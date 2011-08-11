@@ -1,0 +1,10 @@
+{ "name": "nanocouch"
+, "description": "Minimalistic Driver for CouchDB built on mikeals/request"
+, "homepage": "http://github.com/dscape/nanocouch"
+, "version": "0.1.0"
+, "author": "Nuno Job <nunojobpinto@gmail.com> (http://nunojob.com)"
+, "keywords": ["CouchDB", "data", "nodejs", "json", "nosql", "micro", "nano"]
+, "dependencies": { "request": ">=1.9.8", "b64": "1.0.0" }
+, "main": "./nano.js"
+, "engines" : { "node" : "~v0.4.8" }
+}
