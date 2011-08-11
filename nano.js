@@ -47,13 +47,16 @@ module.exports = exports = nano = function nano_module(cfg) {
  /*
   * Creates a CouchDB Database
   * 
-  * e.g. nano.db.create("test", {tried: 0, max_tries: 1},
-  *        function (err) {
-  *          if(err) { throw err; }
-  *          // Do something
-  *          console.log("yey! Dinosaurs! Rawr!");
+  * e.g. nano.db.create(db_name, function (e,b) {
+  *        if(tried.tried === tried.max_retries) {
+  *          callback("Retries work");
+  *          return;
   *        }
-  *      );
+  *        else {
+  *          tried.tried += 1;
+  *          recursive_retries_create_db(tried,callback);
+  *        }
+  *      });
   *
   * @see request_db
   */ 
@@ -61,6 +64,9 @@ module.exports = exports = nano = function nano_module(cfg) {
     request_db(name, "PUT", callback);
   }
   
+ /*
+  *
+  */
   function destroy_db(name, callback) {
     request_db(name, "DELETE", callback);
   }

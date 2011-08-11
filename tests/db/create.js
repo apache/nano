@@ -24,7 +24,7 @@ function create_db_ok(e,b) {
 /*****************************************************************************
  * create_db_recursive_error                                                 *
  *****************************************************************************/
-function create_db_recursive_error(name, callback) {
+function create_db_recursive_error(callback) {
   nano.db.destroy(db_name, function () {
     nano.db.create(db_name, function (e,b) {
       if(e) {
@@ -37,26 +37,30 @@ function create_db_recursive_error(name, callback) {
   });
 }
 
-function create_db_recursive_error_ok(e,b) {
-  assert.equal(e.reason, true);
+function create_db_recursive_error_ok(e,tried) {
+  assert.equal(e.nano_code,"file_exists");
 }
 
 /*****************************************************************************
- * nano.db.create(foo) :recursive :complex                                   *
+ * recursive_retries_create_db                                               *
  *****************************************************************************/
-function recursive_retries_create_db(name, tried, callback) {
-  nano.db.destroy(name, function () {
-    nano.db.create(name, function (e,b) {
+function recursive_retries_create_db(tried,callback) {
+  nano.db.destroy(db_name, function () {
+    nano.db.create(db_name, function (e,b) {
       if(tried.tried === tried.max_retries) {
-        callback();
+        callback(true);
         return;
       }
       else {
         tried.tried += 1;
-        recursive_create_db(name,tried,callback);
+        recursive_retries_create_db(tried,callback);
       }
     });
   });
+}
+
+function recursive_retries_create_db_ok(v) {
+  assert.equal(v,true);
 }
 
 vows.describe('nano.db.create').addBatch({
@@ -65,5 +69,8 @@ vows.describe('nano.db.create').addBatch({
   , "=": create_db_ok },
   "create_db_recursive_error": {
     topic: function () { create_db_recursive_error(this.callback); }
-  , "=": create_db_recursive_error }
+  , "=": create_db_recursive_error_ok },
+  "recursive_retries_create_db": {
+    topic: function () { recursive_retries_create_db({tried:0, max_retries:5},this.callback); }
+  , "=": recursive_retries_create_db_ok }
 }).exportTo(module);
