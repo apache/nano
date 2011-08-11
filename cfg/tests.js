@@ -5,6 +5,7 @@ var cfg = { host: "localhost"
           , pass: "admin"
           };
 
+/* NOT REQUIRED */
 cfg.http_credentials = function credentials() {
   if (cfg.user && cfg.pass) {
     return cfg.user + ":" + cfg.pass + "@";
@@ -12,6 +13,11 @@ cfg.http_credentials = function credentials() {
   else { return ""; }
 }();
 
+cfg.url_noauth = function (){
+  return "http" + (cfg.ssl ? "s" : "") + "://" + cfg.host + ":" + cfg.port;
+}();
+
+/* REQUIRED */
 cfg.url = function (){
   return "http" + (cfg.ssl ? "s" : "") + "://" + cfg.http_credentials + cfg.host + 
     ":" + cfg.port;
