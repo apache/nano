@@ -10,17 +10,18 @@
  *
  * @return An error augmented an driver specific code
  */
-function gen_err(error, code, http_code, type) {
-  if(typeof error === 'string') { error = new Error(error); }
+function gen_err(reason,code,request,http_code,type) {
+  if(typeof reason === 'string') { error = new Error(reason); }
   if(!type) {
     type      = http_code;
     http_code = 500;
   }
-  error.nano_code  = code;
+  error.error      = code;
   error.http_code  = http_code;
-  error.type       = type;
+  error.namespace  = type;
+  error.request    = request;
   return error;
 }
 
-exports.request_err = function (e,c,h) { return gen_err(e,c,h,"request"); }; 
-exports.couch_err   = function (e,c,h) { return gen_err(e,c,h,"couch");   }; 
+exports.request_err = function (e,c,r,h) { return gen_err(e,c,r,h,"request"); }; 
+exports.couch_err   = function (e,c,r,h) { return gen_err(e,c,r,h,"couch");   }; 

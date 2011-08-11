@@ -3,10 +3,12 @@ var vows   = require('/usr/lib/node_modules/vows/lib/vows')
   , cfg    = require('../../cfg/tests.js')
   , nano   = require('../../nano')(cfg);
 
-function destroyDb (name,callback) {
-  nano.db.destroy(name, function (e,b) {
-    callback(e,b);
-    return;
+function destroyDb (callback) {
+  nano.db.create("de1", function () {
+    nano.db.destroy("de1", function (e,b) {
+      callback(e,b);
+      return;
+    });
   });
 }
 
@@ -17,7 +19,7 @@ function destroyDbWorked (e,b) {
 
 vows.describe('nano.db.destroy').addBatch({
   "nano.db.destroy(foo)": {
-    topic: function () { destroyDb("foo", this.callback); }
+    topic: function () { destroyDb(this.callback); }
   , "=": destroyDbWorked
   }
 }).exportTo(module);
