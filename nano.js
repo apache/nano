@@ -1,5 +1,6 @@
 /* Minimalistic Couch In Node */
 var request = require('request')
+  , fs      = require('fs')
   , error   = require('./error')
   , headers = { "content-type": "application/json"
               , "accept": "application/json"
@@ -8,6 +9,9 @@ var request = require('request')
 
 module.exports = exports = nano = function nano_module(cfg) {
   var public_functions = {};
+  if(typeof cfg === "string") {
+    cfg = require(cfg); // No CFG? Maybe it's a file path?
+  }
 
  /*
   * Request DB
@@ -93,27 +97,39 @@ module.exports = exports = nano = function nano_module(cfg) {
   function get_db(name, callback) {
     request_db(name,"GET",callback);
   }
+  
+ /*
+  * Lists all the databases in CouchDB
+  *
+  * e.g. nano.db.get(db_name, function(e,b) {
+  *        console.log(b);
+  *      });
+  *
+  * @see request_db
+  */
+  function list_dbs(callback) {
+    request_db("_all_dbs","GET",callback);
+  }
 
   public_functions = { db:  { create: create_db
                             , get: get_db
                             , destroy: destroy_db
-                            //, list: list_dbs
+                            , list: list_dbs
                             //, replicate: replicate_db
                             //, compact: compact_db
                             //, changes: { add: add_listener
                             //           , remove: remove_listener}
                             }
-                     //, doc: { create: create_doc
-                     //       , get: get_doc
-                     //       , destroy: destroy_doc
-                     //       , bulk: bulk_doc
-                     //       , list: list_docs
-                     //       }
+                     //, create: create_doc
+                     //, get: get_doc
+                     //, destroy: destroy_doc
+                     //, bulk: bulk_doc
+                     //, list: list_docs
                      };
 
   return public_functions;
 };
 
 nano.version = JSON.parse(
-  require('fs').readFileSync(__dirname + "/package.json")).version;
+  fs.readFileSync(__dirname + "/package.json")).version;
 nano.path    = __dirname;
