@@ -97,10 +97,17 @@ module.exports = exports = nano = function nano_module(cfg) {
   public_functions = { db:  { create: create_db
                             , get: get_db
                             , destroy: destroy_db
+                            //, list: list_dbs
+                            //, replicate: replicate_db
+                            //, compact: compact_db
+                            //, changes: { add: add_listener
+                            //           , remove: remove_listener}
                             }
                      //, doc: { create: create_doc
                      //       , get: get_doc
                      //       , destroy: destroy_doc
+                     //       , bulk: bulk_doc
+                     //       , list: list_docs
                      //       }
                      };
 
