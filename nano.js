@@ -21,24 +21,25 @@ module.exports = exports = nano = function nano_module(cfg) {
   * @error {request:connect_db} There was a problem connecting to CouchDB
   * @error {couch:*} Any error that CouchDB returns when creating a DB
   *
-  * @param {name} The database name
-  * @param {method} A valid HTTP verb (e.g. GET)
+  * @param {opts} The request options; e.g. {db: "test", method: "GET"}
   * @param {callback} The function to callback
   *
   * @return Execution of the code in your callback. Hopefully you are handling
   */
-  function request_db(name,method,callback) {
-    if(!callback) { // Then ignore callback
-      callback = function () { return; };
-    }
-    var req = 
-      { uri: cfg.database(name)
-      , method: method
+  function request_db(opts,callback) {
+    var url = cfg.database(opts.db)
+      , req
+      , status_code
+      , parsed;
+    if(!callback) { callback = function () { return; }; } // Void Callback
+    if(opts.doc) { url += "/" + opts.doc; } // Add the document to the URL
+    req = 
+      { uri: url
+      , method: opts.method
       , headers: headers 
       };
     request(req, function(e,h,b){
-      var status_code = h.statusCode
-        , parsed;
+      status_code = h.statusCode;
       if(e) {
         callback(error.request_err(e,"connect_db",req,status_code));
         return;
@@ -68,7 +69,7 @@ module.exports = exports = nano = function nano_module(cfg) {
   * @see request_db
   */ 
   function create_db(name, callback) {
-    request_db(name,"PUT",callback);
+    request_db({db: name, method: "PUT"},callback);
   }
   
  /*
@@ -82,7 +83,7 @@ module.exports = exports = nano = function nano_module(cfg) {
   * @see request_db
   */
   function destroy_db(name, callback) {
-    request_db(name,"DELETE",callback);
+    request_db({db: name, method: "DELETE"},callback);
   }
 
  /*
@@ -95,7 +96,7 @@ module.exports = exports = nano = function nano_module(cfg) {
   * @see request_db
   */
   function get_db(name, callback) {
-    request_db(name,"GET",callback);
+    request_db({db: name, method: "GET"},callback);
   }
   
  /*
@@ -108,7 +109,7 @@ module.exports = exports = nano = function nano_module(cfg) {
   * @see request_db
   */
   function list_dbs(callback) {
-    request_db("_all_dbs","GET",callback);
+    request_db({db: "_all_dbs", method: "GET"},callback);
   }
 
   public_functions = { db:  { create: create_db
