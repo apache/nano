@@ -102,7 +102,7 @@ module.exports = exports = nano = function nano_module(cfg) {
  /*
   * Lists all the databases in CouchDB
   *
-  * e.g. nano.db.get(db_name, function(e,b) {
+  * e.g. nano.db.list(function(e,b) {
   *        console.log(b);
   *      });
   *
@@ -121,11 +121,13 @@ module.exports = exports = nano = function nano_module(cfg) {
                             //, changes: { add: add_listener
                             //           , remove: remove_listener}
                             }
-                     //, create: create_doc
-                     //, get: get_doc
-                     //, destroy: destroy_doc
-                     //, bulk: bulk_doc
-                     //, list: list_docs
+                     // doc: { create: create_doc
+                     //      , get: get_doc
+                     //      , destroy: destroy_doc
+                     //      , bulk: bulk_doc
+                     //      , list: list_docs
+                     //      }
+                     // request: request_db
                      };
 
   return public_functions;
