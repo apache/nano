@@ -90,7 +90,9 @@ module.exports = exports = nano = function database_module(cfg) {
         return;
       }
       parsed = JSON.parse(b);
-      if (status_code === 200 || status_code === 201) { callback(null,rh,parsed); }
+      if (status_code === 200 || status_code === 201 || status_code === 202) { 
+        callback(null,rh,parsed); 
+      }
       else { // Proxy the error
         callback(error.couch_err(parsed.reason,parsed.error,req,status_code),rh,parsed);
       }
@@ -161,6 +163,17 @@ module.exports = exports = nano = function database_module(cfg) {
   function list_dbs(callback) {
     request_db({db: "_all_dbs", method: "GET"},callback);
   }
+
+ /*
+   * Compacts a CouchDB Database
+   *
+   * e.g. nano.db.compact(db_name);
+   *
+   * @see request_db
+   */
+   function compact_db(db_name, callback) {
+     request_db({db: db_name, doc: "_compact", method: "POST"},callback);
+   }
   
  /****************************************************************************
   * doc                                                                      *
@@ -217,7 +230,7 @@ module.exports = exports = nano = function database_module(cfg) {
 
     public_functions = { db: function(cb) { get_db(db_name,cb); }
                        //, replicate: replicate_db
-                       //, compact: compact_db
+                       , compact: function(cb) { compact_db(db_name,cb); }
                        //, changes: { add: add_listener
                        //           , remove: remove_listener}
                        , insert: insert_doc
@@ -235,6 +248,7 @@ module.exports = exports = nano = function database_module(cfg) {
                             , list: list_dbs
                             , use: document_module   // Alias
                             , scope: document_module // Alias
+                            , compact: compact_db
                             }
                      , use: document_module
                      , scope: document_module        // Alias

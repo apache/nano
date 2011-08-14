@@ -10,8 +10,8 @@
  *
  * @return An error augmented an driver specific code
  */
-function gen_err(reason,code,request,http_code,type) {
-  if(typeof reason === 'string') { error = new Error(reason); }
+function gen_err(error,code,request,http_code,type) {
+  if(typeof error === 'string') { error = new Error(error); }
   if(!type) {
     type      = http_code;
     http_code = 500;
