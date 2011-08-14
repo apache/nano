@@ -6,6 +6,9 @@ var vows    = require('/usr/lib/node_modules/vows/lib/vows')
   , db_name = "doc_li1"
   , db      = nano.use(db_name);
 
+/*****************************************************************************
+ * list_doc                                                                  *
+ *****************************************************************************/
 function list_doc(callback) {
   nano.db.create(db_name, function () {
     async.parallel(

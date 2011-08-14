@@ -3,6 +3,9 @@ var vows   = require('/usr/lib/node_modules/vows/lib/vows')
   , cfg    = require('../../cfg/tests.js')
   , nano   = require('../../nano')(cfg);
 
+/*****************************************************************************
+ * get_db                                                                    *
+ *****************************************************************************/
 function get_db(callback) {
   nano.db.create("db_ge1", function () {
     nano.db.get("db_ge1", function (e,h,b) {

@@ -3,6 +3,9 @@ var vows   = require('/usr/lib/node_modules/vows/lib/vows')
   , cfg    = require('../../cfg/tests.js')
   , nano   = require('../../nano')(cfg);
 
+/*****************************************************************************
+ * list_db                                                                   *
+ *****************************************************************************/
 function list_db (callback) {
   nano.db.create("db_li1", function () {
     nano.db.list(function (e,h,b) {

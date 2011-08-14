@@ -4,6 +4,9 @@ var vows   = require('/usr/lib/node_modules/vows/lib/vows')
   , cfg    = require('../../cfg/tests.js')
   , nano   = require('../../nano')(cfg);
 
+/*****************************************************************************
+ * compact_db                                                                *
+ *****************************************************************************/
 function compact_db(callback) {
   nano.db.create("db_co1", function () {
     var db = nano.use("db_co1");

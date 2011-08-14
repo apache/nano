@@ -1,6 +1,6 @@
-/* Minimalistic Couch In Node
+/* Minimal Couch In Node
  *
- * Copyright 2011 Nuno Job <nunojob.com>
+ * Copyright 2011 Nuno Job <nunojob.com> (oO)--',--
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ var request = require('request')
  *
  *
  * - As simple as possible, but no simpler than that
- * - It is not an ORM for CouchDB (author doesn't like ORM for DocDBs)
+ * - It is not an ORM for CouchDB
  * - It is not all fancy and RoR like
  * - It is not meant to prevent you from doing stupid things.
  *   Be creative. Be silly. Do stupid things. I won't thow exceptions back at you.
@@ -68,7 +68,7 @@ module.exports = exports = nano = function database_module(cfg) {
   *
   * @return Execution of the code in your callback. Hopefully you are handling
   */
-  function request_db(opts,callback) {
+  function relax(opts,callback) {
     var url    = cfg.database(opts.db)
       , req    = { method: opts.method, headers: headers }
       , params = opts.params
@@ -118,10 +118,10 @@ module.exports = exports = nano = function database_module(cfg) {
   *        });
   *      }
   *
-  * @see request_db
+  * @see relax
   */ 
   function create_db(db_name, callback) {
-    request_db({db: db_name, method: "PUT"},callback);
+    relax({db: db_name, method: "PUT"},callback);
   }
   
  /*
@@ -132,10 +132,10 @@ module.exports = exports = nano = function database_module(cfg) {
   * Even though this looks sync it is an async function
   * and therefor order is not guaranteed
   *
-  * @see request_db
+  * @see relax
   */
   function destroy_db(db_name, callback) {
-    request_db({db: db_name, method: "DELETE"},callback);
+    relax({db: db_name, method: "DELETE"},callback);
   }
 
  /*
@@ -145,10 +145,10 @@ module.exports = exports = nano = function database_module(cfg) {
   *        console.log(b);
   *      });
   *
-  * @see request_db
+  * @see relax
   */
   function get_db(db_name, callback) {
-    request_db({db: db_name, method: "GET"},callback);
+    relax({db: db_name, method: "GET"},callback);
   }
   
  /*
@@ -158,23 +158,40 @@ module.exports = exports = nano = function database_module(cfg) {
   *        console.log(b);
   *      });
   *
-  * @see request_db
+  * @see relax
   */
   function list_dbs(callback) {
-    request_db({db: "_all_dbs", method: "GET"},callback);
+    relax({db: "_all_dbs", method: "GET"},callback);
   }
 
  /*
-   * Compacts a CouchDB Database
-   *
-   * e.g. nano.db.compact(db_name);
-   *
-   * @see request_db
-   */
-   function compact_db(db_name, callback) {
-     request_db({db: db_name, doc: "_compact", method: "POST"},callback);
+  * Compacts a CouchDB Database
+  *
+  * e.g. nano.db.compact(db_name);
+  *
+  * @see relax
+  */
+  function compact_db(db_name, callback) {
+    relax({db: db_name, doc: "_compact", method: "POST"},callback);
+  }
+
+/*
+ * Replicates a CouchDB Database
+ *
+ * e.g. nano.db.replicate(db_1, db_2);
+ *
+ * @see relax
+ */
+ function replicate_db(source, target, continuous, callback) {
+   if(typeof continuous === "function") {
+     callback   = continuous;
+     continuous = false;
    }
-  
+   var body = {source: source, target: target};
+   if(continuous) { body.continuous = true; }
+   relax({db: "_replicate", doc: "_compact", body: body, method: "POST"},callback);
+ }
+
  /****************************************************************************
   * doc                                                                      *
   ****************************************************************************/
@@ -184,7 +201,7 @@ module.exports = exports = nano = function database_module(cfg) {
    /*
     * Inserts a document in a CouchDB Database
     *
-    * @see request_db
+    * @see relax
     */
     function insert_doc(doc_name,doc,callback) {
       var opts = {db: db_name};
@@ -198,39 +215,47 @@ module.exports = exports = nano = function database_module(cfg) {
         opts.body = doc;
         opts.method = "PUT";
       }
-      request_db(opts,callback);
+      relax(opts,callback);
     }
 
    /*
     * Destroy a document from CouchDB Database
     *
-    * @see request_db
+    * @see relax
     */
     function destroy_doc(doc_name,rev,callback) {
-      request_db({db: db_name, doc: doc_name, method: "DELETE", params: {rev: rev}},callback);
+      relax({db: db_name, doc: doc_name, method: "DELETE", params: {rev: rev}},
+        callback);
     }
 
    /*
     * Get's a document from a CouchDB Database
     *
-    * @see request_db
+    * @see relax
     */
     function get_doc(doc_name,callback) {
-      request_db({db: db_name, doc: doc_name, method: "GET"},callback);
+      relax({db: db_name, doc: doc_name, method: "GET"},callback);
     }
 
    /*
     * Lists all the documents in a CouchDB Database
     *
-    * @see request_db
+    * @see relax
     */
     function list_docs(callback) {
-      request_db({db: db_name, doc: "_all_docs", method: "GET"},callback);
+      relax({db: db_name, doc: "_all_docs", method: "GET"},callback);
     }
 
     public_functions = { info: function(cb) { get_db(db_name,cb); }
-                       //, replicate: replicate_db
+                       , replicate: function(target,continuous,cb) {
+                           if(typeof continuous === "function") {
+                             cb         = continuous;
+                             continuous = false;
+                           }
+                           replicate_db(db_name,target,continuous,cb); 
+                         }
                        , compact: function(cb) { compact_db(db_name,cb); }
+                       // hook.io? socket.io?
                        //, changes: { add: add_listener
                        //           , remove: remove_listener}
                        , insert: insert_doc
@@ -238,6 +263,7 @@ module.exports = exports = nano = function database_module(cfg) {
                        , destroy: destroy_doc
                        //, bulk: bulk_doc
                        , list: list_docs
+                       //, views: {}
                        };
     return public_functions;
   }
@@ -249,10 +275,11 @@ module.exports = exports = nano = function database_module(cfg) {
                             , use: document_module   // Alias
                             , scope: document_module // Alias
                             , compact: compact_db
+                            , replicate: replicate_db
                             }
                      , use: document_module
                      , scope: document_module        // Alias
-                     , request: request_db
+                     , request: relax
                      };
   return public_functions;
 };
@@ -265,6 +292,7 @@ module.exports = exports = nano = function database_module(cfg) {
  *  __/       /
  * /__.|_|-|_|
  *
+ * Thanks for visiting! Come Again!
  */
 
 nano.version = JSON.parse(

@@ -5,6 +5,9 @@ var vows    = require('/usr/lib/node_modules/vows/lib/vows')
   , db_name = "doc_ge1"
   , db      = nano.use(db_name);
 
+/*****************************************************************************
+ * get_doc                                                                   *
+ *****************************************************************************/
 function get_doc(callback) {
   nano.db.create(db_name, function () {
     db.insert("foo", {foo: "bar"}, function () {

@@ -3,7 +3,10 @@ var vows   = require('/usr/lib/node_modules/vows/lib/vows')
   , cfg    = require('../../cfg/tests.js')
   , nano   = require('../../nano')(cfg);
 
-function destroy_db (callback) {
+/*****************************************************************************
+ * destroy_db                                                                *
+ *****************************************************************************/
+function destroy_db(callback) {
   nano.db.create("db_de1", function () {
     nano.db.destroy("db_de1", function (e,h,b) {
       callback(e,h,b);
@@ -12,7 +15,7 @@ function destroy_db (callback) {
   });
 }
 
-function destroy_db_ok (e,h,b) {
+function destroy_db_ok(e,h,b) {
   assert.isNull(e);
   assert.equal(b.ok, true);
   nano.db.destroy("db_de1");

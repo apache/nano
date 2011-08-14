@@ -5,6 +5,9 @@ var vows    = require('/usr/lib/node_modules/vows/lib/vows')
   , db_name = "doc_de1"
   , db      = nano.use(db_name);
 
+/*****************************************************************************
+ * destroy_doc                                                               *
+ *****************************************************************************/
 function destroy_doc(callback) {
   nano.db.create(db_name, function () {
     db.insert("foo", {foo: "bar"}, function (e,h,b) {
