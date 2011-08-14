@@ -5,14 +5,14 @@ var vows   = require('/usr/lib/node_modules/vows/lib/vows')
 
 function destroy_db (callback) {
   nano.db.create("db_de1", function () {
-    nano.db.destroy("db_de1", function (e,b) {
-      callback(e,b);
+    nano.db.destroy("db_de1", function (e,h,b) {
+      callback(e,h,b);
       return;
     });
   });
 }
 
-function destroy_db_ok (e,b) {
+function destroy_db_ok (e,h,b) {
   assert.isNull(e);
   assert.equal(b.ok, true);
   nano.db.destroy("db_de1");

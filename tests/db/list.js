@@ -5,14 +5,14 @@ var vows   = require('/usr/lib/node_modules/vows/lib/vows')
 
 function list_db (callback) {
   nano.db.create("db_li1", function () {
-    nano.db.list(function (e,b) {
-      callback(e,b);
+    nano.db.list(function (e,h,b) {
+      callback(e,h,b);
       return;
     });
   });
 }
 
-function list_db_ok (e,b) {
+function list_db_ok (e,h,b) {
   assert.isNull(e);
   assert.notEqual(b.indexOf("db_li1"),-1);
   nano.db.destroy("db_li1");

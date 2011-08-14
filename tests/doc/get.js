@@ -1,26 +1,28 @@
-var vows   = require('/usr/lib/node_modules/vows/lib/vows')
-  , assert = require('assert')
-  , cfg    = require('../../cfg/tests.js')
-  , nano   = require('../../nano')(cfg);
+var vows    = require('/usr/lib/node_modules/vows/lib/vows')
+  , assert  = require('assert')
+  , cfg     = require('../../cfg/tests.js')
+  , nano    = require('../../nano')(cfg)
+  , db_name = "doc_ge1"
+  , db      = nano.use(db_name);
 
 function get_doc(callback) {
-  nano.db.create("doc_ge1", function () {
-    nano.insert("doc_ge1", "foo", {foo: "bar"}, function () {
-      nano.get("doc_ge1", "foo", function (e,b) {
-        callback(e,b);
+  nano.db.create(db_name, function () {
+    db.insert("foo", {foo: "bar"}, function () {
+      db.get("foo", function (e,h,b) {
+        callback(e,h,b);
         return;
       });
     });
   });
 }
 
-function get_doc_ok(e,b) {
+function get_doc_ok(e,h,b) {
   assert.isNull(e);
   assert.equal(b,0);
-  nano.db.destroy("doc_ge1");
+  nano.db.destroy(db_name);
 }
 
-vows.describe('nano.get').addBatch({
+vows.describe('db.get').addBatch({
   "get_doc": {
     topic: function () { get_doc(this.callback); }
   , "=": get_doc_ok

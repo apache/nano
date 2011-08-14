@@ -7,7 +7,7 @@ var request = require('request')
               }
   , nano;
 
-module.exports = exports = nano = function nano_module(cfg) {
+module.exports = exports = nano = function database_module(cfg) {
   var public_functions = {};
   if(typeof cfg === "string") {
     cfg = require(cfg); // No CFG? Maybe it's a file path?
@@ -21,7 +21,7 @@ module.exports = exports = nano = function nano_module(cfg) {
   *
   * An auxiliary function to do the request to CouchDB
   *
-  * @error {request:connect_db} There was a problem connecting to CouchDB
+  * @error {request:socket} There was a problem connecting to CouchDB
   * @error {couch:*} Any error that CouchDB returns when creating a DB
   *
   * @param {opts} The request options; e.g. {db: "test", method: "GET"}
@@ -33,24 +33,25 @@ module.exports = exports = nano = function nano_module(cfg) {
     var url = cfg.database(opts.db)
       , req = { uri: url, method: opts.method, headers: headers }
       , status_code
-      , parsed;
+      , parsed
+      , rh;
     if(!callback) { callback = function () { return; }; } // Void Callback
     if(opts.doc)  { url += "/" + opts.doc; } // Add the document to the URL
     if(opts.body) { 
       if(typeof opts.body === "object") { req.body = JSON.stringify(opts.body); }
       else { req.body = opts.body; }
     }
-    console.log(req)
     request(req, function(e,h,b){
+      rh = h.headers;
       status_code = h.statusCode;
       if(e) {
-        callback(error.request_err(e,"connect_db",req,status_code));
+        callback(error.request_err(e,"socket",req,status_code),rh,b);
         return;
       }
       parsed = JSON.parse(b);
-      if (status_code === 200 || status_code === 201) { callback(null,parsed); }
+      if (status_code === 200 || status_code === 201) { callback(null,rh,parsed); }
       else { // Proxy the error
-        callback(error.couch_err(parsed.reason,parsed.error,req,status_code));
+        callback(error.couch_err(parsed.reason,parsed.error,req,status_code),rh,parsed);
       }
     });
   }
@@ -123,72 +124,79 @@ module.exports = exports = nano = function nano_module(cfg) {
  /****************************************************************************
   * doc                                                                      *
   ****************************************************************************/
- /*
-  * Get's a document from CouchDB Database
-  *
-  * @see request_db
-  */
-  function get_doc(db_name,doc_name,callback) {
-    request_db({db: db_name, doc: doc_name, method: "GET"},callback);
+  function document_module(db_name) {
+    var public_functions = {};
+
+   /*
+    * Inserts a document in a CouchDB Database
+    *
+    * @see request_db
+    */
+    function insert_doc(doc_name,doc,callback) {
+      var opts = {db: db_name};
+      if(typeof doc === "function") {
+        callback = doc;
+        opts.body = doc_name;
+        opts.method = "POST";
+      }
+      else {
+        opts.doc = doc_name;
+        opts.body = doc;
+        opts.method = "PUT";
+      }
+      request_db(opts,callback);
+    }
+
+   /*
+    * Destroy a document from CouchDB Database
+    *
+    * @see request_db
+    */
+    function destroy_doc(doc_name,callback) {
+      request_db({db: db_name, doc: doc_name, method: "DELETE"},callback);
+    }
+
+   /*
+    * Get's a document from a CouchDB Database
+    *
+    * @see request_db
+    */
+    function get_doc(doc_name,callback) {
+      request_db({db: db_name, doc: doc_name, method: "GET"},callback);
+    }
+
+   /*
+    * Lists all the documents in a CouchDB Database
+    *
+    * @see request_db
+    */
+    function list_docs(callback) {
+      request_db({db: db_name, doc: "_all_docs", method: "GET"},callback);
+    }
+
+    public_functions = { db: function(cb) { get_db(db_name,cb); }
+                       //, replicate: replicate_db
+                       //, compact: compact_db
+                       //, changes: { add: add_listener
+                       //           , remove: remove_listener}
+                       , insert: insert_doc
+                       , get: get_doc
+                       //, destroy: destroy_doc
+                       //, bulk: bulk_doc
+                       , list: list_docs
+                       };
+    return public_functions;
   }
 
- /*
-  * Destroy a document from CouchDB Database
-  *
-  * @see request_db
-  */
-  function destroy_doc(db_name,doc_name,callback) {
-    request_db({db: db_name, doc: doc_name, method: "DELETE"},callback);
-  }
-
- /*
-  * Inserts a document in a CouchDB Database
-  *
-  * @see request_db
-  */
-  function insert_doc(db_name,doc_name,doc,callback) {
-    var opts = {db: db_name};
-    if(typeof doc === "function") {
-      callback = doc;
-      opts.body = doc_name;
-      opts.method = "POST";
-    }
-    else {
-      opts.doc = doc_name;
-      opts.body = doc;
-      opts.method = "PUT";
-    }
-    request_db(opts,callback);
-  }
-  
-  /*
-   * Lists all the documents in a CouchDB Database
-   *
-   * @see request_db
-   */
-   function list_docs(db_name,callback) {
-     request_db({db: db_name, doc: "_all_docs", method: "GET"},callback);
-   }
-  
   public_functions = { db:  { create: create_db
                             , get: get_db
                             , destroy: destroy_db
                             , list: list_dbs
-                            //, use: instance_db
-                            //, replicate: replicate_db
-                            //, compact: compact_db
-                            //, changes: { add: add_listener
-                            //           , remove: remove_listener}
+                            , use: document_module
                             }
-                     // Doc operations will fold under the use construct
-                     , insert: insert_doc
-                     , get: get_doc
-                     , destroy: destroy_doc
-                     //, bulk: bulk_doc
-                     , list: list_docs
+                     , use: document_module
                      , request: request_db
                      };
-
   return public_functions;
 };
 
