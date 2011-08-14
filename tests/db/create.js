@@ -7,10 +7,10 @@ var vows    = require('/usr/lib/node_modules/vows/lib/vows')
  * create_db                                                                 *
  *****************************************************************************/
 function create_db (callback) {
-  nano.db.destroy("cr1", function () {
-    nano.db.create("cr1", function (e,b) {
+  nano.db.destroy("db_cr1", function () {
+    nano.db.create("db_cr1", function (e,b) {
       callback(e,b);
-      nano.db.destroy("cr1");
+      nano.db.destroy("db_cr1");
     });
   });
 }
@@ -18,17 +18,18 @@ function create_db (callback) {
 function create_db_ok(e,b) {
   assert.isNull(e);
   assert.equal(b.ok, true);
+  nano.db.destroy("db_cr1");
 }
 
 /*****************************************************************************
  * recursive_retries_create_db                                               *
  *****************************************************************************/
 function recursive_retries_create_db(tried,callback) {
-  nano.db.destroy("cr2", function () {
-    nano.db.create("cr2", function (e,b) {
+  nano.db.destroy("db_cr2", function () {
+    nano.db.create("db_cr2", function (e,b) {
       if(tried.tried === tried.max_retries) {
         callback(true);
-        nano.db.destroy("cr2");
+        nano.db.destroy("db_cr2");
       }
       else {
         tried.tried += 1;
@@ -40,6 +41,7 @@ function recursive_retries_create_db(tried,callback) {
 
 function recursive_retries_create_db_ok(v) {
   assert.equal(v,true);
+  nano.db.destroy("db_cr2");
 }
 
 vows.describe('nano.db.create').addBatch({

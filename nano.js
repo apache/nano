@@ -13,6 +13,9 @@ module.exports = exports = nano = function nano_module(cfg) {
     cfg = require(cfg); // No CFG? Maybe it's a file path?
   }
 
+ /****************************************************************************
+  * aux                                                                      *
+  ****************************************************************************/
  /*
   * Request DB
   *
@@ -28,16 +31,16 @@ module.exports = exports = nano = function nano_module(cfg) {
   */
   function request_db(opts,callback) {
     var url = cfg.database(opts.db)
-      , req
+      , req = { uri: url, method: opts.method, headers: headers }
       , status_code
       , parsed;
     if(!callback) { callback = function () { return; }; } // Void Callback
-    if(opts.doc) { url += "/" + opts.doc; } // Add the document to the URL
-    req = 
-      { uri: url
-      , method: opts.method
-      , headers: headers 
-      };
+    if(opts.doc)  { url += "/" + opts.doc; } // Add the document to the URL
+    if(opts.body) { 
+      if(typeof opts.body === "object") { req.body = JSON.stringify(opts.body); }
+      else { req.body = opts.body; }
+    }
+    console.log(req)
     request(req, function(e,h,b){
       status_code = h.statusCode;
       if(e) {
@@ -52,24 +55,29 @@ module.exports = exports = nano = function nano_module(cfg) {
     });
   }
 
+ /****************************************************************************
+  * db                                                                       *
+  ****************************************************************************/
  /*
   * Creates a CouchDB Database
   * 
-  * e.g. nano.db.create(db_name, function (e,b) {
-  *        if(tried.tried === tried.max_retries) {
-  *          callback("Retries work");
-  *          return;
-  *        }
-  *        else {
-  *          tried.tried += 1;
-  *          recursive_retries_create_db(tried,callback);
-  *        }
-  *      });
+  * e.g. function recursive_retries_create_db(tried,callback) {
+  *        nano.db.create(db_name, function (e,b) {
+  *          if(tried.tried === tried.max_retries) {
+  *            callback("Retries work");
+  *            return;
+  *          }
+  *          else {
+  *            tried.tried += 1;
+  *            recursive_retries_create_db(tried,callback);
+  *          }
+  *        });
+  *      }
   *
   * @see request_db
   */ 
-  function create_db(name, callback) {
-    request_db({db: name, method: "PUT"},callback);
+  function create_db(db_name, callback) {
+    request_db({db: db_name, method: "PUT"},callback);
   }
   
  /*
@@ -82,8 +90,8 @@ module.exports = exports = nano = function nano_module(cfg) {
   *
   * @see request_db
   */
-  function destroy_db(name, callback) {
-    request_db({db: name, method: "DELETE"},callback);
+  function destroy_db(db_name, callback) {
+    request_db({db: db_name, method: "DELETE"},callback);
   }
 
  /*
@@ -95,8 +103,8 @@ module.exports = exports = nano = function nano_module(cfg) {
   *
   * @see request_db
   */
-  function get_db(name, callback) {
-    request_db({db: name, method: "GET"},callback);
+  function get_db(db_name, callback) {
+    request_db({db: db_name, method: "GET"},callback);
   }
   
  /*
@@ -111,23 +119,74 @@ module.exports = exports = nano = function nano_module(cfg) {
   function list_dbs(callback) {
     request_db({db: "_all_dbs", method: "GET"},callback);
   }
+  
+ /****************************************************************************
+  * doc                                                                      *
+  ****************************************************************************/
+ /*
+  * Get's a document from CouchDB Database
+  *
+  * @see request_db
+  */
+  function get_doc(db_name,doc_name,callback) {
+    request_db({db: db_name, doc: doc_name, method: "GET"},callback);
+  }
 
+ /*
+  * Destroy a document from CouchDB Database
+  *
+  * @see request_db
+  */
+  function destroy_doc(db_name,doc_name,callback) {
+    request_db({db: db_name, doc: doc_name, method: "DELETE"},callback);
+  }
+
+ /*
+  * Inserts a document in a CouchDB Database
+  *
+  * @see request_db
+  */
+  function insert_doc(db_name,doc_name,doc,callback) {
+    var opts = {db: db_name};
+    if(typeof doc === "function") {
+      callback = doc;
+      opts.body = doc_name;
+      opts.method = "POST";
+    }
+    else {
+      opts.doc = doc_name;
+      opts.body = doc;
+      opts.method = "PUT";
+    }
+    request_db(opts,callback);
+  }
+  
+  /*
+   * Lists all the documents in a CouchDB Database
+   *
+   * @see request_db
+   */
+   function list_docs(db_name,callback) {
+     request_db({db: db_name, doc: "_all_docs", method: "GET"},callback);
+   }
+  
   public_functions = { db:  { create: create_db
                             , get: get_db
                             , destroy: destroy_db
                             , list: list_dbs
+                            //, use: instance_db
                             //, replicate: replicate_db
                             //, compact: compact_db
                             //, changes: { add: add_listener
                             //           , remove: remove_listener}
                             }
-                     // doc: { create: create_doc
-                     //      , get: get_doc
-                     //      , destroy: destroy_doc
-                     //      , bulk: bulk_doc
-                     //      , list: list_docs
-                     //      }
-                     // request: request_db
+                     // Doc operations will fold under the use construct
+                     , insert: insert_doc
+                     , get: get_doc
+                     , destroy: destroy_doc
+                     //, bulk: bulk_doc
+                     , list: list_docs
+                     , request: request_db
                      };
 
   return public_functions;
