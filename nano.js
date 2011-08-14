@@ -228,7 +228,7 @@ module.exports = exports = nano = function database_module(cfg) {
       request_db({db: db_name, doc: "_all_docs", method: "GET"},callback);
     }
 
-    public_functions = { db: function(cb) { get_db(db_name,cb); }
+    public_functions = { info: function(cb) { get_db(db_name,cb); }
                        //, replicate: replicate_db
                        , compact: function(cb) { compact_db(db_name,cb); }
                        //, changes: { add: add_listener

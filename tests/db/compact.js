@@ -10,18 +10,24 @@ function compact_db(callback) {
     async.parallel(
       [ function(cb) { db.insert("foobar",  {"foo": "bar"}, cb); }
       , function(cb) { db.insert("barfoo",  {"bar": "foo"}, cb); }
-      , function(cb) { db.insert("foobaz",  {"foo": "baz"}, cb); }
+      , function(cb) { db.insert("foobaz",  {"foo": "baz"},
+          function (e,h,b) { db.destroy("foobaz", b._rev, cb); }); }
       ],
       function(err, results){
-        nano.db.compact("db_co1", callback);
+        db.compact(function () {
+          db.info(function(e,h,b) {
+            callback(null,b);
+            return;
+          });
+        });
       });
   });
 }
 
-function compact_db_ok(e,h,b) {
-  assert.isNull(e);
-  assert.equal(b.ok, true);
+function compact_db_ok(err,list) {
   nano.db.destroy("db_co1");
+  assert.equal(list.doc_count, 3);
+  assert.equal(list.doc_del_count, 0);
 }
 
 vows.describe('nano.db.compact').addBatch({
