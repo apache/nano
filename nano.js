@@ -1,10 +1,9 @@
 /* Minimalistic Couch In Node */
 var request = require('request')
   , fs      = require('fs')
+  , qs      = require('querystring')
   , error   = require('./error')
-  , headers = { "content-type": "application/json"
-              , "accept": "application/json"
-              }
+  , headers = { "content-type": "application/json", "accept": "application/json" }
   , nano;
 
 module.exports = exports = nano = function database_module(cfg) {
@@ -30,8 +29,9 @@ module.exports = exports = nano = function database_module(cfg) {
   * @return Execution of the code in your callback. Hopefully you are handling
   */
   function request_db(opts,callback) {
-    var url = cfg.database(opts.db)
-      , req = { uri: url, method: opts.method, headers: headers }
+    var url    = cfg.database(opts.db)
+      , req    = { method: opts.method, headers: headers }
+      , params = opts.params
       , status_code
       , parsed
       , rh;
@@ -41,6 +41,7 @@ module.exports = exports = nano = function database_module(cfg) {
       if(typeof opts.body === "object") { req.body = JSON.stringify(opts.body); }
       else { req.body = opts.body; }
     }
+    req.uri = url + (params ? "?" + qs.stringify(params) : "");
     request(req, function(e,h,b){
       rh = h.headers;
       status_code = h.statusCode;
@@ -152,8 +153,8 @@ module.exports = exports = nano = function database_module(cfg) {
     *
     * @see request_db
     */
-    function destroy_doc(doc_name,callback) {
-      request_db({db: db_name, doc: doc_name, method: "DELETE"},callback);
+    function destroy_doc(doc_name,rev,callback) {
+      request_db({db: db_name, doc: doc_name, method: "DELETE", params: {rev: rev}},callback);
     }
 
    /*
@@ -181,7 +182,7 @@ module.exports = exports = nano = function database_module(cfg) {
                        //           , remove: remove_listener}
                        , insert: insert_doc
                        , get: get_doc
-                       //, destroy: destroy_doc
+                       , destroy: destroy_doc
                        //, bulk: bulk_doc
                        , list: list_docs
                        };

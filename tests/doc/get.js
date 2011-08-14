@@ -18,7 +18,9 @@ function get_doc(callback) {
 
 function get_doc_ok(e,h,b) {
   assert.isNull(e);
-  assert.equal(b,0);
+  assert.ok(b._rev);
+  assert.equal(b._id, "foo");
+  assert.equal(b.foo, "bar");
   nano.db.destroy(db_name);
 }
 
