@@ -233,9 +233,11 @@ module.exports = exports = nano = function database_module(cfg) {
                             , get: get_db
                             , destroy: destroy_db
                             , list: list_dbs
-                            , use: document_module
+                            , use: document_module   // Alias
+                            , scope: document_module // Alias
                             }
                      , use: document_module
+                     , scope: document_module        // Alias
                      , request: request_db
                      };
   return public_functions;

@@ -5,6 +5,7 @@
 , "author": "Nuno Job <nunojobpinto@gmail.com> (http://nunojob.com)"
 , "keywords": ["CouchDB", "data", "request", "json", "nosql", "micro", "nano"]
 , "dependencies": { "request": ">=1.9.8", "b64": "1.0.0" }
+, "devDependencies": { "async": "~0.1.9", "vows": "~0.5.10" }
 , "main": "./nano.js"
 , "engines" : { "node" : "~v0.4.8" }
 }
