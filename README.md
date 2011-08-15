@@ -1,6 +1,6 @@
 # Nano
 
-`nano` (short for NanoCouch) is a minimalistic `couchdb` driver for `node.js`.
+`nano` (short for nanocouch) is a minimalistic `couchdb` driver for `node.js`.
 
 ## Instalation
 
@@ -17,7 +17,7 @@ In `nano` callback always return three arguments:
       headers: The HTTP response headers from CouchDB, if no error.
       response: The HTTP response body from CouchDB, if no error.
 
-Because in `nano` you can do database operations you are not bound to one and only one database. The first thing you do is load the module pointing either providing a JSON configuration object or a string that represents the relative file path of that config, e.g. `cfg/tests.js`. Do refer to [cfg/couch.example.js][4] for a example. There you can use it to specify where `couchdb` lives, if you want to use `https`, or even to use a `proxy`.
+Because in `nano` you can do database operations you are not bound to one and only one database. The first thing you do is load the module pointing either providing a `json` `configuration object` or a `configuration file path` like `cfg/tests.js`. Do refer to [cfg/couch.example.js][4] for a example. There you will also specify where `couchdb` lives, if you want to use `https`, or even to use a `proxy` server.
 
       var nano = require('nano')('./cfg/tests.js');
 

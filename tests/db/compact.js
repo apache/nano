@@ -18,8 +18,8 @@ function compact_db(callback) {
       ],
       function(err, results){
         db.compact(function () {
-          db.info(function(e,h,b) {
-            callback(null,b);
+          db.info(function(e,_,b) {
+            callback(e,b);
             return;
           });
         });
@@ -29,6 +29,7 @@ function compact_db(callback) {
 
 function compact_db_ok(err,list) {
   nano.db.destroy("db_co1");
+  assert.isNull(err);
   assert.equal(list.doc_count, 3);
   assert.equal(list.doc_del_count, 0);
 }

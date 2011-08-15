@@ -86,12 +86,12 @@ module.exports = exports = nano = function database_module(cfg) {
     }
     req.uri = url + (params ? "?" + qs.stringify(params) : "");
     request(req, function(e,h,b){
-      rh = h.headers;
-      status_code = h.statusCode;
       if(e) {
-        callback(error.request_err(e,"socket",req,status_code),rh,b);
+        callback(error.request_err(e,"socket",req,status_code),{},b);
         return;
       }
+      rh = h.headers;
+      status_code = h.statusCode;
       parsed = JSON.parse(b);
       if (status_code === 200 || status_code === 201 || status_code === 202) { 
         callback(null,rh,parsed); 
