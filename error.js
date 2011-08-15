@@ -1,5 +1,25 @@
 /*
  * Generic Error
+ *
+ * e.g. 
+ * { "stack": "Error: Document update conflict. at gen_err(error.js:14:43)",
+ *   "message": "Document update conflict.",
+ *   "error": "conflict",
+ *   "http_code": 409,
+ *   "namespace": "couch",
+ *   "request": {
+ *       "method": "PUT",
+ *       "headers": {
+ *           "content-type": "application/json",
+ *           "accept": "application/json",
+ *           "authorization": "BasicYWRtaW46YWRtaW4=",
+ *           "content-length": 13
+ *       },
+ *       "body": {"foo": "baz"},
+ *       "uri": "http://admin:admin@localhost: 5984/doc_up1/foo",
+ *       "callback": [Function]
+ *   }
+ * }
  * 
  * Extension on Error to support more complex logic.
  * 
