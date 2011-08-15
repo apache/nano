@@ -219,6 +219,16 @@ module.exports = exports = nano = function database_module(cfg) {
     }
 
    /*
+     * Updates a document in a CouchDB Database
+     *
+     * @see relax
+     */
+     function update_doc(doc_name,rev,doc,callback) {
+       doc._rev = rev;
+       relax({ db: db_name, doc: doc_name, method: "PUT", body: doc},callback);
+     }
+
+   /*
     * Destroy a document from CouchDB Database
     *
     * @see relax
@@ -259,6 +269,7 @@ module.exports = exports = nano = function database_module(cfg) {
                        //, changes: { add: add_listener
                        //           , remove: remove_listener}
                        , insert: insert_doc
+                       , update: update_doc
                        , get: get_doc
                        , destroy: destroy_doc
                        //, bulk: bulk_doc

@@ -16,11 +16,11 @@ function get_db(callback) {
 }
 
 function get_db_ok(e,h,b) {
+  nano.db.destroy("db_ge1");
   assert.isNull(e);
   assert.equal(b.doc_count,0);
   assert.equal(b.doc_del_count,0);
   assert.equal(b.db_name,"db_ge1");
-  nano.db.destroy("db_ge1");
 }
 
 vows.describe('nano.db.get').addBatch({

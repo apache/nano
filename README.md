@@ -53,7 +53,8 @@ Don't forget to delete the database you created:
 
 Assuming `var db = nano.use("somedb");`:
 
-      db.insert(doc_name,doc,callback)
+      db.insert(doc_name,doc,callback) // doc_name is optional
+      db.update(doc_name,rev,doc,callback)
       db.destroy(doc_name,rev,callback)
       db.get(doc_name,callback)
       db.list(callback)
@@ -65,7 +66,7 @@ Assuming `var db = nano.use("somedb");`:
       nano.db.get(db_name,callback)
       nano.db.list(callback) 
       nano.db.compact(db_name,callback)
-      nano.db.replicate(source,target,continuous,callback) // Continuous is optional
+      nano.db.replicate(source,target,continuous,callback) // continuous is optional
 
 ### Other / Advanced
 
@@ -87,6 +88,8 @@ Some future plans are mostly:
 3. Convenience functions for attachments
 4. Support views
 5. Support bulk load
+6. `_uuids`, `_stats`, `_config`, `_active_tasks`, `_all_docs_by_seq`
+7. Support `batch` in updates and inserts.
 
 Great segway to contribute.
 

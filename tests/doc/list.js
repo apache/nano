@@ -23,10 +23,10 @@ function list_doc(callback) {
 }
 
 function list_doc_ok(e,h,b) {
+  nano.db.destroy(db_name);
   assert.isNull(e);
   assert.equal(b.total_rows,3);
   assert.ok(b.rows);
-  nano.db.destroy(db_name);
 }
 
 vows.describe('doc.list').addBatch({

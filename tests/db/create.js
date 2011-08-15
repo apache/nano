@@ -16,9 +16,9 @@ function create_db (callback) {
 }
 
 function create_db_ok(e,h,b) {
+  nano.db.destroy("db_cr1");
   assert.isNull(e);
   assert.equal(b.ok, true);
-  nano.db.destroy("db_cr1");
 }
 
 /*****************************************************************************
@@ -40,8 +40,8 @@ function recursive_retries_create_db(tried,callback) {
 }
 
 function recursive_retries_create_db_ok(v) {
-  assert.equal(v,true);
   nano.db.destroy("db_cr2");
+  assert.equal(v,true);
 }
 
 vows.describe('nano.db.create').addBatch({

@@ -15,11 +15,11 @@ function insert_doc(callback) {
 }
 
 function insert_doc_ok(e,h,b) {
+  nano.db.destroy(db_name);
   assert.isNull(e);
   assert.ok(b.ok);
   assert.ok(b.rev);
   assert.ok(b.id);
-  nano.db.destroy(db_name);
 }
 
 vows.describe('db.insert').addBatch({

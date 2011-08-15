@@ -16,9 +16,9 @@ function destroy_db(callback) {
 }
 
 function destroy_db_ok(e,h,b) {
+  nano.db.destroy("db_de1");
   assert.isNull(e);
   assert.equal(b.ok, true);
-  nano.db.destroy("db_de1");
 }
 
 vows.describe('nano.db.destroy').addBatch({

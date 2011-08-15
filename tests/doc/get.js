@@ -20,11 +20,11 @@ function get_doc(callback) {
 }
 
 function get_doc_ok(e,h,b) {
+  nano.db.destroy(db_name);
   assert.isNull(e);
   assert.ok(b._rev);
   assert.equal(b._id, "foo");
   assert.equal(b.foo, "bar");
-  nano.db.destroy(db_name);
 }
 
 vows.describe('db.get').addBatch({

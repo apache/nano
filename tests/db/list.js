@@ -16,9 +16,9 @@ function list_db (callback) {
 }
 
 function list_db_ok (e,h,b) {
+  nano.db.destroy("db_li1");
   assert.isNull(e);
   assert.notEqual(b.indexOf("db_li1"),-1);
-  nano.db.destroy("db_li1");
 }
 
 vows.describe('nano.db.list').addBatch({
