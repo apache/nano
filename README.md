@@ -9,13 +9,7 @@
 
 ## usage
 
-a quick example on using `nano`
-
-in `nano` callback always return three arguments:
-
-      err: the error, if any. check error.js for more info.
-      headers: the http response headers from couchdb, if no error.
-      response: the http response body from couchdb, if no error.
+a quick example using `nano`
 
 to use `nano` you have to either provide a) a `json` `configuration object` or b) a `configuration file path` like `cfg/tests.js`. refer to [cfg/couch.example.js][4] for a example
 
@@ -43,7 +37,22 @@ you normally don't want to do that though:
 
 the `alicedb.use` method creates a `scope` where you operate inside a single database. this is just a convenience so you don't have to specify the database name every single time you do an update or delete
 
-don't forget to delete the database you created:
+      var alicedb = nano.use("alice");
+
+a callback in nano has always three arguments
+
+      alicedb.insert("rabbit", {crazy: true}, function(e,h,r){
+        if(e) { throw e; }
+        console.log("you have inserted the rabbit.")
+      });
+
+meaning:
+
+      e: the `error`, if any. check error.js for more info.
+      h: the http response `headers` from couchdb, if no error.
+      r: the http `response body` from couchdb, if no error.
+
+that's it. don't forget to delete the database you created:
 
       nano.db.destroy("alice");
 
