@@ -192,7 +192,7 @@ module.exports = exports = nano = function database_module(cfg) {
    }
    var body = {source: source, target: target};
    if(continuous) { body.continuous = true; }
-   relax({db: "_replicate", doc: "_compact", body: body, method: "POST"},callback);
+   relax({db: "_replicate", body: body, method: "POST"},callback);
  }
 
  /****************************************************************************
@@ -294,6 +294,8 @@ module.exports = exports = nano = function database_module(cfg) {
                      , use: document_module
                      , scope: document_module        // Alias
                      , request: relax
+                     , relax: relax                  // Alias
+                     , dinosaur: relax
                      };
   return public_functions;
 };

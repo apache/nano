@@ -1,128 +1,156 @@
-# Nano
+# nano
 
 `nano` (short for nanocouch) is a minimalistic `couchdb` driver for `node.js`.
 
-## Instalation
+## instalation
 
-1. Install [npm][1]
+1. install [npm][1]
 2. `npm install nano`
 
-## Usage
+## usage
 
-A quick example on using `nano`.
+a quick example on using `nano`.
 
-In `nano` callback always return three arguments:
+in `nano` callback always return three arguments:
 
-      err: The error, if any. Check error.js for more info.
-      headers: The HTTP response headers from CouchDB, if no error.
-      response: The HTTP response body from CouchDB, if no error.
+      err: the error, if any. check error.js for more info.
+      headers: the http response headers from couchdb, if no error.
+      response: the http response body from couchdb, if no error.
 
-Because in `nano` you can do database operations you are not bound to one and only one database. The first thing you do is load the module pointing either providing a `json` `configuration object` or a `configuration file path` like `cfg/tests.js`. Do refer to [cfg/couch.example.js][4] for a example. There you will also specify where `couchdb` lives, if you want to use `https`, or even to use a `proxy` server.
+to use `nano` you have to either provide a) a `json` `configuration object` or b) a `configuration file path` like `cfg/tests.js`. refer to [cfg/couch.example.js][4] for a example.
 
       var nano = require('nano')('./cfg/tests.js');
 
-Now you can do your database operations using `nano`. These include things like create, delete or list databases. Let's create a database to store some documents:
+within the `nano` variable you have various methods you can call. these include tasks like create, delete or list databases:
 
       nano.db.create("alice");
 
-Where is my callback? Well in `nano` you have the option of not having a callback and say "I don't care".
+in this function there is not callback. in `nano` the absence of callback means "do this, ignore what happens".
 
-Of course now you want to insert some documents and you wish you had the callback, so let's add it:
+you normally don't want to do that though:
 
-      // Clean up the database we created previously
+      // clean up the database we created previously
       nano.db.destroy("alice", function(err,headers,response) {
         nano.db.create("alice", function(){
-          // Specify the database we are going to use
+          // specify the database we are going to use
           var alicedb = nano.use("alice");
           alicedb.insert("rabbit", {crazy: true}, function(e,h,r){
             if(e) { throw e; }
-            console.log("You have inserted the rabbit.")
+            console.log("you have inserted the rabbit.")
           });
         });
       });
 
-The `alicedb.use` method creates a `scope` where you operate inside a single database. This is just a convenience so you don't have to specify the database name every single time you do an update or delete.
+the `alicedb.use` method creates a `scope` where you operate inside a single database. this is just a convenience so you don't have to specify the database name every single time you do an update or delete.
 
-Don't forget to delete the database you created:
+don't forget to delete the database you created:
 
       nano.db.destroy("alice");
 
-## Interfaces
+## interfaces
 
-### Documents
+`*` marks optional.
+`&` marks aliases.
 
-Assuming `var db = nano.use("somedb");`:
+### databases (nano)
 
-      db.insert(doc_name,doc,callback) // doc_name is optional
-      db.update(doc_name,rev,doc,callback)
-      db.destroy(doc_name,rev,callback)
-      db.get(doc_name,callback)
-      db.list(callback)
+#### functions
 
-### Databases
+`nano.db.create(db_name,callback*)`
+`nano.db.get(db_name,callback*)`
+`nano.db.destroy(db_name,callback*)`
+`nano.db.list(callback*)`
+`nano.db.compact(db_name,callback*)`
+`nano.db.replicate(source,target,continuous*,callback*)`
+`nano.use(db_name)`
+`nano.request(opts,callback*)`
 
-      nano.db.create(db_name,callback)
-      nano.db.destroy(db_name,callback)
-      nano.db.get(db_name,callback)
-      nano.db.list(callback) 
-      nano.db.compact(db_name,callback)
-      nano.db.replicate(source,target,continuous,callback) // continuous is optional
+#### aliases
 
-### Other / Advanced
+`nano.use     > [nano.db.use, nano.db.scope, nano.scope]`
+`nano.request > [nano.relax, nano.dinosaur]`
 
-      nano.use(db_name)
+### documents (nano.use)
+
+`nano.use` simply sets `db_name` in scope. this way you don't have to specify it every time.
+
+#### functions
+
+`db.insert(doc_name*,doc,callback*)`
+`db.update(doc_name,rev,doc,callback*)`
+`db.destroy(doc_name,rev,callback*)`
+`db.get(doc_name,callback*)`
+`db.list(callback*)`
+`db.info`
+
+#### aliases
+
+please remember `db_name` is already in scope so there no need to specify it.
+
+`nano.db.get       > [db.info(callback*)]`
+`nano.db.replicate > [db.replicate(target,continuous*,callback*)]`
+`nano.db.compact   > [db.compact(callback*)]`
+
+### advanced users
+
+`nano` is minimalistic so it provides advanced users with a way to code their own functions:
+      
       nano.request(opts,callback)
 
-### Aliases
+e.g. in `nano` there is no way for you to get a document in a specific revision. an advanced users would do:
 
-You can use `nano.scope` instead of `nano.use`. They are both also available inside db, e.g. `nano.db.scope`.
+      nano.request( { db: "alice"
+                    , doc: "rabbit"
+                    , method: "GET"
+                    , params: { rev: "1-967a00dff5e02add41819138abb3284d"} 
+                    },
+        function (_,_,b) { console.log(b) }
+      );
 
-When using a database with `nano.use` you can still `replicate`, `compact`, and `list` the database you are using. e.g. to list you can use `db.info` (because `db.list` is for listing documents). Other methods remain the same, e.g. `db.replicate`.
+## future plans
 
-## Future plans
+roadmap:
 
-Some future plans are mostly:
-
-1. Add `pipe`, support as provided by request
-2. Explore adding `_changes` feed
-3. Convenience functions for attachments
-4. Support views
-5. Support bulk load
+1. add `pipe` support as provided by request
+2. explore adding `_changes` feed
+3. convenience functions for attachments
+4. support views
+5. support bulk load
 6. `_uuids`, `_stats`, `_config`, `_active_tasks`, `_all_docs_by_seq`
-7. Support `batch` in updates and inserts.
+7. support `batch` in updates and inserts
 
-Great segway to contribute.
+## contribute
 
-## Contribute
+everyone is welcome to contribute. patches, bugfixes, new features.
 
-Everyone is welcome to contribute. 
+1. create an issue to know if the feature is wanted and state that you are interested in fixing it yourself.
+2. fork `nano` in github
+3. create a new branch - `git checkout -b my_branch`
+4. create tests for the changes you made
+5. make sure you pass both existing and newly inserted tests
+6. commit your changes
+7. push to your branch - `git push origin my_branch`
+8. create an pull request
 
-1. Fork `nano` in github
-2. Create a new branch - `git checkout -b my_branch`
-3. Create tests for the changes you made
-4. Make sure you pass both existing and newly inserted tests
-5. Commit your changes
-6. Push to your branch - `git push origin my_branch`
-7. Create an pull request
+### running the tests
 
-### Running the tests
+1. install the packages referred as dev dependencies in `package.json`.
+2. browse to `test/` and `./run`. 
 
-To run the tests simply browse to `test/` and `./run`. Don't forget to install the packages referred as dev dependencies in `package.json`.
+always make sure all the tests pass before sending in your pull request!
+we will tell santa!
 
-Always make sure all the tests pass before sending in your pull request!
-OR I'll tell Santa!
-
-## Meta
+## meta
 
                     _
-                  / _) ROAR! I'm a vegan!
+                  / _) ROAR! i'm a vegan!
            .-^^^-/ /
         __/       /
-       /__.|_|-|_|
+       /__.|_|-|_|     cannes est superb!
 
-* Code: `git clone git://github.com/dscape/nano.git`
-* Home: <http://github.com/dscape/nano>
-* Bugs: <http://github.com/dscape/nano/issues>
+* code: `git clone git://github.com/dscape/nano.git`
+* home: <http://github.com/dscape/nano>
+* bugs: <http://github.com/dscape/nano/issues>
 
 `(oO)--',-` in [caos][3]
 
