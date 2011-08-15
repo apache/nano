@@ -1,3 +1,10 @@
+/* Config file used during tests
+ * Don't remove or modify
+ *
+ * - Or else...
+ * - Or else what?
+ * - Or else nothin'
+ */
 var cfg = { host: "localhost"
           , port: "5984"
           , ssl:  false // Not yet

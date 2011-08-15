@@ -83,7 +83,7 @@ When using a database with `nano.use` you can still `replicate`, `compact`, and 
 
 Some future plans are mostly:
 
-1. Add `proxy`, `pipe`, and `ssl` support as provided by request
+1. Add `pipe`, support as provided by request
 2. Explore adding `_changes` feed
 3. Convenience functions for attachments
 4. Support views
