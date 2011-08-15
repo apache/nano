@@ -75,8 +75,8 @@ that's it. don't forget to delete the database you created:
 
 #### aliases
 
-`nano.use     > [nano.db.use, nano.db.scope, nano.scope]`
-`nano.request > [nano.relax, nano.dinosaur]`
+`nano.use: [nano.db.use, nano.db.scope, nano.scope]`
+`nano.request: [nano.relax, nano.dinosaur]`
 
 ### documents (nano.use)
 
@@ -92,9 +92,9 @@ that's it. don't forget to delete the database you created:
 
 `nano.use` simply sets `db_name` in scope. this way you don't have to specify it every time
 
-`nano.db.get       > [db.info(callback*)]`
-`nano.db.replicate > [db.replicate(target,continuous*,callback*)]`
-`nano.db.compact   > [db.compact(callback*)]`
+`nano.db.get: [db.info(callback*)]`
+`nano.db.replicate: [db.replicate(target,continuous*,callback*)]`
+`nano.db.compact: [db.compact(callback*)]`
 
 ### advanced
 
@@ -102,7 +102,7 @@ that's it. don't forget to delete the database you created:
       
       nano.request(opts,callback*)
 
-e.g. in `nano` there is no way for you to get a document in a specific revision. an advanced users would do:
+e.g. in `nano` there is no way for you to get a document in a specific revision. an advanced user would do:
 
       nano.request( { db: "alice"
                     , doc: "rabbit"
