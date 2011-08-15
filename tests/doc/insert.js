@@ -10,20 +10,15 @@ var vows    = require('/usr/lib/node_modules/vows/lib/vows')
  *****************************************************************************/
 function insert_doc(callback) {
   nano.db.create(db_name, function () {
-    db.insert("foo", {foo: "bar"}, function () {
-      db.get("foo", function (e,h,b) {
-        callback(e,h,b);
-        return;
-      });
-    });
+    db.insert({foo: "bar"}, callback);
   });
 }
 
 function insert_doc_ok(e,h,b) {
   assert.isNull(e);
-  assert.ok(b._rev);
-  assert.equal(b._id, "foo");
-  assert.equal(b.foo, "bar");
+  assert.ok(b.ok);
+  assert.ok(b.rev);
+  assert.ok(b.id);
   nano.db.destroy(db_name);
 }
 

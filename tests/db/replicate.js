@@ -27,7 +27,7 @@ function replicate_db(callback) {
 
 function replicate_db_ok(e,h,b) {
   nano.db.destroy("db_re1");
-  nano.db.destroy("db_re1_replicate");
+  nano.db.destroy("db_re1_replica");
   assert.isNull(e);
   assert.equal(b.total_rows, 3);
   assert.ok(b.rows);
