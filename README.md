@@ -121,7 +121,7 @@ OR I'll tell Santa!
 * Home: <http://github.com/dscape/nano>
 * Bugs: <http://github.com/dscape/nano/issues>
 
-(oO)--',- in [caos][3]
+`(oO)--',-` in [caos][3]
 
 [1]: http://npmjs.org
 [2]: http://github.com/dscape/nano/issues
