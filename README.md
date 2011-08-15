@@ -43,7 +43,7 @@ Of course now you want to insert some documents and you wish you had the callbac
 
 The `alicedb.use` method creates a `scope` where you operate inside a single database. This is just a convenience so you don't have to specify the database name every single time you do an update or delete.
 
-Don't forget to delete the database you create:
+Don't forget to delete the database you created:
 
       nano.db.destroy("alice");
 
