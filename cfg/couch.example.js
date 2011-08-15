@@ -1,6 +1,7 @@
-var cfg = { host: "localhost"
-          , port: "5984"
-          , ssl:  false // Not yet
+var cfg = { host: "mydb.iriscouch.com"
+          , port: "80"
+          , ssl:  false
+          , proxy: "http://someproxy.com"
           , user: "admin"
           , pass: "admin"
           };

@@ -40,6 +40,9 @@ module.exports = exports = nano = function database_module(cfg) {
   if(typeof cfg === "string") {
     cfg = require(cfg); // No CFG? Maybe it's a file path?
   }
+  if(cfg.proxy) { // Proxy support
+    request = request.defaults({proxy: cfg.proxy});
+  }
 
  /****************************************************************************
   * aux                                                                      *

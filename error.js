@@ -1,7 +1,8 @@
 /*
  * Generic Error
  *
- * e.g. 
+ * e.g. missing rev information:
+ *
  * { "stack": "Error: Document update conflict. at gen_err(error.js:14:43)",
  *   "message": "Document update conflict.",
  *   "error": "conflict",
