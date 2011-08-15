@@ -1,6 +1,6 @@
 # Nano
 
-Nano (short for NanoCouch) is a minimalistic CouchDB driver for Node.js.
+`nano` (short for NanoCouch) is a minimalistic CouchDB driver for Node.js.
 
 ## Instalation
 
@@ -9,7 +9,7 @@ Nano (short for NanoCouch) is a minimalistic CouchDB driver for Node.js.
 
 ## Usage
 
-A quick example on using `nano`. You can follow it by `npm install nano` and entering `node` in the console.
+A quick example on using `nano`.
 
 In `nano` callback always return three arguments:
 
@@ -17,15 +17,15 @@ In `nano` callback always return three arguments:
       headers: The HTTP response headers from CouchDB, if no error.
       response: The HTTP response body from CouchDB, if no error.
 
-Because in `nano` you can do database operations you are not bound to one and only one database. The first thing you do is load the module pointing either providing a JSON configuration object or a string that represents the relative file path of that config, e.g. 'cfg/tests.js'. Do refer to 'cfg/tests.js' for a sample.
+Because in `nano` you can do database operations you are not bound to one and only one database. The first thing you do is load the module pointing either providing a JSON configuration object or a string that represents the relative file path of that config, e.g. 'cfg/tests.js'. Do refer to `cfg/tests.js` for a sample.
 
       var nano = require('nano')('./cfg/tests.js');
 
-Now you can do your database operations using nano. These include things like create, delete or list databases. Let's create a database to store some documents:
+Now you can do your database operations using `nano`. These include things like create, delete or list databases. Let's create a database to store some documents:
 
       nano.db.create("alice");
 
-Where is my callback? Well in nano you have the option of not having a callback and say "I don't care".
+Where is my callback? Well in `nano` you have the option of not having a callback and say "I don't care".
 
 Of course now you want to insert some documents and you wish you had the callback, so let's add it:
 
@@ -93,7 +93,7 @@ Great segway to contribute.
 
 Everyone is welcome to contribute. 
 
-1. Fork nano in github
+1. Fork `nano` in github
 2. Create a new branch - `git checkout -b my_branch`
 3. Create tests for the changes you made
 4. Make sure you pass both existing and newly inserted tests
