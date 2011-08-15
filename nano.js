@@ -32,9 +32,9 @@ var request = require('request')
  * - It is not meant to prevent you from doing stupid things.
  *   Be creative. Be silly. Do stupid things. I won't thow exceptions back at you.
  *
- * Have fun! Relax, and don't forget to take the trash out. (compact)
+ *   Have fun! Relax, and don't forget to compact.
+ *   Dinosaurs spaceships ftw!
  */
-
 module.exports = exports = nano = function database_module(cfg) {
   var public_functions = {};
   if(typeof cfg === "string") {
