@@ -37,14 +37,14 @@ you normally don't want to do that though:
 
 the `alicedb.use` method creates a `scope` where you operate inside a single database. this is just a convenience so you don't have to specify the database name every single time you do an update or delete
 
-      var alicedb = nano.use("alice");
+      // 5: var alicedb = nano.use("alice");
 
-a callback in nano has always three arguments
+in `nano` a callback has always three arguments
 
-      alicedb.insert("rabbit", {crazy: true}, function(e,h,r){
-        if(e) { throw e; }
-        console.log("you have inserted the rabbit.")
-      });
+      // 6: alicedb.insert("rabbit", {crazy: true}, function(e,h,r){
+      // 7:   if(e) { throw e; }
+      // 8:   console.log("you have inserted the rabbit.")
+      // 9: });
 
 meaning:
 
