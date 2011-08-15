@@ -295,7 +295,7 @@ module.exports = exports = nano = function database_module(cfg) {
                      , scope: document_module        // Alias
                      , request: relax
                      , relax: relax                  // Alias
-                     , dinosaur: relax
+                     , dinosaur: relax               // Alias
                      };
   return public_functions;
 };

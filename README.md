@@ -1,6 +1,6 @@
 # nano
 
-`nano` (short for nanocouch) is a minimalistic `couchdb` driver for `node.js`.
+`nano` (short for nanocouch) is a minimalistic `couchdb` driver for `node.js`
 
 ## instalation
 
@@ -9,7 +9,7 @@
 
 ## usage
 
-a quick example on using `nano`.
+a quick example on using `nano`
 
 in `nano` callback always return three arguments:
 
@@ -17,7 +17,7 @@ in `nano` callback always return three arguments:
       headers: the http response headers from couchdb, if no error.
       response: the http response body from couchdb, if no error.
 
-to use `nano` you have to either provide a) a `json` `configuration object` or b) a `configuration file path` like `cfg/tests.js`. refer to [cfg/couch.example.js][4] for a example.
+to use `nano` you have to either provide a) a `json` `configuration object` or b) a `configuration file path` like `cfg/tests.js`. refer to [cfg/couch.example.js][4] for a example
 
       var nano = require('nano')('./cfg/tests.js');
 
@@ -25,7 +25,7 @@ within the `nano` variable you have various methods you can call. these include 
 
       nano.db.create("alice");
 
-in this function there is not callback. in `nano` the absence of callback means "do this, ignore what happens".
+in this function there is not callback. in `nano` the absence of callback means "do this, ignore what happens"
 
 you normally don't want to do that though:
 
@@ -41,7 +41,7 @@ you normally don't want to do that though:
         });
       });
 
-the `alicedb.use` method creates a `scope` where you operate inside a single database. this is just a convenience so you don't have to specify the database name every single time you do an update or delete.
+the `alicedb.use` method creates a `scope` where you operate inside a single database. this is just a convenience so you don't have to specify the database name every single time you do an update or delete
 
 don't forget to delete the database you created:
 
@@ -49,8 +49,7 @@ don't forget to delete the database you created:
 
 ## interfaces
 
-`*` marks optional.
-`&` marks aliases.
+`*` marks optional
 
 ### databases (nano)
 
@@ -72,8 +71,6 @@ don't forget to delete the database you created:
 
 ### documents (nano.use)
 
-`nano.use` simply sets `db_name` in scope. this way you don't have to specify it every time.
-
 #### functions
 
 `db.insert(doc_name*,doc,callback*)`
@@ -81,21 +78,20 @@ don't forget to delete the database you created:
 `db.destroy(doc_name,rev,callback*)`
 `db.get(doc_name,callback*)`
 `db.list(callback*)`
-`db.info`
 
 #### aliases
 
-please remember `db_name` is already in scope so there no need to specify it.
+`nano.use` simply sets `db_name` in scope. this way you don't have to specify it every time
 
 `nano.db.get       > [db.info(callback*)]`
 `nano.db.replicate > [db.replicate(target,continuous*,callback*)]`
 `nano.db.compact   > [db.compact(callback*)]`
 
-### advanced users
+### advanced
 
-`nano` is minimalistic so it provides advanced users with a way to code their own functions:
+`nano` is minimalistic so it provides advanced users with a way to code their own extension functions:
       
-      nano.request(opts,callback)
+      nano.request(opts,callback*)
 
 e.g. in `nano` there is no way for you to get a document in a specific revision. an advanced users would do:
 
@@ -107,9 +103,7 @@ e.g. in `nano` there is no way for you to get a document in a specific revision.
         function (_,_,b) { console.log(b) }
       );
 
-## future plans
-
-roadmap:
+## roadmap
 
 1. add `pipe` support as provided by request
 2. explore adding `_changes` feed
@@ -121,24 +115,25 @@ roadmap:
 
 ## contribute
 
-everyone is welcome to contribute. patches, bugfixes, new features.
+everyone is welcome to contribute. patches, bugfixes, new features
 
-1. create an issue to know if the feature is wanted and state that you are interested in fixing it yourself.
+1. create an [issue][2] on github so the community can comment on your idea
 2. fork `nano` in github
-3. create a new branch - `git checkout -b my_branch`
+3. create a new branch `git checkout -b my_branch`
 4. create tests for the changes you made
 5. make sure you pass both existing and newly inserted tests
 6. commit your changes
-7. push to your branch - `git push origin my_branch`
+7. push to your branch `git push origin my_branch`
 8. create an pull request
 
-### running the tests
+### tests
 
-1. install the packages referred as dev dependencies in `package.json`.
-2. browse to `test/` and `./run`. 
+1. install the packages referred as dev dependencies in `package.json`
+2. browse to `test/` and `./run`.
 
 always make sure all the tests pass before sending in your pull request!
-we will tell santa!
+
+we will tell santa
 
 ## meta
 
@@ -146,7 +141,7 @@ we will tell santa!
                   / _) ROAR! i'm a vegan!
            .-^^^-/ /
         __/       /
-       /__.|_|-|_|     cannes est superb!
+       /__.|_|-|_|     cannes est superb
 
 * code: `git clone git://github.com/dscape/nano.git`
 * home: <http://github.com/dscape/nano>
