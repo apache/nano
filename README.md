@@ -17,7 +17,7 @@ In `nano` callback always return three arguments:
       headers: The HTTP response headers from CouchDB, if no error.
       response: The HTTP response body from CouchDB, if no error.
 
-Because in `nano` you can do database operations you are not bound to one and only one database. The first thing you do is load the module pointing either providing a JSON configuration object or a string that represents the relative file path of that config, e.g. 'cfg/tests.js'. Do refer to `cfg/tests.js` for a sample.
+Because in `nano` you can do database operations you are not bound to one and only one database. The first thing you do is load the module pointing either providing a JSON configuration object or a string that represents the relative file path of that config, e.g. 'cfg/tests.js'. Do refer to `cfg/couch.example.js` for a sample.
 
       var nano = require('nano')('./cfg/tests.js');
 
@@ -86,6 +86,7 @@ Some future plans are mostly:
 2. Explore adding `_changes` feed
 3. Convenience functions for attachments
 4. Support views
+5. Support bulk load
 
 Great segway to contribute.
 
