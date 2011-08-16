@@ -8,7 +8,7 @@ function db_name(i) { return "doc_bu" + i; }
 function db(i) { return nano.use(db_name(i)); }
 
 /*****************************************************************************
- * bulks_docs                                                                  *
+ * bulks_docs                                                                *
  *****************************************************************************/
 function bulk_docs(callback) {
   nano.db.create(db_name("a"), function () {
@@ -23,8 +23,9 @@ function bulk_docs(callback) {
 function bulk_docs_ok(e,h,b) {
   nano.db.destroy(db_name("a"));
   assert.isNull(e);
-  assert.equal(b,"1");
-  assert.equal(h, "a");
+  assert.equal(b.length, "2");
+  assert.ok(b[0].ok);
+  assert.ok(b[1].ok);
 }
 
 vows.describe('doc.bulk').addBatch({

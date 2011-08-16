@@ -334,20 +334,13 @@ module.exports = exports = nano = function database_module(cfg) {
     * http://wiki.apache.org/couchdb/HTTP_Bulk_Document_API
     *
     * @param {docs:object} The documents as per the CouchDB API (check link)
-    * @param {params:object:optional} Additions to the querystring
     *
     * @see get_doc
     * @see relax
     */
-    function bulk_docs(docs,params,callback) {
-      var opts = {db: db_name, doc: "_all_docs", method: "POST"};
-      if(typeof params === "function") {
-        callback = params;
-        params   = null;
-      }
-      relax(merge_opts_with_params(opts,params),callback);
+    function bulk_docs(docs,callback) {
+      relax({db: db_name, doc: "_bulk_docs", body: docs, method: "POST"},callback);
     } 
-    
 
     public_functions = { info: function(cb) { get_db(db_name,cb); }
                        , replicate: function(target,continuous,cb) {
