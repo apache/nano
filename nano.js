@@ -17,6 +17,7 @@
 var request = require('request')
   , fs      = require('fs')
   , qs      = require('querystring')
+  , _       = require('underscore')
   , error   = require('./error')
   , headers = { "content-type": "application/json", "accept": "application/json" }
   , nano;
@@ -101,19 +102,6 @@ module.exports = exports = nano = function database_module(cfg) {
       }
     });
   }
-  
-  /*
-   * Merges options with params (if any)
-   *
-   * @param {opts:object} The request options
-   * @param {params:object} The aditional query string params
-   */
-   function merge_opts_with_params(opts,params) {
-     if(params) {
-       opts.params = params;
-     }
-     return opts;
-   }
 
  /****************************************************************************
   * db                                                                       *
@@ -304,12 +292,11 @@ module.exports = exports = nano = function database_module(cfg) {
     * @see relax
     */
     function get_doc(doc_name,params,callback) {
-      var opts = {db: db_name, doc: doc_name, method: "GET"};
       if(typeof params === "function") {
         callback = params;
-        params   = null;
+        params   = {};
       }
-      relax(merge_opts_with_params(opts,params),callback);
+      relax({db: db_name, doc: doc_name, method: "GET", params: params},callback);
     }
 
    /*
@@ -321,12 +308,11 @@ module.exports = exports = nano = function database_module(cfg) {
     * @see relax
     */
     function list_docs(params,callback) {
-      var opts = {db: db_name, doc: "_all_docs", method: "GET"};
       if(typeof params === "function") {
         callback = params;
-        params   = null;
+        params   = {};
       }
-      relax(merge_opts_with_params(opts,params),callback);
+      relax({db: db_name, doc: "_all_docs", method: "GET", params: params},callback);
     }
    
    /*
