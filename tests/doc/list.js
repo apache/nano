@@ -16,9 +16,9 @@ var vows     = require('/usr/lib/node_modules/vows/lib/vows')
 function list_doc(callback) {
   nano.db.create(db_name, function () {
     async.parallel(
-      [ function(cb) { db.insert("foobar",  {"foo": "bar"}, cb); }
-      , function(cb) { db.insert("barfoo",  {"bar": "foo"}, cb); }
-      , function(cb) { db.insert("foobaz",  {"foo": "baz"}, cb); }
+      [ function(cb) { db.insert({"foo": "bar"}, "foobar", cb); }
+      , function(cb) { db.insert({"bar": "foo"}, "barfoo", cb); }
+      , function(cb) { db.insert({"foo": "baz"}, "foobaz", cb); }
       ],
       function(err, results){
         db.list(callback);
@@ -39,9 +39,9 @@ function list_doc_ok(e,h,b) {
 function ns_list_doc(callback) {
   nano.db.create(db2_name, function () {
     async.parallel(
-      [ function(cb) { db2.insert("foobar",  {"foo": "bar"}, cb); }
-      , function(cb) { db2.insert("barfoo",  {"bar": "foo"}, cb); }
-      , function(cb) { db2.insert("foobaz",  {"foo": "baz"}, cb); }
+      [ function(cb) { db2.insert({"foo": "bar"}, "foobar", cb); }
+      , function(cb) { db2.insert({"bar": "foo"}, "barfoo", cb); }
+      , function(cb) { db2.insert({"foo": "baz"}, "foobaz", cb); }
       ],
       function(err, results){
         nano.request( { db: db2_name
@@ -67,9 +67,9 @@ function ns_list_doc_ok(e,h,b) {
 function list_doc_params(callback) {
   nano.db.create(db3_name, function () {
     async.parallel(
-      [ function(cb) { db3.insert("foobar",  {"foo": "bar"}, cb); }
-      , function(cb) { db3.insert("barfoo",  {"bar": "foo"}, cb); }
-      , function(cb) { db3.insert("foobaz",  {"foo": "baz"}, cb); }
+      [ function(cb) { db3.insert({"foo": "bar"}, "foobar", cb); }
+      , function(cb) { db3.insert({"bar": "foo"}, "barfoo", cb); }
+      , function(cb) { db3.insert({"foo": "baz"}, "foobaz", cb); }
       ],
       function(err, results){
         db3.list({startkey: '"c"'},callback);

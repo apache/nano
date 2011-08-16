@@ -83,7 +83,7 @@ that's it. don't forget to delete the database you created:
 
 #### functions
 
-`db.insert(doc_name*,doc,callback*)`
+`db.insert(doc,doc_name*,callback*)`
 `db.update(doc_name,rev,doc,callback*)`
 `db.destroy(doc_name,rev,callback*)`
 `db.get(doc_name,params*,callback*)`

@@ -62,12 +62,12 @@ module.exports = exports = nano = function database_module(cfg) {
   * @error {request:socket} There was a problem connecting to CouchDB
   * @error {couch:*} Any error that CouchDB returns when creating a DB
   *
-  * @param {opts} The request options; e.g. {db: "test", method: "GET"}
-  *        {opts.db} REQUIRED The database name
-  *        {opts.method} REQUIRED The HTTP Method
-  *        {opts.doc} The document URI, if any
-  *        {opts.body} The body, if any
-  * @param {callback} The function to callback
+  * @param {opts:object} The request options; e.g. {db: "test", method: "GET"}
+  *        {opts.db:string} The database name
+  *        {opts.method:string} The HTTP Method
+  *        {opts.doc:string:optional} The document URI, if any
+  *        {opts.body:object|string:optional} The JSON body, if any
+  * @param {callback:function:optional} The function to callback
   *
   * @return Execution of the code in your callback. Hopefully you are handling
   */
@@ -107,6 +107,7 @@ module.exports = exports = nano = function database_module(cfg) {
   ****************************************************************************/
  /*
   * Creates a CouchDB Database
+  * http://wiki.apache.org/couchdb/HTTP_database_API
   * 
   * e.g. function recursive_retries_create_db(tried,callback) {
   *        nano.db.create(db_name, function (e,b) {
@@ -120,6 +121,8 @@ module.exports = exports = nano = function database_module(cfg) {
   *          }
   *        });
   *      }
+  *
+  * @param {db_name:string} The name of the database
   *
   * @see relax
   */ 
@@ -135,6 +138,8 @@ module.exports = exports = nano = function database_module(cfg) {
   * Even though this looks sync it is an async function
   * and therefor order is not guaranteed
   *
+  * @param {db_name:string} The name of the database
+  *
   * @see relax
   */
   function destroy_db(db_name, callback) {
@@ -147,6 +152,8 @@ module.exports = exports = nano = function database_module(cfg) {
   * e.g. nano.db.get(db_name, function(e,b) {
   *        console.log(b);
   *      });
+  *
+  * @param {db_name:string} The name of the database
   *
   * @see relax
   */
@@ -172,6 +179,8 @@ module.exports = exports = nano = function database_module(cfg) {
   *
   * e.g. nano.db.compact(db_name);
   *
+  * @param {db_name:string} The name of the database
+  *
   * @see relax
   */
   function compact_db(db_name, callback) {
@@ -183,6 +192,10 @@ module.exports = exports = nano = function database_module(cfg) {
  *
  * e.g. nano.db.replicate(db_1, db_2);
  *
+ * @param {source:string} The name of the source database
+ * @param {target:string} The name of the target database
+ * @param {continuous:bool:optional} Turn on continuous replication
+ * 
  * @see relax
  */
  function replicate_db(source, target, continuous, callback) {
@@ -210,20 +223,23 @@ module.exports = exports = nano = function database_module(cfg) {
 
    /*
     * Inserts a document in a CouchDB Database
+    * http://wiki.apache.org/couchdb/HTTP_Document_API
+    *
+    * @param {doc:object|string} The document
+    * @param {doc_name:string:optional} The name of the document
     *
     * @see relax
     */
-    function insert_doc(doc_name,doc,callback) {
-      var opts = {db: db_name};
-      if(typeof doc === "function") {
-        callback = doc;
-        opts.body = doc_name;
-        opts.method = "POST";
-      }
-      else {
-        opts.doc = doc_name;
-        opts.body = doc;
-        opts.method = "PUT";
+    function insert_doc(doc,doc_name,callback) {
+      var opts = {db: db_name, body: doc, method: "POST"};
+      if(doc_name) {
+        if(typeof doc_name === "function") {
+          callback = doc_name;
+        }
+        else {
+          opts.doc = doc_name;
+          opts.method = "PUT";
+        }
       }
       relax(opts,callback);
     }
@@ -273,6 +289,23 @@ module.exports = exports = nano = function database_module(cfg) {
       }
       relax({db: db_name, doc: "_all_docs", method: "GET", params: params},callback);
     }
+   
+   /*
+    * Bulk update/delete/insert functionality
+    * http://wiki.apache.org/couchdb/HTTP_Bulk_Document_API
+    *
+    * Ignored transactional semantics as they are not ensured by CouchDB
+    *
+    * @see relax
+    */
+    function bulk_docs(docs,params,callback) {
+      if(typeof params === "function") {
+        callback = params;
+        params   = {};
+      }
+      relax({db: db_name, doc: "_all_docs", method: "GET", params: params},callback);
+    } 
+    
 
     public_functions = { info: function(cb) { get_db(db_name,cb); }
                        , replicate: function(target,continuous,cb) {
@@ -290,16 +323,14 @@ module.exports = exports = nano = function database_module(cfg) {
                        , update: update_doc
                        , get: get_doc
                        , destroy: destroy_doc
-                       //, transaction: { modify: insert_batch
-                       //               , read: get_batch
-                       //               }
+                       , bulk: bulk_docs
                        , list: list_docs
                        //, views: {}
-                       , attachment: { insert: insert_att
+                      // , attachment: { insert: insert_att
                      //                , update: update_att
                       //               , get: get_att
                         //             , destroy: destroy_att
-                                     }
+                      //               }
                        };
     return public_functions;
   }

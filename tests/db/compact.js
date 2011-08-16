@@ -11,9 +11,9 @@ function compact_db(callback) {
   nano.db.create("db_co1", function () {
     var db = nano.use("db_co1");
     async.parallel(
-      [ function(cb) { db.insert("foobar",  {"foo": "bar"}, cb); }
-      , function(cb) { db.insert("barfoo",  {"bar": "foo"}, cb); }
-      , function(cb) { db.insert("foobaz",  {"foo": "baz"},
+      [ function(cb) { db.insert({"foo": "bar"},"foobar",cb); }
+      , function(cb) { db.insert({"bar": "foo"},"barfoo",cb); }
+      , function(cb) { db.insert({"foo": "baz"},"foobaz",
           function (e,h,b) { db.destroy("foobaz", b._rev, cb); }); }
       ],
       function(err, results){
@@ -35,7 +35,7 @@ function compact_db_ok(err,list) {
 }
 
 vows.describe('nano.db.compact').addBatch({
-  "destroy_db": {
+  "compact_db": {
     topic: function () { compact_db(this.callback); }
   , "=": compact_db_ok
   }

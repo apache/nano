@@ -10,7 +10,7 @@ var vows    = require('/usr/lib/node_modules/vows/lib/vows')
  *****************************************************************************/
 function destroy_doc(callback) {
   nano.db.create(db_name, function () {
-    db.insert("foo", {foo: "bar"}, function (_,_,b) {
+    db.insert({foo: "bar"}, "foo", function (_,_,b) {
       db.destroy("foo", b.rev, function (e,h,b) {
         callback(e,h,b);
         return;

@@ -12,7 +12,7 @@ var vows     = require('/usr/lib/node_modules/vows/lib/vows')
  *****************************************************************************/
 function get_doc(callback) {
   nano.db.create(db_name, function () {
-    db.insert("foo", {foo: "bar"}, function () {
+    db.insert({foo: "bar"}, "foo", function () {
       db.get("foo", function (e,h,b) {
         callback(e,h,b);
         return;
@@ -34,8 +34,8 @@ function get_doc_ok(e,h,b) {
  *****************************************************************************/
 function get_doc_params(callback) {
   nano.db.create(db2_name, function () {
-    db2.insert("foo", {foo: "bar"}, function () {
-      db2.insert("foo", {foo: "bar"}, function () { // Conflict, no rev
+    db2.insert({foo: "bar"}, "foo", function () {
+      db2.insert({foo: "bar"}, "foo", function () { // Conflict, no rev
         db2.get("foo", {revs_info: true}, function (e,h,b) {
           callback(e,h,b);
           return;

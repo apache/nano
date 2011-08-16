@@ -12,9 +12,9 @@ function replicate_db(callback) {
     var db      = nano.use("db_re1")
       , replica = nano.use("db_re1_replica");
     async.parallel(
-      [ function(cb) { db.insert("foobar",  {"foo": "bar"}, cb); }
-      , function(cb) { db.insert("barfoo",  {"bar": "foo"}, cb); }
-      , function(cb) { db.insert("foobaz",  {"foo": "baz"}, cb); }
+      [ function(cb) { db.insert({"foo": "bar"},"foobar",cb); }
+      , function(cb) { db.insert({"bar": "foo"},"barfoo",cb); }
+      , function(cb) { db.insert({"foo": "baz"},"foobaz",cb); }
       , function(cb) { nano.db.create("db_re1_replica", cb);     }
       ],
       function(err, results) {
