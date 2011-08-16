@@ -19,7 +19,7 @@ var request = require('request')
   , qs      = require('querystring')
   , _       = require('underscore')
   , error   = require('./error')
-  , headers = { "content-type": "application/json", "accept": "application/json" }
+  , headers = { "content-type": "application/json" }
   , nano;
 
 /*
@@ -82,7 +82,11 @@ module.exports = exports = nano = function database_module(cfg) {
       , parsed
       , rh;
     if(!callback) { callback = function () { return; }; } // Void Callback
-    if(opts.doc)  { url += "/" + opts.doc; } // Add the document to the URL
+    if(opts.doc)  { 
+      url += "/" + opts.doc; // Add the document to the URL
+      if(opts.att) { url += "/" + opts.att; } // Add the attachment to the URL
+    } 
+    if(opts.content_type) { req.headers["content-type"] = opts.content_type; }
     if(opts.body) { 
       if(typeof opts.body === "object") { req.body = JSON.stringify(opts.body); }
       else { req.body = opts.body; } // String or binary
