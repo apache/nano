@@ -87,6 +87,7 @@ that's it. don't forget to delete the database you created:
 `db.update(doc_name,rev,doc,callback*)`
 `db.destroy(doc_name,rev,callback*)`
 `db.get(doc_name,params*,callback*)`
+`db.bulk(docs,callback*)`
 `db.list(params*,callback*)`
 
 #### aliases
