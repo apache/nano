@@ -27,8 +27,8 @@ you normally don't want to do that though:
       nano.db.destroy("alice", function(err,headers,response) {
         nano.db.create("alice", function(){
           // specify the database we are going to use
-          var alicedb = nano.use("alice");
-          alicedb.insert("rabbit", {crazy: true}, function(e,h,r){
+          var alice = nano.use("alice");
+          alice.insert("rabbit", {crazy: true}, function(e,h,r){
             if(e) { throw e; }
             console.log("you have inserted the rabbit.")
           });
@@ -37,11 +37,11 @@ you normally don't want to do that though:
 
 the `nano.use` method creates a `scope` where you operate inside a single database. this is just a convenience so you don't have to specify the database name every single time you do an update or delete
 
-      // 5: var alicedb = nano.use("alice");
+      // 5: var alice = nano.use("alice");
 
 in `nano` a callback has always three arguments
 
-      // 6: alicedb.insert("rabbit", {crazy: true}, function(e,h,r){
+      // 6: alice.insert("rabbit", {crazy: true}, function(e,h,r){
       // 7:   if(e) { throw e; }
       // 8:   console.log("you have inserted the rabbit.")
       // 9: });
@@ -59,6 +59,7 @@ that's it. don't forget to delete the database you created:
 ## interfaces
 
 `*` marks optional
+`params` are additional querystring parameters
 
 ### databases (nano)
 
@@ -83,20 +84,20 @@ that's it. don't forget to delete the database you created:
 
 #### functions
 
-`db.insert(doc,doc_name*,callback*)`
-`db.update(doc_name,rev,doc,callback*)`
-`db.destroy(doc_name,rev,callback*)`
-`db.get(doc_name,params*,callback*)`
-`db.bulk(docs,callback*)`
-`db.list(params*,callback*)`
+`doc.insert(doc,doc_name*,callback*)`
+`doc.update(doc_name,rev,doc,callback*)`
+`doc.destroy(doc_name,rev,callback*)`
+`doc.get(doc_name,params*,callback*)`
+`doc.bulk(docs,callback*)`
+`doc.list(params*,callback*)`
 
 #### aliases
 
 `nano.use` simply sets `db_name` in scope. this way you don't have to specify it every time
 
-`nano.db.get: [db.info(callback*)]`
-`nano.db.replicate: [db.replicate(target,continuous*,callback*)]`
-`nano.db.compact: [db.compact(callback*)]`
+`nano.db.get: [doc.info(callback*)]`
+`nano.db.replicate: [doc.replicate(target,continuous*,callback*)]`
+`nano.db.compact: [doc.compact(callback*)]`
 
 ### advanced
 
@@ -114,19 +115,18 @@ to get a document in a specific rev an advanced user might do:
         function (_,_,b) { console.log(b) }
       );
 
-this is the same as (assuming `db = nano.use("alice");`):
+this is the same as (assuming `alice = nano.use("alice");`):
 
-      nano.get("rabbit", {rev: "1-967a00dff5e02add41819138abb3284d"},
-        function (_,_,b) { console.log(b)
+      alice.get("rabbit", {rev: "1-967a00dff5e02add41819138abb3284d"},
+        function (_,_,b) { console.log(b) }
       );
 
 ## roadmap
 
 1. add `pipe` support as provided by request
 2. explore adding `_changes` feed
-3. convenience functions for attachments
-4. support views
-5. support bulk load
+3. `attachments`
+4. `views`
 
 ## contribute
 
