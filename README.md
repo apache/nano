@@ -126,8 +126,6 @@ this is the same as (assuming `db = nano.use("alice");`):
 3. convenience functions for attachments
 4. support views
 5. support bulk load
-6. `_uuids`, `_stats`, `_config`, `_active_tasks`
-7. support `batch` in updates and inserts
 
 ## contribute
 

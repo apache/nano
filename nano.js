@@ -290,9 +290,16 @@ module.exports = exports = nano = function database_module(cfg) {
                        , update: update_doc
                        , get: get_doc
                        , destroy: destroy_doc
-                       //, bulk: bulk_doc
+                       //, transaction: { modify: insert_batch
+                       //               , read: get_batch
+                       //               }
                        , list: list_docs
                        //, views: {}
+                       , attachment: { insert: insert_att
+                     //                , update: update_att
+                      //               , get: get_att
+                        //             , destroy: destroy_att
+                                     }
                        };
     return public_functions;
   }
