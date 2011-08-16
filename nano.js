@@ -194,6 +194,13 @@ module.exports = exports = nano = function database_module(cfg) {
    if(continuous) { body.continuous = true; }
    relax({db: "_replicate", body: body, method: "POST"},callback);
  }
+ 
+ function config(callback) {
+   relax({db: "_config", method: "GET"}, function (e,h,r) {
+     if(e) { callback(e); }
+     callback(null,h,{nano: cfg, couch: r});
+   });
+ }
 
  /****************************************************************************
   * doc                                                                      *
@@ -302,6 +309,7 @@ module.exports = exports = nano = function database_module(cfg) {
                      , use: document_module
                      , scope: document_module        // Alias
                      , request: relax
+                     , config: config
                      , relax: relax                  // Alias
                      , dinosaur: relax               // Alias
                      };

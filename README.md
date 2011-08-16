@@ -35,7 +35,7 @@ you normally don't want to do that though:
         });
       });
 
-the `alicedb.use` method creates a `scope` where you operate inside a single database. this is just a convenience so you don't have to specify the database name every single time you do an update or delete
+the `nano.use` method creates a `scope` where you operate inside a single database. this is just a convenience so you don't have to specify the database name every single time you do an update or delete
 
       // 5: var alicedb = nano.use("alice");
 
@@ -72,6 +72,7 @@ that's it. don't forget to delete the database you created:
 `nano.db.replicate(source,target,continuous*,callback*)`
 `nano.use(db_name)`
 `nano.request(opts,callback*)`
+`nano.config(callback)`
 
 #### aliases
 
@@ -125,7 +126,7 @@ this is the same as (assuming `db = nano.use("alice");`):
 3. convenience functions for attachments
 4. support views
 5. support bulk load
-6. `_uuids`, `_stats`, `_config`, `_active_tasks`, `_all_docs_by_seq`
+6. `_uuids`, `_stats`, `_config`, `_active_tasks`
 7. support `batch` in updates and inserts
 
 ## contribute
