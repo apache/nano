@@ -65,9 +65,11 @@ module.exports = exports = nano = function database_module(cfg) {
   *
   * @param {opts:object} The request options; e.g. {db: "test", method: "GET"}
   *        {opts.db:string} The database name
-  *        {opts.method:string} The HTTP Method
-  *        {opts.doc:string:optional} The document URI, if any
-  *        {opts.body:object|string:optional} The JSON body, if any
+  *        {opts.method:string} The http Method
+  *        {opts.doc:string:optional} The document name
+  *        {opts.att:string:optional} The attachment name
+  *        {opts.content_type:string:optional} The content type, else json will be used
+  *        {opts.body:object|string|binary:optional} The JSON body
   * @param {callback:function:optional} The function to callback
   *
   * @return Execution of the code in your callback. Hopefully you are handling
@@ -83,7 +85,7 @@ module.exports = exports = nano = function database_module(cfg) {
     if(opts.doc)  { url += "/" + opts.doc; } // Add the document to the URL
     if(opts.body) { 
       if(typeof opts.body === "object") { req.body = JSON.stringify(opts.body); }
-      else { req.body = opts.body; }
+      else { req.body = opts.body; } // String or binary
     }
     req.uri = url + (_.isEmpty(params) ? "" : "?" + qs.stringify(params));
     request(req, function(e,h,b){
@@ -326,7 +328,34 @@ module.exports = exports = nano = function database_module(cfg) {
     */
     function bulk_docs(docs,callback) {
       relax({db: db_name, doc: "_bulk_docs", body: docs, method: "POST"},callback);
-    } 
+    }
+
+   /**************************************************************************
+    * attachment                                                             *
+    **************************************************************************/
+   /*
+    * Inserting an attachment
+    * http://wiki.apache.org/couchdb/HTTP_Document_API
+    *
+    * Don't forget that params.rev is required in all cases except when
+    * creating a new document with a new attachment via this method
+    *
+    * @param {doc_name:string} The name of the document
+    * @param {att_name:string} The name of the attachment
+    * @param {att:buffer} The attachment data
+    * @param {content_type:string} The attachment content type
+    * @param {params:object:optional} Additions to the querystring
+    *
+    * @see relax
+    */
+    function insert_att(doc_name,att_name,att,content_type,params,callback) {
+      if(typeof params === "function") {
+        callback = params;
+        params   = {};
+      }
+      relax({ db: db_name, att: att_name, method: "PUT", content_type: content_type
+            , doc: doc_name, params: params, body: att},callback);
+    }
 
     public_functions = { info: function(cb) { get_db(db_name,cb); }
                        , replicate: function(target,continuous,cb) {
@@ -347,11 +376,10 @@ module.exports = exports = nano = function database_module(cfg) {
                        , bulk: bulk_docs
                        , list: list_docs
                        //, views: {}
-                      // , attachment: { insert: insert_att
-                     //                , update: update_att
+                       , attachment: { insert: insert_att
                       //               , get: get_att
                         //             , destroy: destroy_att
-                      //               }
+                                     }
                        };
     return public_functions;
   }
