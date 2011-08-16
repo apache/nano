@@ -259,8 +259,12 @@ module.exports = exports = nano = function database_module(cfg) {
     *
     * @see relax
     */
-    function list_docs(callback) {
-      relax({db: db_name, doc: "_all_docs", method: "GET"},callback);
+    function list_docs(params,callback) {
+      if(typeof params === "function") {
+        callback = params;
+        params   = {};
+      }
+      relax({db: db_name, doc: "_all_docs", method: "GET", params: params},callback);
     }
 
     public_functions = { info: function(cb) { get_db(db_name,cb); }

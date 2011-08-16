@@ -1,11 +1,14 @@
-var vows    = require('/usr/lib/node_modules/vows/lib/vows')
-  , assert  = require('assert')
-  , async   = require('async')
-  , cfg     = require('../../cfg/tests.js')
-  , nano    = require('../../nano')(cfg)
-  , db_name = "doc_li1"
+var vows     = require('/usr/lib/node_modules/vows/lib/vows')
+  , assert   = require('assert')
+  , async    = require('async')
+  , cfg      = require('../../cfg/tests.js')
+  , nano     = require('../../nano')(cfg)
+  , db_name  = "doc_li1"
   , db2_name = "doc_li2"
-  , db      = nano.use(db_name);
+  , db3_name = "doc_li3"
+  , db       = nano.use(db_name)
+  , db2      = nano.use(db2_name)
+  , db3      = nano.use(db3_name);
 
 /*****************************************************************************
  * list_doc                                                                  *
@@ -31,20 +34,21 @@ function list_doc_ok(e,h,b) {
 }
 
 /*****************************************************************************
- * ns_list_doc                                                                  *
+ * ns_list_doc                                                               *
  *****************************************************************************/
 function ns_list_doc(callback) {
   nano.db.create(db2_name, function () {
     async.parallel(
-      [ function(cb) { db.insert("foobar",  {"foo": "bar"}, cb); }
-      , function(cb) { db.insert("barfoo",  {"bar": "foo"}, cb); }
-      , function(cb) { db.insert("foobaz",  {"foo": "baz"}, cb); }
+      [ function(cb) { db2.insert("foobar",  {"foo": "bar"}, cb); }
+      , function(cb) { db2.insert("barfoo",  {"bar": "foo"}, cb); }
+      , function(cb) { db2.insert("foobaz",  {"foo": "baz"}, cb); }
       ],
       function(err, results){
-        db.request( { db: db2_name
-                    , doc: "_all_docs"
-                    , method: "GET"
-                    }, callback);
+        nano.request( { db: db2_name
+                      , doc: "_all_docs"
+                      , method: "GET"
+                      , params: {limit: 1}
+                      }, callback);
       });
   });
 }
@@ -52,14 +56,45 @@ function ns_list_doc(callback) {
 function ns_list_doc_ok(e,h,b) {
   nano.db.destroy(db2_name);
   assert.isNull(e);
+  assert.equal(b.rows.length,1);
+  assert.equal(b.total_rows,3);
+  assert.ok(b.rows);
+}
+
+/*****************************************************************************
+ * list_doc_params                                                           *
+ *****************************************************************************/
+function list_doc_params(callback) {
+  nano.db.create(db3_name, function () {
+    async.parallel(
+      [ function(cb) { db3.insert("foobar",  {"foo": "bar"}, cb); }
+      , function(cb) { db3.insert("barfoo",  {"bar": "foo"}, cb); }
+      , function(cb) { db3.insert("foobaz",  {"foo": "baz"}, cb); }
+      ],
+      function(err, results){
+        db3.list({startkey: '"c"'},callback);
+      });
+  });
+}
+
+function list_doc_params_ok(e,h,b) {
+  nano.db.destroy(db3_name);
+  assert.isNull(e);
+  assert.equal(b.rows.length,2);
   assert.equal(b.total_rows,3);
   assert.ok(b.rows);
 }
 
 
+
 vows.describe('doc.list').addBatch({
   "list_doc": {
     topic: function () { list_doc(this.callback); }
-  , "=": list_doc_ok
-  }
+  , "=": list_doc_ok },
+  "ns_list_doc": {
+    topic: function () { ns_list_doc(this.callback); }
+  , "=": ns_list_doc_ok },
+  "list_doc_params": {
+    topic: function () { list_doc_params(this.callback); }
+  , "=": list_doc_params_ok }
 }).exportTo(module);

@@ -6,7 +6,7 @@ var vows   = require('/usr/lib/node_modules/vows/lib/vows')
 /*****************************************************************************
  * list_db                                                                   *
  *****************************************************************************/
-function list_db (callback) {
+function list_db(callback) {
   nano.db.create("db_li1", function () {
     nano.db.list(function (e,h,b) {
       callback(e,h,b);
@@ -15,7 +15,7 @@ function list_db (callback) {
   });
 }
 
-function list_db_ok (e,h,b) {
+function list_db_ok(e,h,b) {
   nano.db.destroy("db_li1");
   assert.isNull(e);
   assert.notEqual(b.indexOf("db_li1"),-1);

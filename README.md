@@ -86,7 +86,7 @@ that's it. don't forget to delete the database you created:
 `db.update(doc_name,rev,doc,callback*)`
 `db.destroy(doc_name,rev,callback*)`
 `db.get(doc_name,params*,callback*)`
-`db.list(callback*)`
+`db.list(params*,callback*)`
 
 #### aliases
 
@@ -102,7 +102,7 @@ that's it. don't forget to delete the database you created:
       
       nano.request(opts,callback*)
 
-e.g. to get a document in a specific rev an advanced user might do:
+to get a document in a specific rev an advanced user might do:
 
       nano.request( { db: "alice"
                     , doc: "rabbit"
@@ -110,6 +110,12 @@ e.g. to get a document in a specific rev an advanced user might do:
                     , params: { rev: "1-967a00dff5e02add41819138abb3284d"} 
                     },
         function (_,_,b) { console.log(b) }
+      );
+
+this is the same as (assuming `db = nano.use("alice");`):
+
+      nano.get("rabbit", {rev: "1-967a00dff5e02add41819138abb3284d"},
+        function (_,_,b) { console.log(b)
       );
 
 ## roadmap
