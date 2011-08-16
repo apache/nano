@@ -101,6 +101,19 @@ module.exports = exports = nano = function database_module(cfg) {
       }
     });
   }
+  
+  /*
+   * Merges options with params (if any)
+   *
+   * @param {opts:object} The request options
+   * @param {params:object} The aditional query string params
+   */
+   function merge_opts_with_params(opts,params) {
+     if(params) {
+       opts.params = params;
+     }
+     return opts;
+   }
 
  /****************************************************************************
   * db                                                                       *
@@ -187,33 +200,38 @@ module.exports = exports = nano = function database_module(cfg) {
     relax({db: db_name, doc: "_compact", method: "POST"},callback);
   }
 
-/*
- * Replicates a CouchDB Database
- *
- * e.g. nano.db.replicate(db_1, db_2);
- *
- * @param {source:string} The name of the source database
- * @param {target:string} The name of the target database
- * @param {continuous:bool:optional} Turn on continuous replication
- * 
- * @see relax
- */
- function replicate_db(source, target, continuous, callback) {
-   if(typeof continuous === "function") {
-     callback   = continuous;
-     continuous = false;
-   }
-   var body = {source: source, target: target};
-   if(continuous) { body.continuous = true; }
-   relax({db: "_replicate", body: body, method: "POST"},callback);
- }
+ /*
+  * Replicates a CouchDB Database
+  *
+  * e.g. nano.db.replicate(db_1, db_2);
+  *
+  * @param {source:string} The name of the source database
+  * @param {target:string} The name of the target database
+  * @param {continuous:bool:optional} Turn on continuous replication
+  * 
+  * @see relax
+  */
+  function replicate_db(source, target, continuous, callback) {
+    if(typeof continuous === "function") {
+      callback   = continuous;
+      continuous = false;
+    }
+    var body = {source: source, target: target};
+    if(continuous) { body.continuous = true; }
+    relax({db: "_replicate", body: body, method: "POST"},callback);
+  }
  
- function config(callback) {
-   relax({db: "_config", method: "GET"}, function (e,h,r) {
-     if(e) { callback(e); }
-     callback(null,h,{nano: cfg, couch: r});
-   });
- }
+ /*
+  * Returns the CouchDB + Nano Configuration
+  *
+  * @see relax
+  */
+  function config(callback) {
+    relax({db: "_config", method: "GET"}, function (e,h,r) {
+      if(e) { callback(e); }
+      callback(null,h,{nano: cfg, couch: r});
+    });
+  }
 
  /****************************************************************************
   * doc                                                                      *
@@ -245,17 +263,25 @@ module.exports = exports = nano = function database_module(cfg) {
     }
 
    /*
-     * Updates a document in a CouchDB Database
-     *
-     * @see relax
-     */
-     function update_doc(doc_name,rev,doc,callback) {
-       doc._rev = rev;
-       relax({ db: db_name, doc: doc_name, method: "PUT", body: doc},callback);
-     }
+    * Updates a document in a CouchDB Database
+    *
+    *
+    * @param {doc_name:string} The name of the document
+    * @param {rev:string} The previous document revision    
+    * @param {doc:object|string} The document
+    *
+    * @see relax
+    */
+    function update_doc(doc_name,rev,doc,callback) {
+      doc._rev = rev;
+      relax({ db: db_name, doc: doc_name, method: "PUT", body: doc},callback);
+    }
 
    /*
     * Destroy a document from CouchDB Database
+    *
+    * @param {doc_name:string} The name of the document
+    * @param {rev:string} The previous document revision
     *
     * @see relax
     */
@@ -267,43 +293,59 @@ module.exports = exports = nano = function database_module(cfg) {
    /*
     * Get's a document from a CouchDB Database
     *
+    * e.g. db2.get("foo", {revs_info: true}, function (e,h,b) {
+    *        console.log(e,h,b);
+    *        return;
+    *      });
+    *
+    * @param {doc_name:string} The name of the document
+    * @param {params:object:optional} Additions to the querystring
+    *
     * @see relax
     */
     function get_doc(doc_name,params,callback) {
+      var opts = {db: db_name, doc: doc_name, method: "GET"};
       if(typeof params === "function") {
         callback = params;
-        params   = {};
+        params   = null;
       }
-      relax({db: db_name, doc: doc_name, method: "GET", params: params},callback);
+      relax(merge_opts_with_params(opts,params),callback);
     }
 
    /*
     * Lists all the documents in a CouchDB Database
     *
+    * @param {params:object:optional} Additions to the querystring
+    *
+    * @see get_doc
     * @see relax
     */
     function list_docs(params,callback) {
+      var opts = {db: db_name, doc: "_all_docs", method: "GET"};
       if(typeof params === "function") {
         callback = params;
-        params   = {};
+        params   = null;
       }
-      relax({db: db_name, doc: "_all_docs", method: "GET", params: params},callback);
+      relax(merge_opts_with_params(opts,params),callback);
     }
    
    /*
     * Bulk update/delete/insert functionality
     * http://wiki.apache.org/couchdb/HTTP_Bulk_Document_API
     *
-    * Ignored transactional semantics as they are not ensured by CouchDB
+    * @param {docs:object} The documents as per the CouchDB API (check link)
+    * @param {params:object:optional} Additions to the querystring
     *
+    * @see get_doc
     * @see relax
     */
     function bulk_docs(docs,params,callback) {
+      var opts = {db: db_name, doc: "_all_docs", method: "POST"};
       if(typeof params === "function") {
         callback = params;
-        params   = {};
+        params   = null;
       }
-      relax({db: db_name, doc: "_all_docs", method: "GET", params: params},callback);
+      relax(merge_opts_with_params(opts,params),callback);
     } 
     
 
