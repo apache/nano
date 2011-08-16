@@ -85,7 +85,7 @@ module.exports = exports = nano = function database_module(cfg) {
       if(typeof opts.body === "object") { req.body = JSON.stringify(opts.body); }
       else { req.body = opts.body; }
     }
-    req.uri = url + (params ? "?" + qs.stringify(params) : "");
+    req.uri = url + (_.isEmpty(params) ? "" : "?" + qs.stringify(params));
     request(req, function(e,h,b){
       if(e) {
         callback(error.request_err(e,"socket",req,status_code),{},b);
