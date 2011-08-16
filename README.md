@@ -85,7 +85,7 @@ that's it. don't forget to delete the database you created:
 `db.insert(doc_name*,doc,callback*)`
 `db.update(doc_name,rev,doc,callback*)`
 `db.destroy(doc_name,rev,callback*)`
-`db.get(doc_name,callback*)`
+`db.get(doc_name,params*,callback*)`
 `db.list(callback*)`
 
 #### aliases
@@ -102,7 +102,7 @@ that's it. don't forget to delete the database you created:
       
       nano.request(opts,callback*)
 
-e.g. in `nano` there is no way for you to get a document in a specific revision. an advanced user would do:
+e.g. to get a document in a specific rev an advanced user might do:
 
       nano.request( { db: "alice"
                     , doc: "rabbit"

@@ -246,8 +246,12 @@ module.exports = exports = nano = function database_module(cfg) {
     *
     * @see relax
     */
-    function get_doc(doc_name,callback) {
-      relax({db: db_name, doc: doc_name, method: "GET"},callback);
+    function get_doc(doc_name,params,callback) {
+      if(typeof params === "function") {
+        callback = params;
+        params   = {};
+      }
+      relax({db: db_name, doc: doc_name, method: "GET", params: params},callback);
     }
 
    /*
