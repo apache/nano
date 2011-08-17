@@ -1,4 +1,4 @@
-var vows    = require('/usr/lib/node_modules/vows/lib/vows')
+var vows    = require('vows')
   , assert  = require('assert')
   , cfg     = require('../../cfg/tests.js')
   , nano    = require('../../nano')(cfg);

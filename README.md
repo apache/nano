@@ -90,6 +90,9 @@ that's it. don't forget to delete the database you created:
 `doc.get(doc_name,params*,callback*)`
 `doc.bulk(docs,callback*)`
 `doc.list(params*,callback*)`
+`doc.attachment.insert(doc_name,att_name,att,content_type,params*,callback*)`
+`doc.attachment.get(doc_name,att_name,params*,callback*)`
+`doc.attachment.destroy(doc_name,att_name,rev,callback*)`
 
 #### aliases
 

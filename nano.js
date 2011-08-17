@@ -341,6 +341,12 @@ module.exports = exports = nano = function database_module(cfg) {
     * Inserting an attachment
     * http://wiki.apache.org/couchdb/HTTP_Document_API
     *
+    * e.g. 
+    * db.attachment.insert("new", "att", buffer, "image/bmp", {rev: b.rev},
+    *   function(_,_,response) {
+    *     console.log(response);
+    * });
+    *
     * Don't forget that params.rev is required in all cases except when
     * creating a new document with a new attachment via this method
     *
@@ -359,6 +365,38 @@ module.exports = exports = nano = function database_module(cfg) {
       }
       relax({ db: db_name, att: att_name, method: "PUT", content_type: content_type
             , doc: doc_name, params: params, body: att},callback);
+    }
+
+   /*
+    * Get an attachment
+    *
+    * @param {doc_name:string} The name of the document
+    * @param {att_name:string} The name of the attachment
+    * @param {params:object:optional} Additions to the querystring
+    *
+    * @see relax
+    */
+    function get_att(doc_name,att_name,params,callback) {
+      if(typeof params === "function") {
+        callback = params;
+        params   = {};
+      }
+      relax({ db: db_name, att: att_name, method: "GET"
+            , doc: doc_name, params: params},callback);
+    }
+
+   /*
+    * Destroy an attachment
+    *
+    * @param {doc_name:string} The name of the document
+    * @param {att_name:string} The name of the attachment
+    * @param {rev:string} The document last revision
+    *
+    * @see relax
+    */
+    function destroy_att(doc_name,att_name,rev,callback) {
+      relax({ db: db_name, att: att_name, method: "DELETE"
+            , doc: doc_name, params: {rev: rev}},callback);
     }
 
     public_functions = { info: function(cb) { get_db(db_name,cb); }
@@ -381,8 +419,8 @@ module.exports = exports = nano = function database_module(cfg) {
                        , list: list_docs
                        //, views: {}
                        , attachment: { insert: insert_att
-                      //               , get: get_att
-                        //             , destroy: destroy_att
+                                     , get: get_att
+                                     , destroy: destroy_att
                                      }
                        };
     return public_functions;
