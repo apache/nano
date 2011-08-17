@@ -1,7 +1,7 @@
 { "name": "nano"
 , "description": "NanoCouch is a minimalistic driver for CouchDB built on mikeals/request"
 , "homepage": "http://github.com/dscape/nano"
-, "version": "0.4.5"
+, "version": "0.4.6"
 , "author": "Nuno Job <nunojobpinto@gmail.com> (http://nunojob.com)"
 , "keywords": ["CouchDB", "data", "request", "json", "nosql", "micro", "nano"]
 , "dependencies": {"request": "~2.0.4", "underscore": "~1.1.7"}

@@ -28,7 +28,7 @@ you normally don't want to do that though:
         nano.db.create("alice", function(){
           // specify the database we are going to use
           var alice = nano.use("alice");
-          alice.insert("rabbit", {crazy: true}, function(e,h,r){
+          alice.insert({crazy: true}, "rabbit", function(e,h,r){
             if(e) { throw e; }
             console.log("you have inserted the rabbit.")
           });
@@ -41,7 +41,7 @@ the `nano.use` method creates a `scope` where you operate inside a single databa
 
 in `nano` a callback has always three arguments
 
-      // 6: alice.insert("rabbit", {crazy: true}, function(e,h,r){
+      // 6: alice.insert({crazy: true}, "rabbit", function(e,h,r){
       // 7:   if(e) { throw e; }
       // 8:   console.log("you have inserted the rabbit.")
       // 9: });
