@@ -203,6 +203,26 @@ module.exports = exports = nano = function database_module(cfg) {
   }
 
  /*
+  * CouchDB Database _changes feed
+  *
+  * e.g. nano.db.changes(db_name, {since: 2}, function (e,h,r) {
+  *        console.log(r);
+  *      });
+  *
+  * @param {db_name:string} The name of the database
+  * @param {params:object:optional} Additions to the querystring
+  *
+  * @see relax
+  */
+  function changes_db(db_name, params, callback) {
+    if(typeof params === "function") {
+      callback = params;
+      params = {};
+    }
+    relax({db: db_name, doc: "_changes", params: params, method: "GET"},callback);
+  }
+
+ /*
   * Replicates a CouchDB Database
   *
   * e.g. nano.db.replicate(db_1, db_2);
@@ -416,10 +436,7 @@ module.exports = exports = nano = function database_module(cfg) {
                            replicate_db(db_name,target,continuous,cb); 
                          }
                        , compact: function(cb) { compact_db(db_name,cb); }
-                       // hook.io? socket.io?
-                       //, changes: { add: add_listener
-                       //           , remove: remove_listener}
-                       // Probably just support it and let others do this
+                       , changes: function(params,cb) { changes_db(db_name,params,cb); }
                        , insert: insert_doc
                        , update: update_doc
                        , get: get_doc
@@ -444,6 +461,7 @@ module.exports = exports = nano = function database_module(cfg) {
                             , scope: document_module // Alias
                             , compact: compact_db
                             , replicate: replicate_db
+                            , changes: changes_db
                             }
                      , use: document_module
                      , scope: document_module        // Alias
