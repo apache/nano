@@ -15,11 +15,12 @@ function att_get(callback) {
   var buffer = new Buffer(pixel, 'base64');
   nano.db.create(db_name("a"), function () {
     db("a").attachment.insert("new", "att", "Hello", "text/plain",
-      function(_,_,b) {
+      function(e,_,b) {
+        if(e) { callback(e); }
         db("a").attachment.insert("new", "att", buffer, "image/bmp", {rev: b.rev},
-          function (e,_,b) {
-          if(e) { callback(e); }
-          db("a").attachment.get("new", "att", {rev: b.rev}, callback);
+          function (e2,_,b2) {
+          if(e2) { callback(e2); }
+          db("a").attachment.get("new", "att", {rev: b2.rev}, callback);
         });
     });
   });
@@ -27,9 +28,9 @@ function att_get(callback) {
 
 function att_get_ok(e,h,b) {
   nano.db.destroy(db_name("a"));
-  var buffer = new Buffer(b, "binary");
+  var from_buffer = new Buffer(b, 'binary').toString('base64');
   assert.isNull(e);
-  assert.equal(buffer.toString('base64'), pixel);
+  assert.equal(from_buffer, pixel);
 }
 
 vows.describe('attachment.get').addBatch({

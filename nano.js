@@ -88,8 +88,10 @@ module.exports = exports = nano = function database_module(cfg) {
     } 
     if(opts.content_type) { req.headers["content-type"] = opts.content_type; }
     if(opts.body) { 
-      if(typeof opts.body === "object") { req.body = JSON.stringify(opts.body); }
-      else { req.body = opts.body; } // String or binary
+      if (Buffer.isBuffer(opts.body)) {
+        req.body = opts.body; // Raw data
+      }
+      else { req.body = JSON.stringify(opts.body); } // JSON
     }
     req.uri = url + (_.isEmpty(params) ? "" : "?" + qs.stringify(params));
     request(req, function(e,h,b){
@@ -99,7 +101,7 @@ module.exports = exports = nano = function database_module(cfg) {
       }
       rh = h.headers;
       status_code = h.statusCode;
-      parsed = JSON.parse(b);
+      try { parsed = JSON.parse(b); } catch (err) { parsed = b; }
       if (status_code === 200 || status_code === 201 || status_code === 202) { 
         callback(null,rh,parsed); 
       }
