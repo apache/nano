@@ -61,7 +61,7 @@ that's it. don't forget to delete the database you created:
 `*` marks optional
 `params` are additional querystring parameters
 
-## databases (nano)
+## databases (`nano`)
 
 ### functions
 
@@ -80,7 +80,7 @@ that's it. don't forget to delete the database you created:
 `nano.use: [nano.db.use, nano.db.scope, nano.scope]`
 `nano.request: [nano.relax, nano.dinosaur]`
 
-## documents (nano.use)
+## documents (`nano.use`)
 
 ### functions
 
@@ -96,7 +96,7 @@ that's it. don't forget to delete the database you created:
 
 ### aliases
 
-`nano.use` simply sets `db_name` in scope. this way you don't have to specify it every time
+`nano.use` sets `db_name` in scope so you don't have to specify it every time
 
 `nano.db.get: [doc.info(callback*)]`
 `nano.db.replicate: [doc.replicate(target,continuous*,callback*)]`
@@ -128,8 +128,7 @@ this is the same as (assuming `alice = nano.use("alice");`):
 
 1. add `pipe` support as provided by request
 2. explore adding `_changes` feed
-3. `attachments`
-4. `views`
+3. `views`
 
 # contribute
 
