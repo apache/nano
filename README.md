@@ -2,12 +2,12 @@
 
 `nano` (short for nanocouch) is a minimalistic `couchdb` driver for `node.js`
 
-## instalation
+# instalation
 
 1. install [npm][1]
 2. `npm install nano`
 
-## usage
+# usage
 
 a quick example using `nano`
 
@@ -56,14 +56,14 @@ that's it. don't forget to delete the database you created:
 
       nano.db.destroy("alice");
 
-## interfaces
+# interfaces
 
 `*` marks optional
 `params` are additional querystring parameters
 
-### databases (nano)
+## databases (nano)
 
-#### functions
+### functions
 
 `nano.db.create(db_name,callback*)`
 `nano.db.get(db_name,callback*)`
@@ -75,14 +75,14 @@ that's it. don't forget to delete the database you created:
 `nano.request(opts,callback*)`
 `nano.config(callback)`
 
-#### aliases
+### aliases
 
 `nano.use: [nano.db.use, nano.db.scope, nano.scope]`
 `nano.request: [nano.relax, nano.dinosaur]`
 
-### documents (nano.use)
+## documents (nano.use)
 
-#### functions
+### functions
 
 `doc.insert(doc,doc_name*,callback*)`
 `doc.update(doc_name,rev,doc,callback*)`
@@ -94,7 +94,7 @@ that's it. don't forget to delete the database you created:
 `doc.attachment.get(doc_name,att_name,params*,callback*)`
 `doc.attachment.destroy(doc_name,att_name,rev,callback*)`
 
-#### aliases
+### aliases
 
 `nano.use` simply sets `db_name` in scope. this way you don't have to specify it every time
 
@@ -102,7 +102,7 @@ that's it. don't forget to delete the database you created:
 `nano.db.replicate: [doc.replicate(target,continuous*,callback*)]`
 `nano.db.compact: [doc.compact(callback*)]`
 
-### advanced
+## advanced
 
 `nano` is minimalistic so it provides advanced users with a way to code their own extension functions:
       
@@ -124,14 +124,14 @@ this is the same as (assuming `alice = nano.use("alice");`):
         function (_,_,b) { console.log(b) }
       );
 
-## roadmap
+# roadmap
 
 1. add `pipe` support as provided by request
 2. explore adding `_changes` feed
 3. `attachments`
 4. `views`
 
-## contribute
+# contribute
 
 everyone is welcome to contribute. patches, bugfixes, new features
 
@@ -144,7 +144,7 @@ everyone is welcome to contribute. patches, bugfixes, new features
 7. push to your branch `git push origin my_branch`
 8. create an pull request
 
-### tests
+# tests
 
 1. install the packages referred as dev dependencies in `package.json`
 2. browse to `test/` and `./run`.
@@ -153,7 +153,7 @@ always make sure all the tests pass before sending in your pull request!
 
 we will tell santa
 
-## meta
+# meta
 
                     _
                   / _) ROAR! i'm a vegan!
