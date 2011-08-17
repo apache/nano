@@ -128,9 +128,7 @@ this is the same as (assuming `alice = nano.use("alice");`):
 
 # roadmap
 
-1. add `pipe` support as provided by request
-2. explore adding `_changes` feed
-3. `views`
+Check [issues][2]
 
 # contribute
 
