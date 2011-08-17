@@ -69,7 +69,7 @@ that's it. don't forget to delete the database you created:
 `nano.db.get(db_name,callback*)`
 `nano.db.destroy(db_name,callback*)`
 `nano.db.list(callback*)`
-`nano.db.compact(db_name,callback*)`
+`nano.db.compact(db_name,design_name*,callback*)`
 `nano.db.replicate(source,target,continuous*,callback*)`
 `nano.use(db_name)`
 `nano.request(opts,callback*)`
@@ -93,6 +93,7 @@ that's it. don't forget to delete the database you created:
 `doc.attachment.insert(doc_name,att_name,att,content_type,params*,callback*)`
 `doc.attachment.get(doc_name,att_name,params*,callback*)`
 `doc.attachment.destroy(doc_name,att_name,rev,callback*)`
+`doc.view.compact(design_name,callback*)`
 
 ### aliases
 

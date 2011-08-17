@@ -101,7 +101,8 @@ module.exports = exports = nano = function database_module(cfg) {
       }
       rh = h.headers;
       status_code = h.statusCode;
-      try { parsed = JSON.parse(b); } catch (err) { parsed = b; }
+      // Most likely its JSON but sometimes we get a binary attachment
+      try { parsed = JSON.parse(b); } catch (err) { parsed = b; } 
       if (status_code === 200 || status_code === 201 || status_code === 202) { 
         callback(null,rh,parsed); 
       }
@@ -189,11 +190,16 @@ module.exports = exports = nano = function database_module(cfg) {
   * e.g. nano.db.compact(db_name);
   *
   * @param {db_name:string} The name of the database
+  * @param {design_name:string:optional} The name of the design document
   *
   * @see relax
   */
-  function compact_db(db_name, callback) {
-    relax({db: db_name, doc: "_compact", method: "POST"},callback);
+  function compact_db(db_name, design_name, callback) {
+    if(typeof design_name === "function") {
+      callback = design_name;
+      design_name = null;
+    }
+    relax({db: db_name, doc: "_compact", att: design_name, method: "POST"},callback);
   }
 
  /*
@@ -420,7 +426,8 @@ module.exports = exports = nano = function database_module(cfg) {
                        , destroy: destroy_doc
                        , bulk: bulk_docs
                        , list: list_docs
-                       //, views: {}
+                       , view: { compact: function(design_name,cb) {
+                                    compact_db(db_name,design_name,cb); } }
                        , attachment: { insert: insert_att
                                      , get: get_att
                                      , destroy: destroy_att
