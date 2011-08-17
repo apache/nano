@@ -61,7 +61,7 @@ that's it. don't forget to delete the database you created:
 `*` marks optional
 `params` are additional querystring parameters
 
-## databases, et al.
+## databases, et al
 
 ### functions
 
@@ -80,7 +80,7 @@ that's it. don't forget to delete the database you created:
 `nano.use: [nano.db.use, nano.db.scope, nano.scope]`
 `nano.request: [nano.relax, nano.dinosaur]`
 
-## documents, attachments, et al.
+## documents, attachments, et al
 
 ### functions
 
