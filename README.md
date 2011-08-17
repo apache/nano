@@ -128,7 +128,7 @@ this is the same as (assuming `alice = nano.use("alice");`):
 
 # roadmap
 
-Check [issues][2]
+check [issues][2]
 
 # contribute
 
