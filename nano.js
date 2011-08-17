@@ -411,6 +411,7 @@ module.exports = exports = nano = function database_module(cfg) {
                        // hook.io? socket.io?
                        //, changes: { add: add_listener
                        //           , remove: remove_listener}
+                       // Probably just support it and let others do this
                        , insert: insert_doc
                        , update: update_doc
                        , get: get_doc
