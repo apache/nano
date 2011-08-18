@@ -1,5 +1,5 @@
 /*
- * Generic Error
+ * generic error
  *
  * e.g. missing rev information:
  *
@@ -22,21 +22,19 @@
  *   }
  * }
  * 
- * Extension on Error to support more complex logic.
+ * extension on error to support more complex logic.
  * 
- * @param {error} Either an Error, or a string that will be casted into new
- *        error.
- * @param {code} The recognizable error code
- * @param {http_code} The HTTP code from CouchDB
+ * @param {error:error|string} the error or a reason for the error
+ * @param {code:string} the recognizable error code
+ * @param {http_code:integer:optional} the http code from couchdb
+ * @param {request:object} the request that was made to couch
+ * @param {type:string} a namespace for the error, e.g. couch 
  *
- * @return An error augmented an driver specific code
+ * @return an augmented error that helps you know more than the stack trace
  */
 function gen_err(error,code,request,http_code,type) {
   if(typeof error === 'string') { error = new Error(error); }
-  if(!type) {
-    type      = http_code;
-    http_code = 500;
-  }
+  if(!type) { type = http_code; http_code = 500; }
   error.error      = code;
   error.http_code  = http_code;
   error.namespace  = type;
@@ -44,5 +42,5 @@ function gen_err(error,code,request,http_code,type) {
   return error;
 }
 
-exports.request_err = function (e,c,r,h) { return gen_err(e,c,r,h,"request"); }; 
-exports.couch_err   = function (e,c,r,h) { return gen_err(e,c,r,h,"couch");   }; 
+exports.request_err = function (e,c,r,h) { return gen_err(e,c,r,h,"request");};
+exports.couch_err   = function (e,c,r,h) { return gen_err(e,c,r,h,"couch");  };

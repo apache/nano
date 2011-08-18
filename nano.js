@@ -1,18 +1,18 @@
 /* minimal couch in node
  *
- * Copyright 2011 Nuno Job <nunojob.com> (oO)--',--
+ * copyright 2011 nuno job <nunojob.com> (oO)--',--
  * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * licensed under the apache license, version 2.0 (the "license");
+ * you may not use this file except in compliance with the license.
+ * you may obtain a copy of the license at
  * 
  *     http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * unless required by applicable law or agreed to in writing, software
+ * distributed under the license is distributed on an "as is" basis,
+ * without warranties or conditions of any kind, either express or implied.
+ * see the license for the specific language governing permissions and
+ * limitations under the license.
  */
 var request = require('request')
   , fs      = require('fs')
@@ -23,57 +23,52 @@ var request = require('request')
   , nano;
 
 /*
- * Nano is a library that helps you building requests on top of mikeals/request
- * No more, no less.
+ * nano is a library that helps you building requests to couchdb 
+ * that is built on top of mikeals/request
  *
+ * no more, no less
+ * be creative. be silly. have fun! relax (and don't forget to compact).
  *
- * - As simple as possible, but no simpler than that
- * - It is not an ORM for CouchDB
- * - It is not all fancy and RoR like
- * - It is not meant to prevent you from doing stupid things.
- *   Be creative. Be silly. Do stupid things. I won't thow exceptions back at you.
- *
- *   Have fun! Relax, and don't forget to compact.
- *   Dinosaurs spaceships ftw!
+ * dinosaurs spaceships!
  */
 module.exports = exports = nano = function database_module(cfg) {
   var public_functions = {};
   if(typeof cfg === "string") {
-    cfg = require(cfg); // No CFG? Maybe it's a file path?
+    cfg = require(cfg); // no cfg? maybe it's a file path?
   }
-  if(cfg.proxy) { // Proxy support
-    request = request.defaults({proxy: cfg.proxy});
+  if(cfg.proxy) {
+    request = request.defaults({proxy: cfg.proxy}); // proxy support
   }
 
  /****************************************************************************
-  * aux                                                                      *
+  * relax                                                                      *
   ****************************************************************************/
  /*
-  * Request DB
+  * relax
   *
-  * An auxiliary function to do the request to CouchDB
+  * base for all request using nano
+  * this function assumes familiarity with the couchdb api
   *
-  * Important Announcement: _airplane_voice_ 
-  * This function is public but does not try to prevent you from shooting
-  * yourself in the foot. Use only if you know _exactly_ what you are trying
-  * to do. Plus if you are using it directly and it's not part of the interface
-  * please consider emailing me about that, or telling me what it is, or
-  * doing a pull request!
+  * e.g.
+  * nano.request( { db: "alice"
+  *               , doc: "rabbit"
+  *               , method: "GET"
+  *               , params: { rev: "1-967a00dff5e02add41819138abb3284d"} 
+  *               },
+  *   function (_,_,b) { console.log(b) });
   *
-  * @error {request:socket} There was a problem connecting to CouchDB
-  * @error {couch:*} Any error that CouchDB returns when creating a DB
+  * @error {request:socket} problem connecting to couchdb
+  * @error {couch:*} an error proxied from couchdb
   *
-  * @param {opts:object} The request options; e.g. {db: "test", method: "GET"}
-  *        {opts.db:string} The database name
-  *        {opts.method:string:optional} The http method, defaults to GET
-  *        {opts.doc:string:optional} The document name
-  *        {opts.att:string:optional} The attachment name
-  *        {opts.content_type:string:optional} The content type, else json will be used
-  *        {opts.body:object|string|binary:optional} The JSON body
-  *        {opts.encoding:string:optional} Encoding, usefull for getting attachments
-  * @param {callback:function:optional} The function to callback
-  *
-  * @return Execution of the code in your callback. Hopefully you are handling
+  * @param {opts:object} request options; e.g. {db: "test", method: "GET"}
+  *        {opts.db:string} database name
+  *        {opts.method:string:optional} http method, defaults to "GET"
+  *        {opts.doc:string:optional} document name
+  *        {opts.att:string:optional} attachment name
+  *        {opts.content_type:string:optional} content type, default to json
+  *        {opts.body:object|string|binary:optional} document or attachment body
+  *        {opts.encoding:string:optional} encoding for attachments
+  * @param {callback:function:optional} function to call back
   */
   function relax(opts,callback) {
     var url    = cfg.database(opts.db)
@@ -82,33 +77,30 @@ module.exports = exports = nano = function database_module(cfg) {
       , status_code
       , parsed
       , rh;
-    if(!callback) { callback = function () { return; }; } // Void Callback
+    if(!callback) { callback = function () { return; }; } // void callback
     if(opts.doc)  { 
-      url += "/" + opts.doc; // Add the document to the URL
-      if(opts.att) { url += "/" + opts.att; } // Add the attachment to the URL
+      url += "/" + opts.doc; // add the document to the url
+      if(opts.att) { url += "/" + opts.att; } // add the attachment to the url
     } 
     if(opts.content_type) { req.headers["content-type"] = opts.content_type; }
     if(opts.body) { 
       if (Buffer.isBuffer(opts.body)) {
-        req.body = opts.body; // Raw data
+        req.body = opts.body; // raw data
       }
-      else { req.body = JSON.stringify(opts.body); } // JSON
+      else { req.body = JSON.stringify(opts.body); } // json data
     }
     if(opts.encoding) { req.encoding = opts.encoding; }
     req.uri = url + (_.isEmpty(params) ? "" : "?" + qs.stringify(params));
     request(req, function(e,h,b){
-      if(e) {
-        callback(error.request_err(e,"socket",req,status_code),{},b);
-        return;
-      }
+      if(e) { return callback(error.request_err(e,"socket",req,status_code),{},b); }
       rh = h.headers;
       status_code = h.statusCode;
-      // Most likely its JSON but sometimes we get a binary attachment
+      // did we get json or binary?
       try { parsed = JSON.parse(b); } catch (err) { parsed = b; } 
-      if (status_code === 200 || status_code === 201 || status_code === 202) { 
+      if (status_code === 200 || status_code === 201 || status_code === 202) {
         callback(null,rh,parsed); 
       }
-      else { // Proxy the error
+      else { // proxy the error directly from couchdb
         callback(error.couch_err(parsed.reason,parsed.error,req,status_code),rh,parsed);
       }
     });
@@ -118,7 +110,7 @@ module.exports = exports = nano = function database_module(cfg) {
   * db                                                                       *
   ****************************************************************************/
  /*
-  * Creates a CouchDB Database
+  * creates a couchdb database
   * http://wiki.apache.org/couchdb/HTTP_database_API
   * 
   * e.g. function recursive_retries_create_db(tried,callback) {
@@ -134,7 +126,7 @@ module.exports = exports = nano = function database_module(cfg) {
   *        });
   *      }
   *
-  * @param {db_name:string} The name of the database
+  * @param {db_name:string} database name
   *
   * @see relax
   */ 
@@ -143,14 +135,13 @@ module.exports = exports = nano = function database_module(cfg) {
   }
   
  /*
-  * Annihilates a CouchDB Database
+  * annihilates a couchdb database
   *
   * e.g. nano.db.delete(db_name);
   *
-  * Even though this looks sync it is an async function
-  * and therefor order is not guaranteed
+  * even though this examples looks sync it is an async function
   *
-  * @param {db_name:string} The name of the database
+  * @param {db_name:string} database name
   *
   * @see relax
   */
@@ -159,13 +150,13 @@ module.exports = exports = nano = function database_module(cfg) {
   }
 
  /*
-  * Gets information about a CouchDB Database
+  * gets information about a couchdb database
   *
   * e.g. nano.db.get(db_name, function(e,b) {
   *        console.log(b);
   *      });
   *
-  * @param {db_name:string} The name of the database
+  * @param {db_name:string} database name
   *
   * @see relax
   */
@@ -174,7 +165,7 @@ module.exports = exports = nano = function database_module(cfg) {
   }
   
  /*
-  * Lists all the databases in CouchDB
+  * lists all the databases in couchdb
   *
   * e.g. nano.db.list(function(e,b) {
   *        console.log(b);
@@ -187,12 +178,12 @@ module.exports = exports = nano = function database_module(cfg) {
   }
 
  /*
-  * Compacts a CouchDB Database
+  * compacts a couchdb database
   *
   * e.g. nano.db.compact(db_name);
   *
-  * @param {db_name:string} The name of the database
-  * @param {design_name:string:optional} The name of the design document
+  * @param {db_name:string} database name
+  * @param {design_name:string:optional} design document name
   *
   * @see relax
   */
@@ -205,14 +196,14 @@ module.exports = exports = nano = function database_module(cfg) {
   }
 
  /*
-  * CouchDB Database _changes feed
+  * couchdb database _changes feed
   *
   * e.g. nano.db.changes(db_name, {since: 2}, function (e,h,r) {
   *        console.log(r);
   *      });
   *
-  * @param {db_name:string} The name of the database
-  * @param {params:object:optional} Additions to the querystring
+  * @param {db_name:string} database name
+  * @param {params:object:optional} additions to the querystring
   *
   * @see relax
   */
@@ -225,13 +216,13 @@ module.exports = exports = nano = function database_module(cfg) {
   }
 
  /*
-  * Replicates a CouchDB Database
+  * replicates a couchdb database
   *
   * e.g. nano.db.replicate(db_1, db_2);
   *
-  * @param {source:string} The name of the source database
-  * @param {target:string} The name of the target database
-  * @param {continuous:bool:optional} Turn on continuous replication
+  * @param {source:string} name of the source database
+  * @param {target:string} name of the target database
+  * @param {continuous:bool:optional} continuous replication on?
   * 
   * @see relax
   */
@@ -246,7 +237,7 @@ module.exports = exports = nano = function database_module(cfg) {
   }
  
  /*
-  * Returns the CouchDB + Nano Configuration
+  * returns couchdb + nano configuration
   *
   * @see relax
   */
@@ -264,11 +255,11 @@ module.exports = exports = nano = function database_module(cfg) {
     var public_functions = {};
 
    /*
-    * Inserts a document in a CouchDB Database
+    * inserts a document in a couchdb database
     * http://wiki.apache.org/couchdb/HTTP_Document_API
     *
-    * @param {doc:object|string} The document
-    * @param {doc_name:string:optional} The name of the document
+    * @param {doc:object|string} document body
+    * @param {doc_name:string:optional} document name
     *
     * @see relax
     */
@@ -287,12 +278,12 @@ module.exports = exports = nano = function database_module(cfg) {
     }
 
    /*
-    * Updates a document in a CouchDB Database
+    * updates a document in a couchdb database
     *
     *
-    * @param {doc_name:string} The name of the document
-    * @param {rev:string} The previous document revision    
-    * @param {doc:object|string} The document
+    * @param {doc_name:string} document name
+    * @param {rev:string} previous document revision    
+    * @param {doc:object|string} document body
     *
     * @see relax
     */
@@ -302,10 +293,10 @@ module.exports = exports = nano = function database_module(cfg) {
     }
 
    /*
-    * Destroy a document from CouchDB Database
+    * destroy a document from a couchdb database
     *
-    * @param {doc_name:string} The name of the document
-    * @param {rev:string} The previous document revision
+    * @param {doc_name:string} document name
+    * @param {rev:string} previous document revision
     *
     * @see relax
     */
@@ -315,15 +306,15 @@ module.exports = exports = nano = function database_module(cfg) {
     }
 
    /*
-    * Get's a document from a CouchDB Database
+    * get a document from a couchdb database
     *
     * e.g. db2.get("foo", {revs_info: true}, function (e,h,b) {
     *        console.log(e,h,b);
     *        return;
     *      });
     *
-    * @param {doc_name:string} The name of the document
-    * @param {params:object:optional} Additions to the querystring
+    * @param {doc_name:string} document name
+    * @param {params:object:optional} additions to the querystring
     *
     * @see relax
     */
@@ -336,9 +327,9 @@ module.exports = exports = nano = function database_module(cfg) {
     }
 
    /*
-    * Lists all the documents in a CouchDB Database
+    * lists all the documents in a couchdb database
     *
-    * @param {params:object:optional} Additions to the querystring
+    * @param {params:object:optional} additions to the querystring
     *
     * @see get_doc
     * @see relax
@@ -352,10 +343,10 @@ module.exports = exports = nano = function database_module(cfg) {
     }
    
    /*
-    * Bulk update/delete/insert functionality
-    * http://wiki.apache.org/couchdb/HTTP_Bulk_Document_API
+    * bulk update/delete/insert functionality
+    * [1]: http://wiki.apache.org/couchdb/HTTP_Bulk_Document_API
     *
-    * @param {docs:object} The documents as per the CouchDB API (check link)
+    * @param {docs:object} documents as per the couchdb api[1]
     *
     * @see get_doc
     * @see relax
@@ -368,8 +359,8 @@ module.exports = exports = nano = function database_module(cfg) {
     * attachment                                                             *
     **************************************************************************/
    /*
-    * Inserting an attachment
-    * http://wiki.apache.org/couchdb/HTTP_Document_API
+    * inserting an attachment
+    * [2]: http://wiki.apache.org/couchdb/HTTP_Document_API
     *
     * e.g. 
     * db.attachment.insert("new", "att", buffer, "image/bmp", {rev: b.rev},
@@ -377,14 +368,15 @@ module.exports = exports = nano = function database_module(cfg) {
     *     console.log(response);
     * });
     *
-    * Don't forget that params.rev is required in all cases except when
-    * creating a new document with a new attachment via this method
+    * don't forget that params.rev is required in most cases. only exception
+    * is when creating a new document with a new attachment. consult [2] for
+    * details
     *
-    * @param {doc_name:string} The name of the document
-    * @param {att_name:string} The name of the attachment
-    * @param {att:buffer} The attachment data
-    * @param {content_type:string} The attachment content type
-    * @param {params:object:optional} Additions to the querystring
+    * @param {doc_name:string} document name
+    * @param {att_name:string} attachment name
+    * @param {att:buffer} attachment data
+    * @param {content_type:string} attachment content-type
+    * @param {params:object:optional} additions to the querystring
     *
     * @see relax
     */
@@ -398,11 +390,11 @@ module.exports = exports = nano = function database_module(cfg) {
     }
 
    /*
-    * Get an attachment
+    * get an attachment
     *
-    * @param {doc_name:string} The name of the document
-    * @param {att_name:string} The name of the attachment
-    * @param {params:object:optional} Additions to the querystring
+    * @param {doc_name:string} document name
+    * @param {att_name:string} attachment name
+    * @param {params:object:optional} additions to the querystring
     *
     * @see relax
     */
@@ -411,16 +403,16 @@ module.exports = exports = nano = function database_module(cfg) {
         callback = params;
         params   = {};
       }
-      relax({ db: db_name, att: att_name, method: "GET"
-            , doc: doc_name, params: params, encoding: "binary"},callback);
+      relax({ db: db_name, att: att_name, method: "GET", doc: doc_name
+            , params: params, encoding: "binary"},callback);
     }
 
    /*
-    * Destroy an attachment
+    * destroy an attachment
     *
-    * @param {doc_name:string} The name of the document
-    * @param {att_name:string} The name of the attachment
-    * @param {rev:string} The document last revision
+    * @param {doc_name:string} document name
+    * @param {att_name:string} attachment name
+    * @param {rev:string} previous document revision
     *
     * @see relax
     */
@@ -459,35 +451,34 @@ module.exports = exports = nano = function database_module(cfg) {
                             , get: get_db
                             , destroy: destroy_db
                             , list: list_dbs
-                            , use: document_module   // Alias
-                            , scope: document_module // Alias
+                            , use: document_module   // alias
+                            , scope: document_module // alias
                             , compact: compact_db
                             , replicate: replicate_db
                             , changes: changes_db
                             }
                      , use: document_module
-                     , scope: document_module        // Alias
+                     , scope: document_module        // alias
                      , request: relax
                      , config: config
-                     , relax: relax                  // Alias
-                     , dinosaur: relax               // Alias
+                     , relax: relax                  // alias
+                     , dinosaur: relax               // alias
                      };
   return public_functions;
 };
 
 /*
- * And now an ASCII Dinosaur
+ * and now an ascii dinosaur
  *              _
- *            / _) ROAR! I'm a vegan!
+ *            / _) ROAR! i'm a vegan!
  *     .-^^^-/ /
  *  __/       /
  * /__.|_|-|_|
  *
- * Thanks for visiting! Come Again!
+ * thanks for visiting! come again!
  * 
- * Flight list:
- *   LH1059 A321
- *   LH1178 A321
+ * LH1059-A321
+ * LH1178-A321
  */
 
 nano.version = JSON.parse(
