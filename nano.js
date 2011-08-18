@@ -1,4 +1,4 @@
-/* Minimal Couch In Node
+/* minimal couch in node
  *
  * Copyright 2011 Nuno Job <nunojob.com> (oO)--',--
  * 
@@ -65,18 +65,19 @@ module.exports = exports = nano = function database_module(cfg) {
   *
   * @param {opts:object} The request options; e.g. {db: "test", method: "GET"}
   *        {opts.db:string} The database name
-  *        {opts.method:string} The http Method
+  *        {opts.method:string:optional} The http method, defaults to GET
   *        {opts.doc:string:optional} The document name
   *        {opts.att:string:optional} The attachment name
   *        {opts.content_type:string:optional} The content type, else json will be used
   *        {opts.body:object|string|binary:optional} The JSON body
+  *        {opts.encoding:string:optional} Encoding, usefull for getting attachments
   * @param {callback:function:optional} The function to callback
   *
   * @return Execution of the code in your callback. Hopefully you are handling
   */
   function relax(opts,callback) {
     var url    = cfg.database(opts.db)
-      , req    = { method: opts.method, headers: headers }
+      , req    = { method: (opts.method || "GET"), headers: headers }
       , params = opts.params
       , status_code
       , parsed
@@ -93,6 +94,7 @@ module.exports = exports = nano = function database_module(cfg) {
       }
       else { req.body = JSON.stringify(opts.body); } // JSON
     }
+    if(opts.encoding) { req.encoding = opts.encoding; }
     req.uri = url + (_.isEmpty(params) ? "" : "?" + qs.stringify(params));
     request(req, function(e,h,b){
       if(e) {
@@ -410,7 +412,7 @@ module.exports = exports = nano = function database_module(cfg) {
         params   = {};
       }
       relax({ db: db_name, att: att_name, method: "GET"
-            , doc: doc_name, params: params},callback);
+            , doc: doc_name, params: params, encoding: "binary"},callback);
     }
 
    /*
@@ -482,6 +484,10 @@ module.exports = exports = nano = function database_module(cfg) {
  * /__.|_|-|_|
  *
  * Thanks for visiting! Come Again!
+ * 
+ * Flight list:
+ *   LH1059 A321
+ *   LH1178 A321
  */
 
 nano.version = JSON.parse(

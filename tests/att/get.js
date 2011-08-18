@@ -11,6 +11,13 @@ function db(i) { return nano.use(db_name(i)); }
 /*****************************************************************************
  * att_get                                                                   *
  *****************************************************************************/
+/*
+ * Pipe example:
+ *   require('request')
+ *     .get('http://localhost:5984/att_gea/new/att')
+ *     .pipe(require('fs').createWriteStream('/Users/njob/Desktop/temp.bmp'))
+ *
+ */
 function att_get(callback) {
   var buffer = new Buffer(pixel, 'base64');
   nano.db.create(db_name("a"), function () {
@@ -27,9 +34,9 @@ function att_get(callback) {
 }
 
 function att_get_ok(e,h,b) {
-  nano.db.destroy(db_name("a"));
-  var from_buffer = new Buffer(b, 'binary').toString('base64');
   assert.isNull(e);
+  nano.db.destroy(db_name("a"));
+  var from_buffer = new Buffer(b, "binary").toString("base64");
   assert.equal(from_buffer, pixel);
 }
 
