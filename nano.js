@@ -77,7 +77,6 @@ module.exports = exports = nano = function database_module(cfg) {
       , status_code
       , parsed
       , rh;
-    if(!callback) { callback = function () { return; }; } // void callback
     if(opts.doc)  { 
       url += "/" + opts.doc; // add the document to the url
       if(opts.att) { url += "/" + opts.att; } // add the attachment to the url
@@ -91,13 +90,14 @@ module.exports = exports = nano = function database_module(cfg) {
     }
     if(opts.encoding) { req.encoding = opts.encoding; }
     req.uri = url + (_.isEmpty(params) ? "" : "?" + qs.stringify(params));
+    if(!callback) { return request(req); } // void callback
     request(req, function(e,h,b){
       if(e) { return callback(error.request_err(e,"socket",req,status_code),{},b); }
       rh = h.headers;
       status_code = h.statusCode;
       // did we get json or binary?
       try { parsed = JSON.parse(b); } catch (err) { parsed = b; } 
-      if (status_code === 200 || status_code === 201 || status_code === 202) {
+      if (status_code >= 200 && status_code < 300) {
         callback(null,rh,parsed); 
       }
       else { // proxy the error directly from couchdb
@@ -131,7 +131,7 @@ module.exports = exports = nano = function database_module(cfg) {
   * @see relax
   */ 
   function create_db(db_name, callback) {
-    relax({db: db_name, method: "PUT"},callback);
+    return relax({db: db_name, method: "PUT"},callback);
   }
   
  /*
@@ -146,7 +146,7 @@ module.exports = exports = nano = function database_module(cfg) {
   * @see relax
   */
   function destroy_db(db_name, callback) {
-    relax({db: db_name, method: "DELETE"},callback);
+    return relax({db: db_name, method: "DELETE"},callback);
   }
 
  /*
@@ -161,7 +161,7 @@ module.exports = exports = nano = function database_module(cfg) {
   * @see relax
   */
   function get_db(db_name, callback) {
-    relax({db: db_name, method: "GET"},callback);
+    return relax({db: db_name, method: "GET"},callback);
   }
   
  /*
@@ -174,7 +174,7 @@ module.exports = exports = nano = function database_module(cfg) {
   * @see relax
   */
   function list_dbs(callback) {
-    relax({db: "_all_dbs", method: "GET"},callback);
+    return relax({db: "_all_dbs", method: "GET"},callback);
   }
 
  /*
@@ -192,7 +192,7 @@ module.exports = exports = nano = function database_module(cfg) {
       callback = design_name;
       design_name = null;
     }
-    relax({db: db_name, doc: "_compact", att: design_name, method: "POST"},callback);
+    return relax({db: db_name, doc: "_compact", att: design_name, method: "POST"},callback);
   }
 
  /*
@@ -212,7 +212,7 @@ module.exports = exports = nano = function database_module(cfg) {
       callback = params;
       params = {};
     }
-    relax({db: db_name, doc: "_changes", params: params, method: "GET"},callback);
+    return relax({db: db_name, doc: "_changes", params: params, method: "GET"},callback);
   }
 
  /*
@@ -233,7 +233,7 @@ module.exports = exports = nano = function database_module(cfg) {
     }
     var body = {source: source, target: target};
     if(continuous) { body.continuous = true; }
-    relax({db: "_replicate", body: body, method: "POST"},callback);
+    return relax({db: "_replicate", body: body, method: "POST"},callback);
   }
  
  /*
@@ -242,7 +242,7 @@ module.exports = exports = nano = function database_module(cfg) {
   * @see relax
   */
   function config(callback) {
-    relax({db: "_config", method: "GET"}, function (e,h,r) {
+    return relax({db: "_config", method: "GET"}, function (e,h,r) {
       if(e) { callback(e); }
       callback(null,h,{nano: cfg, couch: r});
     });
@@ -274,7 +274,7 @@ module.exports = exports = nano = function database_module(cfg) {
           opts.method = "PUT";
         }
       }
-      relax(opts,callback);
+      return relax(opts,callback);
     }
 
    /*
@@ -289,7 +289,7 @@ module.exports = exports = nano = function database_module(cfg) {
     */
     function update_doc(doc_name,rev,doc,callback) {
       doc._rev = rev;
-      relax({ db: db_name, doc: doc_name, method: "PUT", body: doc},callback);
+      return relax({ db: db_name, doc: doc_name, method: "PUT", body: doc},callback);
     }
 
    /*
@@ -301,7 +301,7 @@ module.exports = exports = nano = function database_module(cfg) {
     * @see relax
     */
     function destroy_doc(doc_name,rev,callback) {
-      relax({db: db_name, doc: doc_name, method: "DELETE", params: {rev: rev}},
+      return relax({db: db_name, doc: doc_name, method: "DELETE", params: {rev: rev}},
         callback);
     }
 
@@ -323,7 +323,7 @@ module.exports = exports = nano = function database_module(cfg) {
         callback = params;
         params   = {};
       }
-      relax({db: db_name, doc: doc_name, method: "GET", params: params},callback);
+      return relax({db: db_name, doc: doc_name, method: "GET", params: params},callback);
     }
 
    /*
@@ -339,7 +339,7 @@ module.exports = exports = nano = function database_module(cfg) {
         callback = params;
         params   = {};
       }
-      relax({db: db_name, doc: "_all_docs", method: "GET", params: params},callback);
+      return relax({db: db_name, doc: "_all_docs", method: "GET", params: params},callback);
     }
    
    /*
@@ -352,7 +352,7 @@ module.exports = exports = nano = function database_module(cfg) {
     * @see relax
     */
     function bulk_docs(docs,callback) {
-      relax({db: db_name, doc: "_bulk_docs", body: docs, method: "POST"},callback);
+      return relax({db: db_name, doc: "_bulk_docs", body: docs, method: "POST"},callback);
     }
 
    /**************************************************************************
@@ -385,8 +385,8 @@ module.exports = exports = nano = function database_module(cfg) {
         callback = params;
         params   = {};
       }
-      relax({ db: db_name, att: att_name, method: "PUT", content_type: content_type
-            , doc: doc_name, params: params, body: att},callback);
+      return relax({ db: db_name, att: att_name, method: "PUT", content_type: content_type
+                   , doc: doc_name, params: params, body: att},callback);
     }
 
    /*
@@ -403,8 +403,8 @@ module.exports = exports = nano = function database_module(cfg) {
         callback = params;
         params   = {};
       }
-      relax({ db: db_name, att: att_name, method: "GET", doc: doc_name
-            , params: params, encoding: "binary"},callback);
+      return relax({ db: db_name, att: att_name, method: "GET", doc: doc_name
+                   , params: params, encoding: "binary"},callback);
     }
 
    /*
@@ -417,20 +417,22 @@ module.exports = exports = nano = function database_module(cfg) {
     * @see relax
     */
     function destroy_att(doc_name,att_name,rev,callback) {
-      relax({ db: db_name, att: att_name, method: "DELETE"
-            , doc: doc_name, params: {rev: rev}},callback);
+      return relax({ db: db_name, att: att_name, method: "DELETE"
+                  , doc: doc_name, params: {rev: rev}},callback);
     }
 
-    public_functions = { info: function(cb) { get_db(db_name,cb); }
+    public_functions = { info: function(cb) { return get_db(db_name,cb); }
                        , replicate: function(target,continuous,cb) {
                            if(typeof continuous === "function") {
                              cb         = continuous;
                              continuous = false;
                            }
-                           replicate_db(db_name,target,continuous,cb); 
+                           return replicate_db(db_name,target,continuous,cb); 
                          }
-                       , compact: function(cb) { compact_db(db_name,cb); }
-                       , changes: function(params,cb) { changes_db(db_name,params,cb); }
+                       , compact: function(cb) { return compact_db(db_name,cb); }
+                       , changes: function(params,cb) { 
+                           return changes_db(db_name,params,cb); 
+                         }
                        , insert: insert_doc
                        , update: update_doc
                        , get: get_doc
@@ -438,7 +440,8 @@ module.exports = exports = nano = function database_module(cfg) {
                        , bulk: bulk_docs
                        , list: list_docs
                        , view: { compact: function(design_name,cb) {
-                                    compact_db(db_name,design_name,cb); } }
+                                   return compact_db(db_name,design_name,cb); } 
+                               }
                        , attachment: { insert: insert_att
                                      , get: get_att
                                      , destroy: destroy_att

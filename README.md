@@ -126,6 +126,13 @@ this is the same as (assuming `alice = nano.use("alice");`):
         function (_,_,b) { console.log(b) }
       );
 
+### pipe
+
+you can pipe in `nano` just like you do in express. this is available in all methods:
+
+      alice.attachment.get("sugar", "att", {rev: rev})
+        .pipe(fs.createWriteStream("/tmp/sugar-for-rabbit"));
+
 # roadmap
 
 check [issues][2]

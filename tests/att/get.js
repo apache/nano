@@ -1,6 +1,5 @@
 var vows     = require('vows')
   , assert   = require('assert')
-  , async    = require('async')
   , cfg      = require('../../cfg/tests.js')
   , nano     = require('../../nano')(cfg)
   , pixel    = "Qk06AAAAAAAAADYAAAAoAAAAAQAAAP////8BABgAAAAAAAAAAAATCwAAEwsAAAAAAAAAAAAAWm2CAA==";
@@ -11,13 +10,6 @@ function db(i) { return nano.use(db_name(i)); }
 /*****************************************************************************
  * att_get                                                                   *
  *****************************************************************************/
-/*
- * Pipe example:
- *   require('request')
- *     .get('http://localhost:5984/att_gea/new/att')
- *     .pipe(require('fs').createWriteStream('/Users/njob/Desktop/temp.bmp'))
- *
- */
 function att_get(callback) {
   var buffer = new Buffer(pixel, 'base64');
   nano.db.create(db_name("a"), function () {
