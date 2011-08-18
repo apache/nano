@@ -86,7 +86,6 @@ that's it. don't forget to delete the database you created:
 ### functions
 
 `doc.insert(doc,doc_name*,callback*)`
-`doc.update(doc_name,rev,doc,callback*)`
 `doc.destroy(doc_name,rev,callback*)`
 `doc.get(doc_name,params*,callback*)`
 `doc.bulk(docs,callback*)`

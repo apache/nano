@@ -278,21 +278,6 @@ module.exports = exports = nano = function database_module(cfg) {
     }
 
    /*
-    * updates a document in a couchdb database
-    *
-    *
-    * @param {doc_name:string} document name
-    * @param {rev:string} previous document revision    
-    * @param {doc:object|string} document body
-    *
-    * @see relax
-    */
-    function update_doc(doc_name,rev,doc,callback) {
-      doc._rev = rev;
-      return relax({ db: db_name, doc: doc_name, method: "PUT", body: doc},callback);
-    }
-
-   /*
     * destroy a document from a couchdb database
     *
     * @param {doc_name:string} document name
@@ -434,7 +419,6 @@ module.exports = exports = nano = function database_module(cfg) {
                            return changes_db(db_name,params,cb); 
                          }
                        , insert: insert_doc
-                       , update: update_doc
                        , get: get_doc
                        , destroy: destroy_doc
                        , bulk: bulk_docs
