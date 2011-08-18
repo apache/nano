@@ -71,7 +71,7 @@ module.exports = exports = nano = function database_module(cfg) {
   * @param {callback:function:optional} function to call back
   */
   function relax(opts,callback) {
-    var url    = cfg.database(opts.db)
+    var url    = cfg.url + "/" + opts.db
       , req    = { method: (opts.method || "GET"), headers: headers }
       , params = opts.params
       , status_code

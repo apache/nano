@@ -30,13 +30,4 @@ cfg.url = function (){
     ":" + cfg.port;
 }();
 
-/*
- * Database
- *
- * @param {name} The database name
- * 
- * @return The full URL of the database
- */
-cfg.database = function(name) { return cfg.url + "/" + name; };
-
 module.exports = exports = cfg;

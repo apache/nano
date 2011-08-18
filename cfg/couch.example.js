@@ -18,6 +18,4 @@ cfg.url = function () {
     ":" + cfg.port;
 }();
 
-cfg.database = function(name) { return cfg.url + "/" + name; };
-
 module.exports = exports = cfg;
