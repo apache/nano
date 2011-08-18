@@ -6,8 +6,15 @@ var cfg = { host: "mydb.iriscouch.com"
           , pass: "admin"
           };
 
+cfg.credentials = function credentials() {
+  if (cfg.user && cfg.pass) {
+    return cfg.user + ":" + cfg.pass + "@";
+  }
+  else { return ""; }
+}();
+
 cfg.url = function () {
-  return "http" + (cfg.ssl ? "s" : "") + "://" + cfg.http_credentials + cfg.host + 
+  return "http" + (cfg.ssl ? "s" : "") + "://" + cfg.credentials + cfg.host + 
     ":" + cfg.port;
 }();
 
