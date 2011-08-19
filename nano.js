@@ -95,8 +95,7 @@ module.exports = exports = nano = function database_module(cfg) {
       if(e) { return callback(error.request_err(e,"socket",req,status_code),{},b); }
       rh = h.headers;
       status_code = h.statusCode;
-      // did we get json or binary?
-      try { parsed = JSON.parse(b); } catch (err) { parsed = b; } 
+      try { parsed = JSON.parse(b); } catch (err) { parsed = b; } // did we get json or binary?
       if (status_code >= 200 && status_code < 300) {
         callback(null,rh,parsed); 
       }
