@@ -34,7 +34,12 @@ var request = require('request')
 module.exports = exports = nano = function database_module(cfg) {
   var public_functions = {};
   if(typeof cfg === "string") {
-    cfg = require(cfg); // no cfg? maybe it's a file path?
+    try {
+      cfg = require(cfg); // no cfg? maybe it's a file path?
+    }
+    catch(e) {
+      cfg = {url: cfg}; // not a file path? guess it's the url
+    }
   }
   if(cfg.proxy) {
     request = request.defaults({proxy: cfg.proxy}); // proxy support
