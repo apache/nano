@@ -82,15 +82,15 @@ module.exports = exports = nano = function database_module(cfg) {
       if(opts.att) { url += "/" + opts.att; } // add the attachment to the url
     } 
     if(opts.content_type) { req.headers["content-type"] = opts.content_type; }
+    if(opts.encoding) { req.encoding = opts.encoding; }
+    req.uri = url + (_.isEmpty(params) ? "" : "?" + qs.stringify(params));
+    if(!callback) { return request(req); } // void callback, pipe
     if(opts.body) { 
       if (Buffer.isBuffer(opts.body)) {
         req.body = opts.body; // raw data
       }
       else { req.body = JSON.stringify(opts.body); } // json data
     }
-    if(opts.encoding) { req.encoding = opts.encoding; }
-    req.uri = url + (_.isEmpty(params) ? "" : "?" + qs.stringify(params));
-    if(!callback) { return request(req); } // void callback
     request(req, function(e,h,b){
       if(e) { return callback(error.request_err(e,"socket",req,status_code),{},b); }
       rh = (h.headers || {});
