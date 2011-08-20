@@ -1,6 +1,10 @@
 #!/bin/bash
 # sudo npm install -g vows
-for s in $(ls -d */);
-do 
-  for f in $s*.js; do echo $f; node $f; done;
-done;
+if which vows
+then vows */*.js 
+else
+  for s in $(ls -d */);
+  do 
+    for f in $s*.js; do echo $f; node $f; done;
+  done;
+fi

@@ -19,7 +19,6 @@ var request     = require('request')
   , qs          = require('querystring')
   , _           = require('underscore')
   , error       = require('./error')
-  , headers     = { "content-type": "application/json" }
   , default_url = "http://localhost:5984"
   , nano;
 
@@ -81,6 +80,7 @@ module.exports = exports = nano = function database_module(cfg) {
   */
   function relax(opts,callback) {
     var url    = cfg.url + "/" + opts.db
+      , headers = { "content-type": "application/json" }
       , req    = { method: (opts.method || "GET"), headers: headers }
       , params = opts.params
       , status_code
