@@ -14,12 +14,13 @@
  * see the license for the specific language governing permissions and
  * limitations under the license.
  */
-var request = require('request')
-  , fs      = require('fs')
-  , qs      = require('querystring')
-  , _       = require('underscore')
-  , error   = require('./error')
-  , headers = { "content-type": "application/json" }
+var request     = require('request')
+  , fs          = require('fs')
+  , qs          = require('querystring')
+  , _           = require('underscore')
+  , error       = require('./error')
+  , headers     = { "content-type": "application/json" }
+  , default_url = "http://localhost:5984"
   , nano;
 
 /*
@@ -34,15 +35,18 @@ var request = require('request')
 module.exports = exports = nano = function database_module(cfg) {
   var public_functions = {};
   if(typeof cfg === "string") {
-    try {
-      cfg = require(cfg); // no cfg? maybe it's a file path?
-    }
-    catch(e) {
-      cfg = {url: cfg}; // not a file path? guess it's the url
+    if(/^https?:/.test(cfg)) { cfg = {url: cfg}; } // url
+    else { 
+      try { cfg = require(cfg); } // file path
+      catch(e) { console.error("bad cfg: couldn't load file"); } 
     }
   }
   if(cfg.proxy) {
     request = request.defaults({proxy: cfg.proxy}); // proxy support
+  }
+  if(!cfg.url) {
+    console.error("bad cfg: using default=" + default_url);
+    cfg = {url: default_url}; // if everything else fails, use default
   }
 
  /****************************************************************************
@@ -238,18 +242,6 @@ module.exports = exports = nano = function database_module(cfg) {
     var body = {source: source, target: target};
     if(continuous) { body.continuous = true; }
     return relax({db: "_replicate", body: body, method: "POST"},callback);
-  }
- 
- /*
-  * returns couchdb + nano configuration
-  *
-  * @see relax
-  */
-  function config(callback) {
-    return relax({db: "_config", method: "GET"}, function (e,h,r) {
-      if(e) { callback(e); }
-      callback(null,h,{nano: cfg, couch: r});
-    });
   }
 
  /****************************************************************************
@@ -451,7 +443,7 @@ module.exports = exports = nano = function database_module(cfg) {
                      , use: document_module
                      , scope: document_module        // alias
                      , request: relax
-                     , config: config
+                     , config: cfg
                      , relax: relax                  // alias
                      , dinosaur: relax               // alias
                      };

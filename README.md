@@ -74,7 +74,7 @@ that's it. don't forget to delete the database you created:
 `nano.db.changes(db_name,params*,callback*)`
 `nano.use(db_name)`
 `nano.request(opts,callback*)`
-`nano.config(callback)`
+`nano.config`
 
 ### aliases
 
