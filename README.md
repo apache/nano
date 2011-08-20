@@ -13,7 +13,7 @@ a quick example using `nano`
 
 to use `nano` you have to either provide a) a `json` `configuration object` or b) a `configuration file path` like `cfg/tests.js`. refer to [cfg/couch.example.js][4] for a example
 
-      var nano = require('nano')('./cfg/tests.js');
+      var nano = require('nano')('http://localhost:5984');
 
 within the `nano` variable you have various methods you can call. these include tasks like create, delete or list databases:
 
@@ -55,6 +55,10 @@ meaning:
 that's it. don't forget to delete the database you created:
 
       nano.db.destroy("alice");
+
+# tutorial
+
+for a small tutorial check out [writings.nunojob.com/2011/08/nano-minimalistic-couchdb-client-for-nodejs.html](http://writings.nunojob.com/2011/08/nano-minimalistic-couchdb-client-for-nodejs.html)
 
 # interfaces
 
@@ -129,7 +133,7 @@ this is the same as (assuming `alice = nano.use("alice");`):
 
 you can pipe in `nano` just like you do in any other stream. this is available in all methods:
 
-      alice.attachment.get("sugar", "att", {rev: rev})
+      alice.attachment.get("breakfast", "sugar", {rev: rev})
         .pipe(fs.createWriteStream("/tmp/sugar-for-rabbit"));
 
 # roadmap
