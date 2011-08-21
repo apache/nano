@@ -92,8 +92,15 @@ module.exports = exports = nano = function database_module(cfg) {
       url += "/" + opts.doc; // add the document to the url
       if(opts.att) { url += "/" + opts.att; } // add the attachment to the url
     } 
-    if(opts.content_type) { req.headers["content-type"] = opts.content_type; }
-    if(opts.encoding) { req.encoding = opts.encoding; }
+    if(opts.encoding && callback) { 
+      req.encoding = opts.encoding;
+      delete req.headers["content-type"];
+      delete req.headers.accept;
+    }
+    if(opts.content_type) { 
+      req.headers["content-type"] = opts.content_type;
+      delete req.headers.accept; // undo headers set
+    }
     req.uri = url + (_.isEmpty(params) ? "" : "?" + qs.stringify(params));
     if(!callback) { return request(req); } // void callback, pipe
     if(opts.body) { 

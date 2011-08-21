@@ -32,7 +32,6 @@ function att_pipe(callback) {
 
 function att_pipe_ok() {
   nano.db.destroy(db_name("a"));
-  console.log(file_name("a"))
   assert.equal(fs.readFileSync(file_name("a")).toString("base64"), pixel);
   //fs.deleteFileSync(file_name("a"));
 }
