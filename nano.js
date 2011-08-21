@@ -107,6 +107,7 @@ module.exports = exports = nano = function database_module(cfg) {
       rh = (h.headers || {});
       rh['status-code'] = status_code = h.statusCode;
       delete rh.server; // prevent security vunerabilities related to couchdb
+      delete rh["content-length"]; // prevent problems with trims and stalled responses
       try { parsed = JSON.parse(b); } catch (err) { parsed = b; } // did we get json or binary?
       if (status_code >= 200 && status_code < 300) {
         callback(null,rh,parsed); 
