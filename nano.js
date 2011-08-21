@@ -80,7 +80,9 @@ module.exports = exports = nano = function database_module(cfg) {
   */
   function relax(opts,callback) {
     var url    = cfg.url + "/" + opts.db
-      , headers = { "content-type": "application/json" }
+      , headers = { "content-type": "application/json" 
+                  , "accept": "application/json"
+                  }
       , req    = { method: (opts.method || "GET"), headers: headers }
       , params = opts.params
       , status_code
