@@ -103,9 +103,9 @@ module.exports = exports = nano = function database_module(cfg) {
       else { req.body = JSON.stringify(opts.body); } // json data
     }
     request(req, function(e,h,b){
-      if(e) { return callback(error.request_err(e,"socket",req,status_code),{},b); }
-      rh = (h.headers || {});
-      rh['status-code'] = status_code = h.statusCode;
+      rh = (h && h.headers || {});
+      rh['status-code'] = status_code = (h && h.statusCode || 500);
+      if(e) { return callback(error.request_err(e,"socket",req,status_code),rh,b); }
       delete rh.server; // prevent security vunerabilities related to couchdb
       delete rh["content-length"]; // prevent problems with trims and stalled responses
       try { parsed = JSON.parse(b); } catch (err) { parsed = b; } // did we get json or binary?

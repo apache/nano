@@ -90,10 +90,10 @@ function gen_err(error,code,request,http_code,type) {
   if(typeof http_code !== "number") { http_code = 500; }
   if(typeof error === 'string') { error = new Error(error); }
 
-  error.error      = code;
-  error.http_code  = http_code;
-  error.namespace  = type;
-  error.request    = request;
+  error.error        = code;
+  error.status_code  = http_code;
+  error.namespace    = type;
+  error.request      = request;
   return error;
 }
 
