@@ -11,7 +11,7 @@ function empty_error(callback) {
 
 function empty_error_ok(_,e) {
   assert.equal(e.message, "Unknown Error");
-  assert.equal(e.http_code, 500);
+  assert.equal(e.status_code, 500);
   assert.isNull(e.error);
   assert.isNull(e.request);
 }
@@ -25,7 +25,7 @@ function error_412(callback) {
 
 function error_412_ok(_,e) {
   assert.equal(e.message, "Precondition Failed");
-  assert.equal(e.http_code, 412);
+  assert.equal(e.status_code, 412);
   assert.isNull(e.error);
   assert.isNull(e.request);
 }
