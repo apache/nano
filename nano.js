@@ -18,6 +18,7 @@ var request     = require('request')
   , fs          = require('fs')
   , qs          = require('querystring')
   , _           = require('underscore')
+  , u           = require('url')
   , error       = require('./error')
   , default_url = "http://localhost:5984"
   , nano;
@@ -32,13 +33,17 @@ var request     = require('request')
  * dinosaurs spaceships!
  */
 module.exports = exports = nano = function database_module(cfg) {
-  var public_functions = {};
+  var public_functions = {}, path, db;
   if(typeof cfg === "string") {
     if(/^https?:/.test(cfg)) { cfg = {url: cfg}; } // url
     else { 
       try { cfg = require(cfg); } // file path
       catch(e) { console.error("bad cfg: couldn't load file"); } 
     }
+  }
+  if(!cfg) {
+    console.error("bad cfg: you passed undefined");
+    cfg = {};
   }
   if(cfg.proxy) {
     request = request.defaults({proxy: cfg.proxy}); // proxy support
@@ -47,9 +52,10 @@ module.exports = exports = nano = function database_module(cfg) {
     console.error("bad cfg: using default=" + default_url);
     cfg = {url: default_url}; // if everything else fails, use default
   }
+  path = u.parse(cfg.url);
 
  /****************************************************************************
-  * relax                                                                      *
+  * relax                                                                    *
   ****************************************************************************/
  /*
   * relax
@@ -71,6 +77,7 @@ module.exports = exports = nano = function database_module(cfg) {
   * @param {opts:object} request options; e.g. {db: "test", method: "GET"}
   *        {opts.db:string} database name
   *        {opts.method:string:optional} http method, defaults to "GET"
+  *        {opts.path:string:optional} a full path, override `doc` and `att`
   *        {opts.doc:string:optional} document name
   *        {opts.att:string:optional} attachment name
   *        {opts.content_type:string:optional} content type, default to json
@@ -88,10 +95,13 @@ module.exports = exports = nano = function database_module(cfg) {
       , status_code
       , parsed
       , rh;
-    if(opts.doc)  { 
-      url += "/" + opts.doc; // add the document to the url
+    if(opts.path) {
+      url += "/" + opts.path;
+    }
+    else if(opts.doc)  { 
+      url += "/" + encodeURIComponent(opts.doc); // add the document to the url
       if(opts.att) { url += "/" + opts.att; } // add the attachment to the url
-    } 
+    }
     if(opts.encoding && callback) { 
       req.encoding = opts.encoding;
       delete req.headers["content-type"];
@@ -112,7 +122,7 @@ module.exports = exports = nano = function database_module(cfg) {
     request(req, function(e,h,b){
       rh = (h && h.headers || {});
       rh['status-code'] = status_code = (h && h.statusCode || 500);
-      if(e) { return callback(error.request_err(e,"socket",req,status_code),rh,b); }
+      if(e) { return callback(error.request(e,"socket",req,status_code),rh,b); }
       delete rh.server; // prevent security vunerabilities related to couchdb
       delete rh["content-length"]; // prevent problems with trims and stalled responses
       try { parsed = JSON.parse(b); } catch (err) { parsed = b; } // did we get json or binary?
@@ -120,7 +130,7 @@ module.exports = exports = nano = function database_module(cfg) {
         callback(null,rh,parsed); 
       }
       else { // proxy the error directly from couchdb
-        callback(error.couch_err(parsed.reason,parsed.error,req,status_code),rh,parsed);
+        callback(error.couch(parsed.reason,parsed.error,req,status_code),rh,parsed);
       }
     });
   }
@@ -211,7 +221,7 @@ module.exports = exports = nano = function database_module(cfg) {
       callback = design_name;
       design_name = null;
     }
-    return relax({db: db_name, doc: "_compact", att: design_name, method: "POST"},callback);
+    return relax({db: db_name, path: ("_compact" + design_name), method: "POST"},callback);
   }
 
  /*
@@ -231,7 +241,7 @@ module.exports = exports = nano = function database_module(cfg) {
       callback = params;
       params = {};
     }
-    return relax({db: db_name, doc: "_changes", params: params, method: "GET"},callback);
+    return relax({db: db_name, path: "_changes", params: params, method: "GET"},callback);
   }
 
  /*
@@ -331,7 +341,7 @@ module.exports = exports = nano = function database_module(cfg) {
         callback = params;
         params   = {};
       }
-      return relax({db: db_name, doc: "_all_docs", method: "GET", params: params},callback);
+      return relax({db: db_name, path: "_all_docs", method: "GET", params: params},callback);
     }
    
    /*
@@ -344,7 +354,7 @@ module.exports = exports = nano = function database_module(cfg) {
     * @see relax
     */
     function bulk_docs(docs,callback) {
-      return relax({db: db_name, doc: "_bulk_docs", body: docs, method: "POST"},callback);
+      return relax({db: db_name, path: "_bulk_docs", body: docs, method: "POST"},callback);
     }
 
    /**************************************************************************
@@ -458,7 +468,14 @@ module.exports = exports = nano = function database_module(cfg) {
                      , relax: relax                  // alias
                      , dinosaur: relax               // alias
                      };
-  return public_functions;
+
+  // does the user want a database, or nano?
+  if(!_.isEmpty(path.pathname.split('/')[1])) { 
+    db = path.pathname.split('/')[1];
+    cfg.url = path.protocol + '//' + path.host; // reset url
+    return document_module(db); 
+  }
+  else   { return public_functions; }
 };
 
 /*

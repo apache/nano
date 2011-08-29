@@ -30,4 +30,8 @@ cfg.url = function (){
     ":" + cfg.port;
 }();
 
+cfg.db_url = function (postfix) {
+  return cfg.url + '/' + postfix;
+};
+
 module.exports = exports = cfg;

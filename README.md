@@ -123,7 +123,7 @@ to get a document in a specific rev an advanced user might do:
         function (_,_,b) { console.log(b) }
       );
 
-this is the same as (assuming `alice = nano.use("alice");`):
+this is the same as (assuming `alice = require('nano')('http://localhost:5984/alice')`):
 
       alice.get("rabbit", {rev: "1-967a00dff5e02add41819138abb3284d"},
         function (_,_,b) { console.log(b) }

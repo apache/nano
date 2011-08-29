@@ -6,28 +6,28 @@ var vows     = require('vows')
  * empty_error                                                               *
  *****************************************************************************/
 function empty_error(callback) {
-  callback(null,err.couch_err(null,null,null,null));
+  callback(null,err.couch(null,null,null,null));
 }
 
 function empty_error_ok(_,e) {
   assert.equal(e.message, "Unknown Error");
   assert.equal(e.status_code, 500);
-  assert.isNull(e.error);
-  assert.isNull(e.request);
+  assert.equal(e.error, "unknown");
+  assert.ok(typeof e.request === 'object');
 }
 
 /*****************************************************************************
  * error_412                                                                 *
  *****************************************************************************/
 function error_412(callback) {
-  callback(null,err.couch_err(null,null,null,412));
+  callback(null,err.couch(null,null,null,412));
 }
 
 function error_412_ok(_,e) {
   assert.equal(e.message, "Precondition Failed");
   assert.equal(e.status_code, 412);
-  assert.isNull(e.error);
-  assert.isNull(e.request);
+  assert.equal(e.error, "unknown");
+  assert.ok(typeof e.request === 'object');
 }
 
 vows.describe('error').addBatch({
