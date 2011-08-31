@@ -11,10 +11,7 @@ var vows    = require('vows')
 function update_doc(callback) {
   nano.db.create(db_name, function () {
     db.insert({foo: "bar"}, "foo", function (_,b) {
-      db.insert({"_rev": b.rev, foo: "baz"}, "foo", function (e,b) {
-        callback(e,b);
-        return;
-      });
+      db.insert({"_rev": b.rev, foo: "baz"}, "foo", callback);
     });
   });
 }

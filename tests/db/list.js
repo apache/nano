@@ -8,10 +8,7 @@ var vows   = require('vows')
  *****************************************************************************/
 function list_db(callback) {
   nano.db.create("db_li1", function () {
-    nano.db.list(function (e,b) {
-      callback(e,b);
-      return;
-    });
+    nano.db.list(callback);
   });
 }
 

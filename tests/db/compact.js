@@ -18,10 +18,7 @@ function compact_db(callback) {
       ],
       function(err, results){
         db.compact(function () {
-          db.info(function(e,b) {
-            callback(e,b);
-            return;
-          });
+          db.info(callback);
         });
       });
   });
