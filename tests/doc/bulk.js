@@ -24,8 +24,8 @@ function bulk_docs_ok(e,h,b) {
   nano.db.destroy(db_name("a"));
   assert.isNull(e);
   assert.equal(b.length, "2");
-  assert.ok(b[0].ok);
-  assert.ok(b[1].ok);
+  assert.ok(b[0].id);
+  assert.ok(b[1].id);
 }
 
 vows.describe('doc.bulk').addBatch({
