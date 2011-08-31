@@ -1,9 +1,10 @@
 #!/bin/bash
 # sudo npm install -g vows
+tests=$(dirname $0)
 if which vows
-then vows tests/*/*.js 
+then vows $tests/*/*.js 
 else
-  for s in $(ls -d tests/*/);
+  for s in $(ls -d $tests/*/);
   do 
     for f in $s*.js; do echo $f; node $f; done;
   done;
