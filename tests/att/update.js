@@ -14,7 +14,7 @@ function att_doc(callback) {
   var pixel  = "Qk06AAAAAAAAADYAAAAoAAAAAQAAAP////8BABgAAAAAAAAAAAATCwAAEwsAAAAAAAAAAAAAWm2CAA=="
     , buffer = new Buffer(pixel, 'base64');
   nano.db.create(db_name("b"), function () {
-    db("b").attachment.insert("new", "att", "Hello World!", "text/plain", 
+    db("b").attachment.insert("new", "att", "Hello World!", "text/plain",
       function (e,_,b) {
         if(e) { callback(e); }
         db("b").attachment.insert("new", "att", buffer, "image/bmp", {rev: b.rev},

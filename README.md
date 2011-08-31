@@ -110,7 +110,7 @@ for a small tutorial check out [writings.nunojob.com/2011/08/nano-minimalistic-c
 ## advanced
 
 `nano` is minimalistic so it provides advanced users with a way to code their own extension functions:
-      
+
       nano.request(opts,callback*)
 
 to get a document in a specific rev an advanced user might do:
@@ -118,7 +118,7 @@ to get a document in a specific rev an advanced user might do:
       nano.request( { db: "alice"
                     , doc: "rabbit"
                     , method: "GET"
-                    , params: { rev: "1-967a00dff5e02add41819138abb3284d"} 
+                    , params: { rev: "1-967a00dff5e02add41819138abb3284d"}
                     },
         function (_,_,b) { console.log(b) }
       );

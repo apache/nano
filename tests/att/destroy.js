@@ -12,7 +12,7 @@ function db(i) { return nano.use(db_name(i)); }
  *****************************************************************************/
 function att_des(callback) {
   nano.db.create(db_name("a"), function () {
-    db("a").attachment.insert("new", "att", "Hello World!", "text/plain", 
+    db("a").attachment.insert("new", "att", "Hello World!", "text/plain",
       function (e,h,b) {
         db("a").attachment.destroy("new", "att", b.rev, callback);
     });
