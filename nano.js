@@ -122,15 +122,15 @@ module.exports = exports = nano = function database_module(cfg) {
     request(req, function(e,h,b){
       rh = (h && h.headers || {});
       rh['status-code'] = status_code = (h && h.statusCode || 500);
-      if(e) { return callback(error.request(e,"socket",req,status_code),rh,b); }
+      if(e) { return callback(error.request(e,"socket",req,status_code),b,rh); }
       delete rh.server; // prevent security vunerabilities related to couchdb
       delete rh["content-length"]; // prevent problems with trims and stalled responses
       try { parsed = JSON.parse(b); } catch (err) { parsed = b; } // did we get json or binary?
       if (status_code >= 200 && status_code < 300) {
-        callback(null,rh,parsed);
+        callback(null,parsed,rh);
       }
       else { // proxy the error directly from couchdb
-        callback(error.couch(parsed.reason,parsed.error,req,status_code),rh,parsed);
+        callback(error.couch(parsed.reason,parsed.error,req,status_code),parsed,rh);
       }
     });
   }

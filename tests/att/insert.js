@@ -16,7 +16,7 @@ function att_new_doc(callback) {
   });
 }
 
-function att_new_doc_ok(e,h,b) {
+function att_new_doc_ok(e,b) {
   nano.db.destroy(db_name("a"));
   assert.isNull(e);
   assert.ok(b.ok);

@@ -14,11 +14,11 @@ function compact_db(callback) {
       [ function(cb) { db.insert({"foo": "bar"},"foobar",cb); }
       , function(cb) { db.insert({"bar": "foo"},"barfoo",cb); }
       , function(cb) { db.insert({"foo": "baz"},"foobaz",
-          function (e,h,b) { db.destroy("foobaz", b._rev, cb); }); }
+          function (e,b) { db.destroy("foobaz", b._rev, cb); }); }
       ],
       function(err, results){
         db.compact(function () {
-          db.info(function(e,_,b) {
+          db.info(function(e,b) {
             callback(e,b);
             return;
           });

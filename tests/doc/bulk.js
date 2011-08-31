@@ -14,13 +14,13 @@ function bulk_docs(callback) {
   nano.db.create(db_name("a"), function () {
     db("a").bulk(
       {"docs":[{"key":"baz","name":"bazzel"},{"key":"bar","name":"barry"}]},
-      function (e,h,r) {
-        callback(e,h,r);
+      function (e,r) {
+        callback(e,r);
       });
   });
 }
 
-function bulk_docs_ok(e,h,b) {
+function bulk_docs_ok(e,b) {
   nano.db.destroy(db_name("a"));
   assert.isNull(e);
   assert.equal(b.length, "2");

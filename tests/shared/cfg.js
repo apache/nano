@@ -21,7 +21,7 @@ function url2_ok(_,n) { assert.equal(n.config.url, "http://someurl.com/"); }
 function url_db(callback) {
   nano(cfg.db_url("adb")).info(callback);
 }
-function url_db_ok(e,h,b) {
+function url_db_ok(e,b) {
   assert.equal(e.message,"no_db_file");
   assert.equal(e.error, "not_found");
   assert.equal(e.request.uri, (cfg.url + '/adb'));
@@ -33,7 +33,7 @@ function url_db_ok(e,h,b) {
 function url_db2(callback) {
   nano(cfg.db_url("adb/")).info(callback);
 }
-function url_db2_ok(e,h,b) {
+function url_db2_ok(e,b) {
   assert.equal(e.message,"no_db_file");
   assert.equal(e.error, "not_found");
   assert.equal(e.request.uri, (cfg.url + '/adb'));
@@ -45,7 +45,7 @@ function url_db2_ok(e,h,b) {
 function url_db3(callback) {
   nano(cfg.db_url("adb/blergh")).info(callback);
 }
-function url_db3_ok(e,h,b) {
+function url_db3_ok(e,b) {
   assert.equal(e.message,"no_db_file");
   assert.equal(e.error, "not_found");
   assert.equal(e.request.uri, (cfg.url + '/adb'));
@@ -57,7 +57,7 @@ function url_db3_ok(e,h,b) {
 function url_db4(callback) {
   nano(cfg.db_url("a/b/d/c/")).info(callback);
 }
-function url_db4_ok(e,h,b) {
+function url_db4_ok(e,b) {
   assert.equal(e.message,"no_db_file");
   assert.equal(e.error, "not_found");
   assert.equal(e.request.uri, (cfg.url + '/a'));

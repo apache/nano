@@ -25,7 +25,7 @@ function replicate_db(callback) {
   });
 }
 
-function replicate_db_ok(e,h,b) {
+function replicate_db_ok(e,b) {
   nano.db.destroy("db_re1");
   nano.db.destroy("db_re1_replica");
   assert.isNull(e);

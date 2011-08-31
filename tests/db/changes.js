@@ -23,7 +23,7 @@ function changes_db(callback) {
   });
 }
 
-function changes_db_ok(e,h,b) {
+function changes_db_ok(e,b) {
   nano.db.destroy(db_name("a"));
   assert.isNull(e);
   assert.equal(b.results.length,1);

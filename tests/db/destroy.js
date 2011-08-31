@@ -8,14 +8,14 @@ var vows   = require('vows')
  *****************************************************************************/
 function destroy_db(callback) {
   nano.db.create("db_de1", function () {
-    nano.db.destroy("db_de1", function (e,h,b) {
-      callback(e,h,b);
+    nano.db.destroy("db_de1", function (e,b) {
+      callback(e,b);
       return;
     });
   });
 }
 
-function destroy_db_ok(e,h,b) {
+function destroy_db_ok(e,b) {
   nano.db.destroy("db_de1");
   assert.isNull(e);
   assert.equal(b.ok, true);

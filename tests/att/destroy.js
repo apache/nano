@@ -13,13 +13,13 @@ function db(i) { return nano.use(db_name(i)); }
 function att_des(callback) {
   nano.db.create(db_name("a"), function () {
     db("a").attachment.insert("new", "att", "Hello World!", "text/plain",
-      function (e,h,b) {
+      function (e,b) {
         db("a").attachment.destroy("new", "att", b.rev, callback);
     });
   });
 }
 
-function att_des_ok(e,h,b) {
+function att_des_ok(e,b) {
   nano.db.destroy(db_name("a"));
   assert.isNull(e);
   assert.ok(b.ok);

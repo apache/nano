@@ -24,11 +24,11 @@ in this function there is not callback. in `nano` the absence of callback means 
 you normally don't want to do that though:
 
       // clean up the database we created previously
-      nano.db.destroy("alice", function(err,headers,response) {
+      nano.db.destroy("alice", function(err,response,headers) {
         nano.db.create("alice", function(){
           // specify the database we are going to use
           var alice = nano.use("alice");
-          alice.insert({crazy: true}, "rabbit", function(e,h,r){
+          alice.insert({crazy: true}, "rabbit", function(e,r,h){
             if(e) { throw e; }
             console.log("you have inserted the rabbit.")
           });
@@ -41,7 +41,7 @@ the `nano.use` method creates a `scope` where you operate inside a single databa
 
 in `nano` a callback has always three arguments
 
-      // 6: alice.insert({crazy: true}, "rabbit", function(e,h,r){
+      // 6: alice.insert({crazy: true}, "rabbit", function(e,r,h){
       // 7:   if(e) { throw e; }
       // 8:   console.log("you have inserted the rabbit.")
       // 9: });
@@ -49,8 +49,8 @@ in `nano` a callback has always three arguments
 meaning:
 
       e: the `error`, if any. check error.js for more info.
-      h: the http response `headers` from couchdb, if no error.
       r: the http `response body` from couchdb, if no error.
+      h: the http response `headers` from couchdb, if no error.
 
 that's it. don't forget to delete the database you created:
 
@@ -120,13 +120,13 @@ to get a document in a specific rev an advanced user might do:
                     , method: "GET"
                     , params: { rev: "1-967a00dff5e02add41819138abb3284d"}
                     },
-        function (_,_,b) { console.log(b) }
+        function (_,b) { console.log(b) }
       );
 
 this is the same as (assuming `alice = require('nano')('http://localhost:5984/alice')`):
 
       alice.get("rabbit", {rev: "1-967a00dff5e02add41819138abb3284d"},
-        function (_,_,b) { console.log(b) }
+        function (_,b) { console.log(b) }
       );
 
 ### pipe
