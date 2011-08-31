@@ -1,9 +1,9 @@
 #!/bin/bash
 # sudo npm install -g vows
 if which vows
-then vows */*.js 
+then vows tests/*/*.js 
 else
-  for s in $(ls -d */);
+  for s in $(ls -d tests/*/);
   do 
     for f in $s*.js; do echo $f; node $f; done;
   done;
