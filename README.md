@@ -2,7 +2,7 @@
 
 `nano` (short for `nanocouch`) is a minimalistic `couchdb` driver for `node.js`
 
-# instalation
+# installation
 
 1. install [npm][1]
 2. `npm install nano`
