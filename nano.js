@@ -69,7 +69,7 @@ module.exports = exports = nano = function database_module(cfg) {
   *               , method: "GET"
   *               , params: { rev: "1-967a00dff5e02add41819138abb3284d"}
   *               },
-  *   function (_,_,b) { console.log(b) });
+  *   function (_,b) { console.log(b) });
   *
   * @error {request:socket} problem connecting to couchdb
   * @error {couch:*} an error proxied from couchdb
@@ -227,7 +227,7 @@ module.exports = exports = nano = function database_module(cfg) {
  /*
   * couchdb database _changes feed
   *
-  * e.g. nano.db.changes(db_name, {since: 2}, function (e,h,r) {
+  * e.g. nano.db.changes(db_name, {since: 2}, function (e,r,h) {
   *        console.log(r);
   *      });
   *
@@ -310,8 +310,8 @@ module.exports = exports = nano = function database_module(cfg) {
    /*
     * get a document from a couchdb database
     *
-    * e.g. db2.get("foo", {revs_info: true}, function (e,h,b) {
-    *        console.log(e,h,b);
+    * e.g. db2.get("foo", {revs_info: true}, function (e,b,h) {
+    *        console.log(e,b,h);
     *        return;
     *      });
     *
@@ -366,7 +366,7 @@ module.exports = exports = nano = function database_module(cfg) {
     *
     * e.g.
     * db.attachment.insert("new", "att", buffer, "image/bmp", {rev: b.rev},
-    *   function(_,_,response) {
+    *   function(_,response) {
     *     console.log(response);
     * });
     *
