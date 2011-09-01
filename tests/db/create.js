@@ -8,10 +8,7 @@ var vows    = require('vows')
  *****************************************************************************/
 function create_db (callback) {
   nano.db.destroy("db_cr1", function () {
-    nano.db.create("db_cr1", function (e,h,b) {
-      callback(e,h,b);
-      nano.db.destroy("db_cr1");
-    });
+    nano.db.create("db_cr1", callback);
   });
 }
 
@@ -29,7 +26,6 @@ function recursive_retries_create_db(tried,callback) {
     nano.db.create("db_cr2", function (e,h,b) {
       if(tried.tried === tried.max_retries) {
         callback(true);
-        nano.db.destroy("db_cr2");
       }
       else {
         tried.tried += 1;
