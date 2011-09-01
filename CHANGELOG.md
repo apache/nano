@@ -1,3 +1,7 @@
+# 0.8.1
+
+* migrated tests to dscape/ensure
+
 # 0.8.0
 
 * changed parameter order for callbacks to make headers easier to ignore

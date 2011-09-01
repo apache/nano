@@ -1,13 +1,11 @@
-var vows   = require('vows')
+var ensure = require('ensure')
   , assert = require('assert')
   , async  = require('async')
   , cfg    = require('../../cfg/tests.js')
-  , nano   = require('../../nano')(cfg);
+  , nano   = require('../../nano')(cfg)
+  , tests    = exports;
 
-/*****************************************************************************
- * compact_db                                                                *
- *****************************************************************************/
-function compact_db(callback) {
+tests.compact_db = function (callback) {
   nano.db.create("db_co1", function () {
     var db = nano.use("db_co1");
     async.parallel(
@@ -22,18 +20,13 @@ function compact_db(callback) {
         });
       });
   });
-}
+};
 
-function compact_db_ok(err,list) {
+tests.compact_db_ok = function (err,list) {
   nano.db.destroy("db_co1");
   assert.isNull(err);
   assert.equal(list.doc_count, 3);
   assert.equal(list.doc_del_count, 0);
-}
+};
 
-vows.describe('nano.db.compact').addBatch({
-  "compact_db": {
-    topic: function () { compact_db(this.callback); }
-  , "=": compact_db_ok
-  }
-}).exportTo(module);
+ensure(__filename, tests, module);

@@ -1,57 +1,44 @@
-var vows     = require('vows')
+var ensure   = require('ensure')
   , assert   = require('assert')
   , cfg      = require('../../cfg/tests.js')
   , nano     = require('../../nano')(cfg)
-  , db_name  = "doc_ge1"
-  , db2_name = "doc_ge2"
-  , db       = nano.use(db_name)
-  , db2      = nano.use(db2_name);
+  , tests    = exports;
 
-/*****************************************************************************
- * get_doc                                                                   *
- *****************************************************************************/
-function get_doc(callback) {
-  nano.db.create(db_name, function () {
-    db.insert({foo: "bar"}, "foo", function () {
-      db.get("foo", callback);
+function db_name(i) { return "doc_ge" + i; }
+function db(i) { return nano.use(db_name(i)); }
+
+tests.get_doc = function (callback) {
+  nano.db.create(db_name('a'), function () {
+    db('a').insert({foo: "bar"}, "foo", function () {
+      db('a').get("foo", callback);
     });
   });
-}
+};
 
-function get_doc_ok(e,b) {
-  nano.db.destroy(db_name);
+tests.get_doc_ok = function (e,b) {
+  nano.db.destroy(db_name('a'));
   assert.isNull(e);
   assert.ok(b._rev);
   assert.equal(b._id, "foo");
   assert.equal(b.foo, "bar");
-}
+};
 
-/*****************************************************************************
- * get_doc_params                                                            *
- *****************************************************************************/
-function get_doc_params(callback) {
-  nano.db.create(db2_name, function () {
-    db2.insert({foo: "bar"}, "foo", function () {
-      db2.insert({foo: "bar"}, "foo", function () { // Conflict, no rev
-        db2.get("foo", {revs_info: true}, callback);
+tests.get_doc_params = function (callback) {
+  nano.db.create(db_name('b'), function () {
+    db('b').insert({foo: "bar"}, "foo", function () {
+      db('b').insert({foo: "bar"}, "foo", function () { // Conflict, no rev
+        db('b').get("foo", {revs_info: true}, callback);
       });
     });
   });
-}
+};
 
-function get_doc_params_ok(e,b) {
-  nano.db.destroy(db2_name);
+tests.get_doc_params_ok = function (e,b) {
+  nano.db.destroy(db_name('b'));
   assert.isNull(e);
   assert.ok(b._revs_info);
   assert.equal(b._id, "foo");
   assert.equal(b.foo, "bar");
-}
+};
 
-vows.describe('db.get').addBatch({
-  "get_doc": {
-    topic: function () { get_doc(this.callback); }
-  , "=": get_doc_ok },
-  "get_doc_params": {
-    topic: function () { get_doc_params(this.callback); }
-  , "=": get_doc_params_ok }
-}).exportTo(module);
+ensure(__filename, tests, module);

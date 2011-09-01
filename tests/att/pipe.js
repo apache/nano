@@ -1,8 +1,9 @@
-var vows      = require('vows')
+var ensure    = require('ensure')
   , fs        = require('fs')
   , assert    = require('assert')
   , cfg       = require('../../cfg/tests.js')
   , nano      = require('../../nano')(cfg)
+  , tests     = exports
   , pixel     = "Qk06AAAAAAAAADYAAAAoAAAAAQAAAP////8BABgAAAAAAAAAAAATCwAAEwsAAAAAAAAAAAAAWm2CAA==";
 
 function db_name(i) { return "att_pi" + i; }
@@ -10,10 +11,7 @@ function db(i) { return nano.use(db_name(i)); }
 function file_name(i) { return  __dirname + "/." + i + "-tmp.bmp"; }
 function f_s(i) { return fs.createWriteStream(file_name(i)); }
 
-/*****************************************************************************
- * att_pipe                                                                  *
- *****************************************************************************/
-function att_pipe(callback) {
+tests.att_pipe = function (callback) {
   var buffer      = new Buffer(pixel, 'base64')
     , file_stream = f_s("a");
   file_stream.on("close", function() { callback(); });
@@ -28,16 +26,12 @@ function att_pipe(callback) {
         });
     });
   });
-}
+};
 
-function att_pipe_ok() {
+tests.att_pipe_ok = function () {
   nano.db.destroy(db_name("a"));
   assert.equal(fs.readFileSync(file_name("a")).toString("base64"), pixel);
-  //fs.deleteFileSync(file_name("a"));
-}
+  fs.unlinkSync(file_name("a"));
+};
 
-vows.describe('attachment.pipe').addBatch({
-  "att_pipe": {
-    topic: function () { att_pipe(this.callback); }
-  , "=": att_pipe_ok }
-}).exportTo(module);
+ensure(__filename, tests, module);

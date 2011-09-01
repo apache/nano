@@ -1,32 +1,26 @@
-var vows    = require('vows')
-  , assert  = require('assert')
-  , cfg     = require('../../cfg/tests.js')
-  , nano    = require('../../nano')(cfg)
-  , db_name = "doc_up1"
-  , db      = nano.use(db_name);
+var ensure   = require('ensure')
+  , assert   = require('assert')
+  , cfg      = require('../../cfg/tests.js')
+  , nano     = require('../../nano')(cfg)
+  , tests    = exports;
 
-/*****************************************************************************
- * update_doc                                                                *
- *****************************************************************************/
-function update_doc(callback) {
-  nano.db.create(db_name, function () {
-    db.insert({foo: "bar"}, "foo", function (_,b) {
-      db.insert({"_rev": b.rev, foo: "baz"}, "foo", callback);
+function db_name(i) { return "doc_up" + i; }
+function db(i) { return nano.use(db_name(i)); }
+
+tests.update_doc = function (callback) {
+  nano.db.create(db_name('a'), function () {
+    db('a').insert({foo: "bar"}, "foo", function (_,b) {
+      db('a').insert({"_rev": b.rev, foo: "baz"}, "foo", callback);
     });
   });
-}
+};
 
-function update_doc_ok(e,b) {
-  nano.db.destroy(db_name);
+tests.update_doc_ok = function (e,b) {
+  nano.db.destroy(db_name('a'));
   assert.isNull(e);
   assert.equal(b.id, "foo");
   assert.ok(b.ok);
   assert.ok(b.rev);
-}
+};
 
-vows.describe('db.update').addBatch({
-  "update_doc": {
-    topic: function () { update_doc(this.callback); }
-  , "=": update_doc_ok
-  }
-}).exportTo(module);
+ensure(__filename, tests, module);

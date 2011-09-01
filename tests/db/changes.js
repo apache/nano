@@ -1,16 +1,14 @@
-var vows   = require('vows')
+var ensure = require('ensure')
   , assert = require('assert')
   , async  = require('async')
   , cfg    = require('../../cfg/tests.js')
-  , nano   = require('../../nano')(cfg);
+  , nano   = require('../../nano')(cfg)
+  , tests    = exports;
 
 function db_name(i) { return "doc_ch" + i; }
 function db(i) { return nano.use(db_name(i)); }
 
-/*****************************************************************************
- * changes_db                                                                  *
- *****************************************************************************/
-function changes_db(callback) {
+tests.changes_db = function (callback) {
   nano.db.create(db_name("a"), function () {
     async.parallel(
       [ function(cb) { db("a").insert({"foo": "bar"}, "foobar", cb); }
@@ -21,18 +19,13 @@ function changes_db(callback) {
         db("a").changes({since:2}, callback);
       });
   });
-}
+};
 
-function changes_db_ok(e,b) {
+tests.changes_db_ok = function (e,b) {
   nano.db.destroy(db_name("a"));
   assert.isNull(e);
   assert.equal(b.results.length,1);
   assert.equal(b.last_seq,3);
-}
+};
 
-vows.describe('nano.db.changes').addBatch({
-  "changes_db": {
-    topic: function () { changes_db(this.callback); }
-  , "=": changes_db_ok
-  }
-}).exportTo(module);
+ensure(__filename, tests, module);

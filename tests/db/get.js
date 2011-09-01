@@ -1,31 +1,24 @@
-var vows   = require('vows')
-  , assert = require('assert')
-  , cfg    = require('../../cfg/tests.js')
-  , nano   = require('../../nano')(cfg);
+var ensure   = require('ensure')
+  , assert   = require('assert')
+  , cfg      = require('../../cfg/tests.js')
+  , nano     = require('../../nano')(cfg)
+  , tests    = exports;
 
-/*****************************************************************************
- * get_db                                                                    *
- *****************************************************************************/
-function get_db(callback) {
+tests.get_db = function (callback) {
   nano.db.create("db_ge1", function () {
     nano.db.get("db_ge1", function (e,b) {
       callback(e,b);
       return;
     });
   });
-}
+};
 
-function get_db_ok(e,b) {
+tests.get_db_ok = function (e,b) {
   nano.db.destroy("db_ge1");
   assert.isNull(e);
   assert.equal(b.doc_count,0);
   assert.equal(b.doc_del_count,0);
   assert.equal(b.db_name,"db_ge1");
-}
+};
 
-vows.describe('nano.db.get').addBatch({
-  "get_db": {
-    topic: function () { get_db(this.callback); }
-  , "=": get_db_ok
-  }
-}).exportTo(module);
+ensure(__filename, tests, module);

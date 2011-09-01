@@ -1,13 +1,11 @@
-var vows   = require('vows')
-  , assert = require('assert')
-  , async  = require('async')
-  , cfg    = require('../../cfg/tests.js')
-  , nano   = require('../../nano')(cfg);
+var ensure   = require('ensure')
+  , assert   = require('assert')
+  , async    = require('async')
+  , cfg      = require('../../cfg/tests.js')
+  , nano     = require('../../nano')(cfg)
+  , tests    = exports;
 
-/*****************************************************************************
- * replicate_db                                                              *
- *****************************************************************************/
-function replicate_db(callback) {
+tests.replicate_db = function (callback) {
   nano.db.create("db_re1", function () {
     var db      = nano.use("db_re1")
       , replica = nano.use("db_re1_replica");
@@ -23,19 +21,14 @@ function replicate_db(callback) {
         });
       });
   });
-}
+};
 
-function replicate_db_ok(e,b) {
+tests.replicate_db_ok = function (e,b) {
   nano.db.destroy("db_re1");
   nano.db.destroy("db_re1_replica");
   assert.isNull(e);
   assert.equal(b.total_rows, 3);
   assert.ok(b.rows);
-}
+};
 
-vows.describe('nano.db.replicate').addBatch({
-  "replicate_db": {
-    topic: function () { replicate_db(this.callback); }
-  , "=": replicate_db_ok
-  }
-}).exportTo(module);
+ensure(__filename, tests, module);

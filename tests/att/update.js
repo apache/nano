@@ -1,16 +1,13 @@
-var vows     = require('vows')
+var ensure   = require('ensure')
   , assert   = require('assert')
-  , async    = require('async')
   , cfg      = require('../../cfg/tests.js')
-  , nano     = require('../../nano')(cfg);
+  , nano     = require('../../nano')(cfg)
+  , tests    = exports;
 
 function db_name(i) { return "att_up" + i; }
 function db(i) { return nano.use(db_name(i)); }
 
-/*****************************************************************************
- * att_doc                                                                   *
- *****************************************************************************/
-function att_doc(callback) {
+tests.att_doc = function (callback) {
   var pixel  = "Qk06AAAAAAAAADYAAAAoAAAAAQAAAP////8BABgAAAAAAAAAAAATCwAAEwsAAAAAAAAAAAAAWm2CAA=="
     , buffer = new Buffer(pixel, 'base64');
   nano.db.create(db_name("b"), function () {
@@ -21,17 +18,13 @@ function att_doc(callback) {
           callback);
     });
   });
-}
+};
 
-function att_doc_ok(e,b) {
+tests.att_doc_ok = function (e,b) {
   nano.db.destroy(db_name("b"));
   assert.isNull(e);
   assert.ok(b.ok);
   assert.equal(b.id, "new");
-}
+};
 
-vows.describe('attachment.update').addBatch({
-  "att_doc": {
-    topic: function () { att_doc(this.callback); }
-  , "=": att_doc_ok }
-}).exportTo(module);
+ensure(__filename, tests, module);

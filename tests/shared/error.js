@@ -1,40 +1,28 @@
-var vows     = require('vows')
+var ensure   = require('ensure')
   , assert   = require('assert')
-  , err    = require('../../error');
+  , err    = require('../../error')
+  , tests    = exports;
 
-/*****************************************************************************
- * empty_error                                                               *
- *****************************************************************************/
-function empty_error(callback) {
+tests.empty_error = function (callback) {
   callback(null,err.couch(null,null,null,null));
-}
+};
 
-function empty_error_ok(_,e) {
+tests.empty_error_ok = function (_,e) {
   assert.equal(e.message, "Unknown Error");
   assert.equal(e.status_code, 500);
   assert.equal(e.error, "unknown");
   assert.ok(typeof e.request === 'object');
-}
+};
 
-/*****************************************************************************
- * error_412                                                                 *
- *****************************************************************************/
-function error_412(callback) {
+tests.error_412 = function (callback) {
   callback(null,err.couch(null,null,null,412));
-}
+};
 
-function error_412_ok(_,e) {
+tests.error_412_ok = function (_,e) {
   assert.equal(e.message, "Precondition Failed");
   assert.equal(e.status_code, 412);
   assert.equal(e.error, "unknown");
   assert.ok(typeof e.request === 'object');
-}
+};
 
-vows.describe('error').addBatch({
-  "empty_error": {
-    topic: function () { empty_error(this.callback); }
-  , "=": empty_error_ok },
-  "error_412": {
-    topic: function () { error_412(this.callback); }
-  , "=": error_412_ok }
-}).exportTo(module);
+ensure(__filename, tests, module);

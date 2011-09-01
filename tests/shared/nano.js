@@ -1,25 +1,12 @@
-var vows     = require('vows')
-  , assert   = require('assert')
-  , cfg    = require('../../cfg/tests.js')
-  , nano   = require('../../nano');
+var ensure = require('ensure')
+  , assert = require('assert')
+  , nano   = require('../../nano')
+  , tests    = exports;
 
-/*****************************************************************************
- * version                                                                   *
- *****************************************************************************/
-function version(callback) { callback(null,nano.version); }
-function version_ok(_,n) { assert.ok(n); }
+tests.version = function (callback) { callback(null,nano.version); };
+tests.version_ok = function (_,n) { assert.ok(n); };
 
-/*****************************************************************************
- * path                                                                      *
- *****************************************************************************/
-function path(callback) { callback(null,nano.path); }
-function path_ok(_,n) { assert.ok(n); }
+tests.path = function (callback) { callback(null,nano.path); };
+tests.path_ok = function (_,n) { assert.ok(n); };
 
-vows.describe('nano').addBatch({
-  "version": {
-    topic: function () { version(this.callback); }
-  , "=": version_ok },
-  "path": {
-    topic: function () { path(this.callback); }
-  , "=": path_ok }
-}).exportTo(module);
+ensure(__filename, tests, module);

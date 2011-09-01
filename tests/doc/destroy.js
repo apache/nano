@@ -1,15 +1,12 @@
-var vows    = require('vows')
-  , assert  = require('assert')
-  , cfg     = require('../../cfg/tests.js')
-  , nano    = require('../../nano')(cfg)
-  , db_name = "doc_de1"
-  , db      = nano.use(db_name);
+var ensure   = require('ensure')
+  , assert   = require('assert')
+  , cfg      = require('../../cfg/tests.js')
+  , nano     = require('../../nano')(cfg)
+  , tests    = exports;
 
-/*****************************************************************************
- * destroy_doc                                                               *
- *****************************************************************************/
-function destroy_doc(callback) {
-  nano.db.create(db_name, function () {
+tests.destroy_doc = function (callback) {
+  var db = nano.use("doc_de1");
+  nano.db.create("doc_de1", function () {
     db.insert({foo: "bar"}, "foo", function (_,b) {
       db.destroy("foo", b.rev, function (e,b) {
         callback(e,b);
@@ -17,19 +14,14 @@ function destroy_doc(callback) {
       });
     });
   });
-}
+};
 
-function destroy_doc_ok(e,b) {
-  nano.db.destroy(db_name);
+tests.destroy_doc_ok = function (e,b) {
+  nano.db.destroy("doc_de1");
   assert.isNull(e);
   assert.ok(b.ok);
   assert.equal(b.id, "foo");
   assert.ok(b.rev);
-}
+};
 
-vows.describe('db.destroy').addBatch({
-  "destroy_doc": {
-    topic: function () { destroy_doc(this.callback); }
-  , "=": destroy_doc_ok
-  }
-}).exportTo(module);
+ensure(__filename, tests, module);

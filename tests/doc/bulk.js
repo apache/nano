@@ -1,16 +1,14 @@
-var vows     = require('vows')
+var ensure   = require('ensure')
   , assert   = require('assert')
   , async    = require('async')
   , cfg      = require('../../cfg/tests.js')
-  , nano     = require('../../nano')(cfg);
+  , nano     = require('../../nano')(cfg)
+  , tests    = exports;
 
 function db_name(i) { return "doc_bu" + i; }
 function db(i) { return nano.use(db_name(i)); }
 
-/*****************************************************************************
- * bulks_docs                                                                *
- *****************************************************************************/
-function bulk_docs(callback) {
+tests.bulk_docs = function (callback) {
   nano.db.create(db_name("a"), function () {
     db("a").bulk(
       {"docs":[{"key":"baz","name":"bazzel"},{"key":"bar","name":"barry"}]},
@@ -18,18 +16,14 @@ function bulk_docs(callback) {
         callback(e,r);
       });
   });
-}
+};
 
-function bulk_docs_ok(e,b) {
+tests.bulk_docs_ok = function (e,b) {
   nano.db.destroy(db_name("a"));
   assert.isNull(e);
   assert.equal(b.length, "2");
   assert.ok(b[0].id);
   assert.ok(b[1].id);
-}
+};
 
-vows.describe('doc.bulk').addBatch({
-  "bulk_doc": {
-    topic: function () { bulk_docs(this.callback); }
-  , "=": bulk_docs_ok }
-}).exportTo(module);
+ensure(__filename, tests, module);
