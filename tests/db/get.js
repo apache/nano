@@ -8,14 +8,14 @@ var vows   = require('vows')
  *****************************************************************************/
 function get_db(callback) {
   nano.db.create("db_ge1", function () {
-    nano.db.get("db_ge1", function (e,h,b) {
-      callback(e,h,b);
+    nano.db.get("db_ge1", function (e,b) {
+      callback(e,b);
       return;
     });
   });
 }
 
-function get_db_ok(e,h,b) {
+function get_db_ok(e,b) {
   nano.db.destroy("db_ge1");
   assert.isNull(e);
   assert.equal(b.doc_count,0);

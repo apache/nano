@@ -12,7 +12,7 @@ function create_db (callback) {
   });
 }
 
-function create_db_ok(e,h,b) {
+function create_db_ok(e,b) {
   nano.db.destroy("db_cr1");
   assert.isNull(e);
   assert.equal(b.ok, true);
@@ -23,7 +23,7 @@ function create_db_ok(e,h,b) {
  *****************************************************************************/
 function recursive_retries_create_db(tried,callback) {
   nano.db.destroy("db_cr2", function () {
-    nano.db.create("db_cr2", function (e,h,b) {
+    nano.db.create("db_cr2", function () {
       if(tried.tried === tried.max_retries) {
         callback(true);
       }

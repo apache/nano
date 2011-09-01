@@ -1,13 +1,13 @@
 /* minimal couch in node
  *
  * copyright 2011 nuno job <nunojob.com> (oO)--',--
- * 
+ *
  * licensed under the apache license, version 2.0 (the "license");
  * you may not use this file except in compliance with the license.
  * you may obtain a copy of the license at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * unless required by applicable law or agreed to in writing, software
  * distributed under the license is distributed on an "as is" basis,
  * without warranties or conditions of any kind, either express or implied.
@@ -24,7 +24,7 @@ var request     = require('request')
   , nano;
 
 /*
- * nano is a library that helps you building requests to couchdb 
+ * nano is a library that helps you building requests to couchdb
  * that is built on top of mikeals/request
  *
  * no more, no less
@@ -36,9 +36,9 @@ module.exports = exports = nano = function database_module(cfg) {
   var public_functions = {}, path, db;
   if(typeof cfg === "string") {
     if(/^https?:/.test(cfg)) { cfg = {url: cfg}; } // url
-    else { 
+    else {
       try { cfg = require(cfg); } // file path
-      catch(e) { console.error("bad cfg: couldn't load file"); } 
+      catch(e) { console.error("bad cfg: couldn't load file"); }
     }
   }
   if(!cfg) {
@@ -67,7 +67,7 @@ module.exports = exports = nano = function database_module(cfg) {
   * nano.request( { db: "alice"
   *               , doc: "rabbit"
   *               , method: "GET"
-  *               , params: { rev: "1-967a00dff5e02add41819138abb3284d"} 
+  *               , params: { rev: "1-967a00dff5e02add41819138abb3284d"}
   *               },
   *   function (_,_,b) { console.log(b) });
   *
@@ -87,7 +87,7 @@ module.exports = exports = nano = function database_module(cfg) {
   */
   function relax(opts,callback) {
     var url    = cfg.url + "/" + opts.db
-      , headers = { "content-type": "application/json" 
+      , headers = { "content-type": "application/json"
                   , "accept": "application/json"
                   }
       , req    = { method: (opts.method || "GET"), headers: headers }
@@ -98,22 +98,22 @@ module.exports = exports = nano = function database_module(cfg) {
     if(opts.path) {
       url += "/" + opts.path;
     }
-    else if(opts.doc)  { 
+    else if(opts.doc)  {
       url += "/" + encodeURIComponent(opts.doc); // add the document to the url
       if(opts.att) { url += "/" + opts.att; } // add the attachment to the url
     }
-    if(opts.encoding && callback) { 
+    if(opts.encoding && callback) {
       req.encoding = opts.encoding;
       delete req.headers["content-type"];
       delete req.headers.accept;
     }
-    if(opts.content_type) { 
+    if(opts.content_type) {
       req.headers["content-type"] = opts.content_type;
       delete req.headers.accept; // undo headers set
     }
     req.uri = url + (_.isEmpty(params) ? "" : "?" + qs.stringify(params));
     if(!callback) { return request(req); } // void callback, pipe
-    if(opts.body) { 
+    if(opts.body) {
       if (Buffer.isBuffer(opts.body)) {
         req.body = opts.body; // raw data
       }
@@ -122,15 +122,15 @@ module.exports = exports = nano = function database_module(cfg) {
     request(req, function(e,h,b){
       rh = (h && h.headers || {});
       rh['status-code'] = status_code = (h && h.statusCode || 500);
-      if(e) { return callback(error.request(e,"socket",req,status_code),rh,b); }
+      if(e) { return callback(error.request(e,"socket",req,status_code),b,rh); }
       delete rh.server; // prevent security vunerabilities related to couchdb
       delete rh["content-length"]; // prevent problems with trims and stalled responses
       try { parsed = JSON.parse(b); } catch (err) { parsed = b; } // did we get json or binary?
       if (status_code >= 200 && status_code < 300) {
-        callback(null,rh,parsed); 
+        callback(null,parsed,rh);
       }
       else { // proxy the error directly from couchdb
-        callback(error.couch(parsed.reason,parsed.error,req,status_code),rh,parsed);
+        callback(error.couch(parsed.reason,parsed.error,req,status_code),parsed,rh);
       }
     });
   }
@@ -141,7 +141,7 @@ module.exports = exports = nano = function database_module(cfg) {
  /*
   * creates a couchdb database
   * http://wiki.apache.org/couchdb/HTTP_database_API
-  * 
+  *
   * e.g. function recursive_retries_create_db(tried,callback) {
   *        nano.db.create(db_name, function (e,b) {
   *          if(tried.tried === tried.max_retries) {
@@ -158,11 +158,11 @@ module.exports = exports = nano = function database_module(cfg) {
   * @param {db_name:string} database name
   *
   * @see relax
-  */ 
+  */
   function create_db(db_name, callback) {
     return relax({db: db_name, method: "PUT"},callback);
   }
-  
+
  /*
   * annihilates a couchdb database
   *
@@ -192,7 +192,7 @@ module.exports = exports = nano = function database_module(cfg) {
   function get_db(db_name, callback) {
     return relax({db: db_name, method: "GET"},callback);
   }
-  
+
  /*
   * lists all the databases in couchdb
   *
@@ -252,7 +252,7 @@ module.exports = exports = nano = function database_module(cfg) {
   * @param {source:string} name of the source database
   * @param {target:string} name of the target database
   * @param {continuous:bool:optional} continuous replication on?
-  * 
+  *
   * @see relax
   */
   function replicate_db(source, target, continuous, callback) {
@@ -343,7 +343,7 @@ module.exports = exports = nano = function database_module(cfg) {
       }
       return relax({db: db_name, path: "_all_docs", method: "GET", params: params},callback);
     }
-   
+
    /*
     * bulk update/delete/insert functionality
     * [1]: http://wiki.apache.org/couchdb/HTTP_Bulk_Document_API
@@ -364,7 +364,7 @@ module.exports = exports = nano = function database_module(cfg) {
     * inserting an attachment
     * [2]: http://wiki.apache.org/couchdb/HTTP_Document_API
     *
-    * e.g. 
+    * e.g.
     * db.attachment.insert("new", "att", buffer, "image/bmp", {rev: b.rev},
     *   function(_,_,response) {
     *     console.log(response);
@@ -429,11 +429,11 @@ module.exports = exports = nano = function database_module(cfg) {
                              cb         = continuous;
                              continuous = false;
                            }
-                           return replicate_db(db_name,target,continuous,cb); 
+                           return replicate_db(db_name,target,continuous,cb);
                          }
                        , compact: function(cb) { return compact_db(db_name,cb); }
-                       , changes: function(params,cb) { 
-                           return changes_db(db_name,params,cb); 
+                       , changes: function(params,cb) {
+                           return changes_db(db_name,params,cb);
                          }
                        , insert: insert_doc
                        , get: get_doc
@@ -441,7 +441,7 @@ module.exports = exports = nano = function database_module(cfg) {
                        , bulk: bulk_docs
                        , list: list_docs
                        , view: { compact: function(design_name,cb) {
-                                   return compact_db(db_name,design_name,cb); } 
+                                   return compact_db(db_name,design_name,cb); }
                                }
                        , attachment: { insert: insert_att
                                      , get: get_att
@@ -470,10 +470,10 @@ module.exports = exports = nano = function database_module(cfg) {
                      };
 
   // does the user want a database, or nano?
-  if(!_.isEmpty(path.pathname.split('/')[1])) { 
+  if(!_.isEmpty(path.pathname.split('/')[1])) {
     db = path.pathname.split('/')[1];
     cfg.url = path.protocol + '//' + path.host; // reset url
-    return document_module(db); 
+    return document_module(db);
   }
   else   { return public_functions; }
 };
@@ -487,7 +487,7 @@ module.exports = exports = nano = function database_module(cfg) {
  * /__.|_|-|_|
  *
  * thanks for visiting! come again!
- * 
+ *
  * LH1059-A321
  * LH1178-A321
  */

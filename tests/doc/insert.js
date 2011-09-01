@@ -15,7 +15,7 @@ function insert_doc(callback) {
   });
 }
 
-function insert_doc_ok(e,h,b) {
+function insert_doc_ok(e,b) {
   nano.db.destroy(db_name("a"));
   assert.isNull(e);
   assert.ok(b.ok);
@@ -32,7 +32,7 @@ function insert_doc_path(callback) {
   });
 }
 
-function insert_doc_path_ok(e,h,b) {
+function insert_doc_path_ok(e,b) {
   nano.db.destroy(db_name("b"));
   assert.isNull(e);
   assert.ok(b.ok);

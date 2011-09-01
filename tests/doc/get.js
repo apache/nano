@@ -13,15 +13,12 @@ var vows     = require('vows')
 function get_doc(callback) {
   nano.db.create(db_name, function () {
     db.insert({foo: "bar"}, "foo", function () {
-      db.get("foo", function (e,h,b) {
-        callback(e,h,b);
-        return;
-      });
+      db.get("foo", callback);
     });
   });
 }
 
-function get_doc_ok(e,h,b) {
+function get_doc_ok(e,b) {
   nano.db.destroy(db_name);
   assert.isNull(e);
   assert.ok(b._rev);
@@ -36,16 +33,13 @@ function get_doc_params(callback) {
   nano.db.create(db2_name, function () {
     db2.insert({foo: "bar"}, "foo", function () {
       db2.insert({foo: "bar"}, "foo", function () { // Conflict, no rev
-        db2.get("foo", {revs_info: true}, function (e,h,b) {
-          callback(e,h,b);
-          return;
-        });
+        db2.get("foo", {revs_info: true}, callback);
       });
     });
   });
 }
 
-function get_doc_params_ok(e,h,b) {
+function get_doc_params_ok(e,b) {
   nano.db.destroy(db2_name);
   assert.isNull(e);
   assert.ok(b._revs_info);

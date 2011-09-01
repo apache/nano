@@ -10,16 +10,16 @@ var vows    = require('vows')
  *****************************************************************************/
 function destroy_doc(callback) {
   nano.db.create(db_name, function () {
-    db.insert({foo: "bar"}, "foo", function (_,_,b) {
-      db.destroy("foo", b.rev, function (e,h,b) {
-        callback(e,h,b);
+    db.insert({foo: "bar"}, "foo", function (_,b) {
+      db.destroy("foo", b.rev, function (e,b) {
+        callback(e,b);
         return;
       });
     });
   });
 }
 
-function destroy_doc_ok(e,h,b) {
+function destroy_doc_ok(e,b) {
   nano.db.destroy(db_name);
   assert.isNull(e);
   assert.ok(b.ok);

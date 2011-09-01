@@ -6,7 +6,7 @@
 # Setup
 
       # Alter the config to match your preferences
-      vi ./tests/cfg/tests.js
+      vi ./cfg/tests.js
 
 # Run
 

@@ -19,10 +19,10 @@ function att_pipe(callback) {
   file_stream.on("close", function() { callback(); });
   nano.db.create(db_name("a"), function () {
     db("a").attachment.insert("new", "att", "Hello", "text/plain",
-      function(e,_,b) {
+      function(e,b) {
         if(e) { callback(e); }
         db("a").attachment.insert("new", "att", buffer, "image/bmp", {rev: b.rev},
-          function (e2,_,b2) {
+          function (e2,b2) {
           if(e2) { callback(e2); }
           db("a").attachment.get("new", "att", {rev: b2.rev}).pipe(file_stream);
         });

@@ -8,14 +8,11 @@ var vows   = require('vows')
  *****************************************************************************/
 function list_db(callback) {
   nano.db.create("db_li1", function () {
-    nano.db.list(function (e,h,b) {
-      callback(e,h,b);
-      return;
-    });
+    nano.db.list(callback);
   });
 }
 
-function list_db_ok(e,h,b) {
+function list_db_ok(e,b) {
   nano.db.destroy("db_li1");
   assert.isNull(e);
   assert.notEqual(b.indexOf("db_li1"),-1);

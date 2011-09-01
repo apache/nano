@@ -26,7 +26,7 @@ function list_doc(callback) {
   });
 }
 
-function list_doc_ok(e,h,b) {
+function list_doc_ok(e,b) {
   nano.db.destroy(db_name);
   assert.isNull(e);
   assert.equal(b.total_rows,3);
@@ -53,7 +53,7 @@ function ns_list_doc(callback) {
   });
 }
 
-function ns_list_doc_ok(e,h,b) {
+function ns_list_doc_ok(e,b) {
   nano.db.destroy(db2_name);
   assert.isNull(e);
   assert.equal(b.rows.length,1);
@@ -77,7 +77,7 @@ function list_doc_params(callback) {
   });
 }
 
-function list_doc_params_ok(e,h,b) {
+function list_doc_params_ok(e,b) {
   nano.db.destroy(db3_name);
   assert.isNull(e);
   assert.equal(b.rows.length,2);
