@@ -1,3 +1,7 @@
+# 0.8.0
+
+* changed parameter order for callbacks to make headers easier to ignore
+
 # 0.7.0
 
 * added support for arbitrary paths in `nano.request`
