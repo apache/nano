@@ -91,10 +91,10 @@ function gen_err(scope,error,code,request,status_code) {
   status_code = typeof status_code === 'number' && status_code || 500;
   request     = request                                        || {};
   if(typeof error === 'string') { error = new Error(error); }
-  error.error        = code;
-  error.status_code  = status_code;
-  error.scope        = scope;
-  error.request      = request;
+  error.error          = code;
+  error['status-code'] = status_code;
+  error.scope          = scope;
+  error.request        = request;
   return error;
 }
 
