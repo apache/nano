@@ -99,7 +99,12 @@ module.exports = exports = nano = function database_module(cfg) {
       url += "/" + opts.path;
     }
     else if(opts.doc)  {
-      url += "/" + encodeURIComponent(opts.doc); // add the document to the url
+      if(!/^_design/.test(opts.doc)) { 
+        url += "/" + encodeURIComponent(opts.doc); // add the document to the url
+      }
+      else {
+        url += "/" + opts.doc;
+      }
       if(opts.att) { url += "/" + opts.att; } // add the attachment to the url
     }
     if(opts.encoding && callback) {
@@ -345,6 +350,24 @@ module.exports = exports = nano = function database_module(cfg) {
     }
 
    /*
+    * calls a view
+    *
+    * @param {design_name:string} design document name
+    * @param {view_name:string} view to call
+    * @param {params:object:optional} additions to the querystring
+    *
+    * @see relax
+    */
+    function view_docs(design_name,view_name,params,callback) {
+      if(typeof params === "function") {
+        callback = params;
+        params   = {};
+      }
+      return relax({db: db_name, path: '_design/' + design_name + '/_view/' + view_name
+                   , method: "GET", params: params},callback);
+    }
+
+   /*
     * bulk update/delete/insert functionality
     * [1]: http://wiki.apache.org/couchdb/HTTP_Bulk_Document_API
     *
@@ -440,14 +463,15 @@ module.exports = exports = nano = function database_module(cfg) {
                        , destroy: destroy_doc
                        , bulk: bulk_docs
                        , list: list_docs
-                       , view: { compact: function(design_name,cb) {
-                                   return compact_db(db_name,design_name,cb); }
-                               }
                        , attachment: { insert: insert_att
                                      , get: get_att
                                      , destroy: destroy_att
                                      }
                        };
+    public_functions.view = view_docs;
+    public_functions.view.compact = function(design_name,cb) {
+    return compact_db(db_name,design_name,cb); 
+    };
     return public_functions;
   }
 

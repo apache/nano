@@ -11,7 +11,6 @@ tests.destroy_db = function (callback) {
 };
 
 tests.destroy_db_ok = function (e,b) {
-  nano.db.destroy("db_de1");
   assert.isNull(e);
   assert.equal(b.ok, true);
 };

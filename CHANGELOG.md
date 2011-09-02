@@ -1,3 +1,7 @@
+# 0.8.4
+
+* added view query support
+
 # 0.8.1
 
 * migrated tests to dscape/ensure

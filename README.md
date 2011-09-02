@@ -89,14 +89,15 @@ for a small tutorial check out [writings.nunojob.com/2011/08/nano-minimalistic-c
 
 ### functions
 
-`doc.insert(doc,doc_name*,callback*)`
-`doc.destroy(doc_name,rev,callback*)`
-`doc.get(doc_name,params*,callback*)`
-`doc.bulk(docs,callback*)`
-`doc.list(params*,callback*)`
-`doc.attachment.insert(doc_name,att_name,att,content_type,params*,callback*)`
-`doc.attachment.get(doc_name,att_name,params*,callback*)`
-`doc.attachment.destroy(doc_name,att_name,rev,callback*)`
+`db.insert(doc,doc_name*,callback*)`
+`db.destroy(doc_name,rev,callback*)`
+`db.get(doc_name,params*,callback*)`
+`db.bulk(docs,callback*)`
+`db.list(params*,callback*)`
+`db.view(design_name,view_name,params*,callback*)`
+`db.attachment.insert(doc_name,att_name,att,content_type,params*,callback*)`
+`db.attachment.get(doc_name,att_name,params*,callback*)`
+`db.attachment.destroy(doc_name,att_name,rev,callback*)`
 
 ### aliases
 
