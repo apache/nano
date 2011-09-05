@@ -56,12 +56,10 @@ that's it. don't forget to delete the database you created:
 
       nano.db.destroy("alice");
 
-# tutorial
-
-for a small tutorial check out these articles:
+# tutorials
 
 * [nano - a minimalistic couchdb client for nodejs](http://writings.nunojob.com/2011/08/nano-minimalistic-couchdb-client-for-nodejs.html)
-* [getting started with node.js and couchdb][http://writings.nunojob.com/2011/09/getting-started-with-nodejs-and-couchdb.html]
+* [getting started with node.js and couchdb](http://writings.nunojob.com/2011/09/getting-started-with-nodejs-and-couchdb.html)
 
 # interfaces
 
