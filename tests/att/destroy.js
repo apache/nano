@@ -23,4 +23,4 @@ tests.att_des_ok = function (e,b) {
   assert.equal(b.id, "new");
 };
 
-ensure(__filename, tests, module);
+ensure(__filename,tests,module,process.argv[2]);

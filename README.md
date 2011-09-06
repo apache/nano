@@ -155,6 +155,12 @@ everyone is welcome to contribute. patches, bugfixes, new features
 7. push to your branch `git push origin my_branch`
 8. create an pull request
 
+*useful tip*: to run a single test and get verbose output you can do
+
+      NANO_ENV=testing node tests/doc/list.js list_doc_params
+
+where `list_doc_params` is the test name.
+
 # tests
 
 1. install the packages referred as dev dependencies in `package.json`

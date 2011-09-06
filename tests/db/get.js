@@ -21,4 +21,4 @@ tests.get_db_ok = function (e,b) {
   assert.equal(b.db_name,"db_ge1");
 };
 
-ensure(__filename, tests, module);
+ensure(__filename,tests,module,process.argv[2]);

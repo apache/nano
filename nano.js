@@ -21,7 +21,9 @@ var request     = require('request')
   , u           = require('url')
   , error       = require('./error')
   , default_url = "http://localhost:5984"
-  , nano;
+  , nano
+  , verbose = (process.env.NANO_ENV==='testing')
+  ;
 
 /*
  * nano is a library that helps you building requests to couchdb
@@ -52,6 +54,7 @@ module.exports = exports = nano = function database_module(cfg) {
     console.error("bad cfg: using default=" + default_url);
     cfg = {url: default_url}; // if everything else fails, use default
   }
+  if(verbose) { console.log(cfg); }
   path = u.parse(cfg.url);
 
  /****************************************************************************
@@ -124,6 +127,7 @@ module.exports = exports = nano = function database_module(cfg) {
       }
       else { req.body = JSON.stringify(opts.body); } // json data
     }
+    if(verbose) { console.log(req); }
     request(req, function(e,h,b){
       rh = (h && h.headers || {});
       rh['status-code'] = status_code = (h && h.statusCode || 500);
@@ -135,6 +139,7 @@ module.exports = exports = nano = function database_module(cfg) {
         callback(null,parsed,rh);
       }
       else { // proxy the error directly from couchdb
+        if(verbose) { console.log(parsed); }
         callback(error.couch(parsed.reason,parsed.error,req,status_code),parsed,rh);
       }
     });

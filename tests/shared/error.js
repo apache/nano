@@ -25,4 +25,4 @@ tests.error_412_ok = function (_,e) {
   assert.ok(typeof e.request === 'object');
 };
 
-ensure(__filename, tests, module);
+ensure(__filename,tests,module,process.argv[2]);

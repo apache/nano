@@ -23,4 +23,4 @@ tests.update_doc_ok = function (e,b) {
   assert.ok(b.rev);
 };
 
-ensure(__filename, tests, module);
+ensure(__filename,tests,module,process.argv[2]);

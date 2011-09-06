@@ -16,4 +16,4 @@ tests.create_db_ok = function (e,b) {
   assert.equal(b.ok, true);
 };
 
-ensure(__filename, tests, module);
+ensure(__filename,tests,module,process.argv[2]);

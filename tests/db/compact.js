@@ -29,4 +29,4 @@ tests.compact_db_ok = function (err,list) {
   assert.equal(list.doc_del_count, 0);
 };
 
-ensure(__filename, tests, module);
+ensure(__filename,tests,module,process.argv[2]);

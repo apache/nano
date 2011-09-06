@@ -34,4 +34,4 @@ tests.att_pipe_ok = function () {
   fs.unlinkSync(file_name("a"));
 };
 
-ensure(__filename, tests, module);
+ensure(__filename,tests,module,process.argv[2]);

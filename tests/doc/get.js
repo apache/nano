@@ -41,4 +41,4 @@ tests.get_doc_params_ok = function (e,b) {
   assert.equal(b.foo, "bar");
 };
 
-ensure(__filename, tests, module);
+ensure(__filename,tests,module,process.argv[2]);

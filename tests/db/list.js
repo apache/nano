@@ -15,3 +15,5 @@ tests.list_db_ok = function (e,b) {
   assert.isNull(e);
   assert.notEqual(b.indexOf("db_li1"),-1);
 };
+
+ensure(__filename,tests,module,process.argv[2]);

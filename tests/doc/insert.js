@@ -35,4 +35,4 @@ tests.insert_doc_path_ok = function (e,b) {
   assert.equal(b.id, "some/path");
 }
 
-ensure(__filename, tests, module);
+ensure(__filename,tests,module,process.argv[2]);

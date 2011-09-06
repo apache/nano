@@ -26,4 +26,4 @@ tests.bulk_docs_ok = function (e,b) {
   assert.ok(b[1].id);
 };
 
-ensure(__filename, tests, module);
+ensure(__filename,tests,module,process.argv[2]);

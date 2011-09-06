@@ -30,4 +30,4 @@ tests.att_get_ok = function (e,b) {
   assert.equal(from_buffer, pixel);
 };
 
-ensure(__filename, tests, module);
+ensure(__filename,tests,module,process.argv[2]);

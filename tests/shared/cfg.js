@@ -53,4 +53,4 @@ tests.not_string_or_object_ok = function (_,e) { assert.equal(e.config.url,"http
 tests.nano_undefined = function (callback) { callback(null,nano()); };
 tests.nano_undefined_ok = function (_,e) { assert.equal(e.config.url,"http://localhost:5984"); };
 
-ensure(__filename, tests, module);
+ensure(__filename,tests,module,process.argv[2]);

@@ -74,4 +74,4 @@ tests.list_doc_params_ok = function (e,b) {
   assert.ok(b.rows);
 };
 
-ensure(__filename, tests, module);
+ensure(__filename,tests,module,process.argv[2]);

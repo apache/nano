@@ -3,5 +3,5 @@
 tests=$(dirname $0)
 for s in $(ls -d $tests/*/);
 do 
-  for f in $s*.js; do echo $f; node $f; done;
+  for f in $s*.js; do node $f; done;
 done;
