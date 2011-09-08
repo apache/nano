@@ -11,7 +11,7 @@
 
 a quick example using `nano`
 
-to use `nano` you have to either provide a) a `json` `configuration object` or b) a `configuration file path` like `cfg/tests.js`. refer to [cfg/couch.example.js][4] for a example
+to use `nano` you have to either provide a) a `json` `configuration object`, b) a `url` string, or c) a `configuration file path` like `cfg/tests.js`. refer to [cfg/couch.example.js][4] for a example
 
       var nano = require('nano')('http://localhost:5984');
 
