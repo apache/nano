@@ -1,5 +1,4 @@
 var ensure   = require('ensure')
-  , assert   = require('assert')
   , cfg      = require('../../cfg/tests.js')
   , nano     = require('../../nano')(cfg)
   , tests    = exports;
@@ -28,8 +27,8 @@ tests.recursive_create_view = function (tried,callback) {
 
 tests.recursive_create_view_ok = function (e,view) {
   nano.db.destroy("view_qu1");
-  assert.isNull(e);
-  assert.equal(view.total_rows,0);
+  this.t.notOk(e);
+  this.t.equal(view.total_rows,0);
 };
 
 ensure(__filename, tests, module);

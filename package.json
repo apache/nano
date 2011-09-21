@@ -2,7 +2,7 @@
 , "description"     : "minimalistic couchdb driver for node.js"
 , "homepage"        : "http://github.com/dscape/nano"
 , "repository"      : "git://github.com/dscape/nano"
-, "version"         : "0.9.1"
+, "version"         : "0.9.2"
 , "author"          : "Nuno Job <nunojobpinto@gmail.com> (http://nunojob.com)"
 , "contributors"    : 
   [ "Thiago Arrais <thiago.arrais@gmail.com> (http://thiagoarrais.com)"
@@ -11,7 +11,7 @@
 , "keywords"        : ["couchdb", "data", "request", "json", "nosql", "micro", "nano"]
 , "dependencies"    : {"request": "~2.1.1", "underscore": "~1.1.7"}
 , "devDependencies" : { "async": "~0.1.9", "ensure": "0.4.x" }
-, "scripts"         : { "test": "./tests/run" }
+, "scripts"         : { "test": "./node_modules/ensure/bin/tap.js tests/*/*.js" }
 , "main"            : "./nano.js"
 , "engines"         : { "node": ">=0.3.6" }
 }

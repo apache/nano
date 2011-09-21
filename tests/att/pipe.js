@@ -1,6 +1,5 @@
 var ensure    = require('ensure')
   , fs        = require('fs')
-  , assert    = require('assert')
   , cfg       = require('../../cfg/tests.js')
   , nano      = require('../../nano')(cfg)
   , tests     = exports
@@ -30,7 +29,7 @@ tests.att_pipe = function (callback) {
 
 tests.att_pipe_ok = function () {
   nano.db.destroy(db_name("a"));
-  assert.equal(fs.readFileSync(file_name("a")).toString("base64"), pixel);
+  this.t.equal(fs.readFileSync(file_name("a")).toString("base64"), pixel);
   fs.unlinkSync(file_name("a"));
 };
 

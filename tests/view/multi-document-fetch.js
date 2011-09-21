@@ -1,5 +1,4 @@
 var ensure = require('ensure')
-  , assert = require('assert')
   , async  = require('async')
   , cfg    = require('../../cfg/tests.js')
   , nano   = require('../../nano')(cfg)
@@ -27,10 +26,10 @@ tests.multi_doc = function (callback) {
 
 tests.multi_doc_ok = function (err,view) {
   nano.db.destroy("view_md1");
-  assert.isNull(err);
-  assert.equal(view.rows.length, 2);
-  assert.equal(view.rows[0].id, 'foo');
-  assert.equal(view.rows[1].id, 'bar');
+  this.t.notOk(err);
+  this.t.equal(view.rows.length, 2);
+  this.t.equal(view.rows[0].id, 'foo');
+  this.t.equal(view.rows[1].id, 'bar');
 };
 
 ensure(__filename, tests, module);

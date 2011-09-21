@@ -1,5 +1,4 @@
 var ensure   = require('ensure')
-  , assert   = require('assert')
   , async    = require('async')
   , cfg      = require('../../cfg/tests.js')
   , nano     = require('../../nano')(cfg)
@@ -23,9 +22,9 @@ tests.list_doc = function (callback) {
 
 tests.list_doc_ok = function (e,b) {
   nano.db.destroy(db_name('a'));
-  assert.isNull(e);
-  assert.equal(b.total_rows,3);
-  assert.ok(b.rows);
+  this.t.notOk(e);
+  this.t.equal(b.total_rows,3);
+  this.t.ok(b.rows);
 };
 
 tests.ns_list_doc = function (callback) {
@@ -47,10 +46,10 @@ tests.ns_list_doc = function (callback) {
 
 tests.ns_list_doc_ok = function (e,b) {
   nano.db.destroy(db_name('b'));
-  assert.isNull(e);
-  assert.equal(b.rows.length,1);
-  assert.equal(b.total_rows,3);
-  assert.ok(b.rows);
+  this.t.notOk(e);
+  this.t.equal(b.rows.length,1);
+  this.t.equal(b.total_rows,3);
+  this.t.ok(b.rows);
 };
 
 tests.list_doc_params = function (callback) {
@@ -68,10 +67,10 @@ tests.list_doc_params = function (callback) {
 
 tests.list_doc_params_ok = function (e,b) {
   nano.db.destroy(db_name('c'));
-  assert.isNull(e);
-  assert.equal(b.rows.length,2);
-  assert.equal(b.total_rows,3);
-  assert.ok(b.rows);
+  this.t.notOk(e);
+  this.t.equal(b.rows.length,2);
+  this.t.equal(b.total_rows,3);
+  this.t.ok(b.rows);
 };
 
 ensure(__filename,tests,module,process.argv[2]);

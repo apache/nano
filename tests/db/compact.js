@@ -1,5 +1,4 @@
 var ensure = require('ensure')
-  , assert = require('assert')
   , async  = require('async')
   , cfg    = require('../../cfg/tests.js')
   , nano   = require('../../nano')(cfg)
@@ -24,9 +23,9 @@ tests.compact_db = function (callback) {
 
 tests.compact_db_ok = function (err,list) {
   nano.db.destroy("db_co1");
-  assert.isNull(err);
-  assert.equal(list.doc_count, 3);
-  assert.equal(list.doc_del_count, 0);
+  this.t.notOk(err);
+  this.t.equal(list.doc_count, 3);
+  this.t.equal(list.doc_del_count, 0);
 };
 
 ensure(__filename,tests,module,process.argv[2]);

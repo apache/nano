@@ -1,5 +1,4 @@
 var ensure   = require('ensure')
-  , assert   = require('assert')
   , async    = require('async')
   , cfg      = require('../../cfg/tests.js')
   , nano     = require('../../nano')(cfg)
@@ -26,9 +25,9 @@ tests.replicate_db = function (callback) {
 tests.replicate_db_ok = function (e,b) {
   nano.db.destroy("db_re1");
   nano.db.destroy("db_re1_replica");
-  assert.isNull(e);
-  assert.equal(b.total_rows, 3);
-  assert.ok(b.rows);
+  this.t.notOk(e);
+  this.t.equal(b.total_rows, 3);
+  this.t.ok(b.rows);
 };
 
 ensure(__filename,tests,module,process.argv[2]);

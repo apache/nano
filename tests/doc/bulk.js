@@ -1,5 +1,4 @@
 var ensure   = require('ensure')
-  , assert   = require('assert')
   , async    = require('async')
   , cfg      = require('../../cfg/tests.js')
   , nano     = require('../../nano')(cfg)
@@ -20,10 +19,10 @@ tests.bulk_docs = function (callback) {
 
 tests.bulk_docs_ok = function (e,b) {
   nano.db.destroy(db_name("a"));
-  assert.isNull(e);
-  assert.equal(b.length, "2");
-  assert.ok(b[0].id);
-  assert.ok(b[1].id);
+  this.t.notOk(e);
+  this.t.equal(b.length, 2);
+  this.t.ok(b[0].id);
+  this.t.ok(b[1].id);
 };
 
 ensure(__filename,tests,module,process.argv[2]);

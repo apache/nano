@@ -1,5 +1,4 @@
 var ensure   = require('ensure')
-  , assert   = require('assert')
   , cfg      = require('../../cfg/tests.js')
   , nano     = require('../../nano')(cfg)
   , tests    = exports
@@ -25,9 +24,9 @@ tests.att_get = function (callback) {
 
 tests.att_get_ok = function (e,b) {
   nano.db.destroy(db_name("a"));
-  assert.isNull(e);
+  this.t.notOk(e);
   var from_buffer = new Buffer(b, "binary").toString("base64");
-  assert.equal(from_buffer, pixel);
+  this.t.equal(from_buffer, pixel);
 };
 
 ensure(__filename,tests,module,process.argv[2]);

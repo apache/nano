@@ -1,5 +1,4 @@
 var ensure   = require('ensure')
-  , assert   = require('assert')
   , cfg      = require('../../cfg/tests.js')
   , nano     = require('../../nano')(cfg)
   , tests    = exports;
@@ -18,10 +17,10 @@ tests.destroy_doc = function (callback) {
 
 tests.destroy_doc_ok = function (e,b) {
   nano.db.destroy("doc_de1");
-  assert.isNull(e);
-  assert.ok(b.ok);
-  assert.equal(b.id, "foo");
-  assert.ok(b.rev);
+  this.t.notOk(e);
+  this.t.ok(b.ok);
+  this.t.equal(b.id, "foo");
+  this.t.ok(b.rev);
 };
 
 ensure(__filename,tests,module,process.argv[2]);

@@ -1,5 +1,4 @@
 var ensure = require('ensure')
-  , assert = require('assert')
   , async  = require('async')
   , cfg    = require('../../cfg/tests.js')
   , nano   = require('../../nano')(cfg)
@@ -30,8 +29,8 @@ tests.compact_view = function (callback) {
 
 tests.compact_view_ok = function (err,view) {
   nano.db.destroy("view_co1");
-  assert.isNull(err);
-  assert.equal(view.total_rows, 2);
+  this.t.notOk(err);
+  this.t.equal(view.total_rows, 2);
 };
 
 ensure(__filename, tests, module);
