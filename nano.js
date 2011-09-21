@@ -370,20 +370,19 @@ module.exports = exports = nano = function database_module(cfg) {
         callback = params;
         params   = {};
       }
-
       var path, view, viewPath;
-      path = '_design/' + design_name;
-      view = '/_view/'  + view_name;
+      path     = '_design/' + design_name;
+      view     = '/_view/'  + view_name;
       viewPath = path+view;
-
       if (params.keys) {
         var body = {keys: params.keys};
         delete params.keys;
         return relax({db: db_name, path: viewPath
-                 , method: "POST", params: params, body: body}, callback);
-      } else {
+                     , method: "POST", params: params, body: body}, callback);
+      }
+      else {
         return relax({db: db_name, path: viewPath
-                 , method: "GET", params: params},callback);
+                     , method: "GET", params: params},callback);
       }
     }
 
