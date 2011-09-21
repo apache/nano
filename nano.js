@@ -370,18 +370,15 @@ module.exports = exports = nano = function database_module(cfg) {
         callback = params;
         params   = {};
       }
-      var path, view, viewPath;
-      path     = '_design/' + design_name;
-      view     = '/_view/'  + view_name;
-      viewPath = path+view;
+      var view_path = '_design/' + design_name + '/_view/'  + view_name;
       if (params.keys) {
         var body = {keys: params.keys};
         delete params.keys;
-        return relax({db: db_name, path: viewPath
+        return relax({db: db_name, path: view_path
                      , method: "POST", params: params, body: body}, callback);
       }
       else {
-        return relax({db: db_name, path: viewPath
+        return relax({db: db_name, path: view_path
                      , method: "GET", params: params},callback);
       }
     }
@@ -528,7 +525,7 @@ module.exports = exports = nano = function database_module(cfg) {
  *     .-^^^-/ /
  *  __/       /
  * /__.|_|-|_|
- *=
+ *
  * thanks for visiting! come again!
  *
  * LH1059-A321
