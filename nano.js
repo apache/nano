@@ -102,7 +102,7 @@ module.exports = exports = nano = function database_module(cfg) {
       url += "/" + opts.path;
     }
     else if(opts.doc)  {
-      if(!/^_design/.test(opts.doc)) { 
+      if(!/^_design/.test(opts.doc)) {
         url += "/" + encodeURIComponent(opts.doc); // add the document to the url
       }
       else {
@@ -368,8 +368,21 @@ module.exports = exports = nano = function database_module(cfg) {
         callback = params;
         params   = {};
       }
-      return relax({db: db_name, path: '_design/' + design_name + '/_view/' + view_name
-                   , method: "GET", params: params},callback);
+
+      var path, view, viewPath;
+      path = '_design/' + design_name;
+      view = '/_view/'  + view_name;
+      viewPath = path+view;
+
+      if (params.keys) {
+        var body = {keys: params.keys};
+        delete params.keys;
+        return relax({db: db_name, path: viewPath
+                 , method: "POST", params: params, body: body}, callback);
+      } else {
+        return relax({db: db_name, path: viewPath
+                 , method: "GET", params: params},callback);
+      }
     }
 
    /*
@@ -475,7 +488,7 @@ module.exports = exports = nano = function database_module(cfg) {
                        };
     public_functions.view = view_docs;
     public_functions.view.compact = function(design_name,cb) {
-    return compact_db(db_name,design_name,cb); 
+    return compact_db(db_name,design_name,cb);
     };
     return public_functions;
   }
@@ -514,7 +527,7 @@ module.exports = exports = nano = function database_module(cfg) {
  *     .-^^^-/ /
  *  __/       /
  * /__.|_|-|_|
- *
+ *=
  * thanks for visiting! come again!
  *
  * LH1059-A321
