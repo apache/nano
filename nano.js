@@ -21,8 +21,8 @@ var request     = require('request')
   , u           = require('url')
   , error       = require('./error')
   , default_url = "http://localhost:5984"
+  , verbose     = (process.env.NANO_ENV==='testing')
   , nano
-  , verbose = (process.env.NANO_ENV==='testing')
   ;
 
 /*
@@ -89,60 +89,76 @@ module.exports = exports = nano = function database_module(cfg) {
   * @param {callback:function:optional} function to call back
   */
   function relax(opts,callback) {
-    var url    = cfg.url + "/" + opts.db
-      , headers = { "content-type": "application/json"
-                  , "accept": "application/json"
-                  }
-      , req    = { method: (opts.method || "GET"), headers: headers }
-      , params = opts.params
-      , status_code
-      , parsed
-      , rh;
-    if(opts.path) {
-      url += "/" + opts.path;
-    }
-    else if(opts.doc)  {
-      if(!/^_design/.test(opts.doc)) {
-        url += "/" + encodeURIComponent(opts.doc); // add the document to the url
+    try {
+      var url    = cfg.url + "/" + opts.db
+        , headers = { "content-type": "application/json"
+                    , "accept": "application/json"
+                    }
+        , req    = { method: (opts.method || "GET"), headers: headers }
+        , params = opts.params
+        , status_code
+        , parsed
+        , rh;
+      if(opts.path) {
+        url += "/" + opts.path;
       }
-      else {
-        url += "/" + opts.doc;
+      else if(opts.doc)  {
+        if(!/^_design/.test(opts.doc)) {
+          url += "/" + encodeURIComponent(opts.doc); // add the document to the url
+        }
+        else {
+          url += "/" + opts.doc;
+        }
+        if(opts.att) { url += "/" + opts.att; } // add the attachment to the url
       }
-      if(opts.att) { url += "/" + opts.att; } // add the attachment to the url
-    }
-    if(opts.encoding && callback) {
-      req.encoding = opts.encoding;
-      delete req.headers["content-type"];
-      delete req.headers.accept;
-    }
-    if(opts.content_type) {
-      req.headers["content-type"] = opts.content_type;
-      delete req.headers.accept; // undo headers set
-    }
-    req.uri = url + (_.isEmpty(params) ? "" : "?" + qs.stringify(params));
-    if(!callback) { return request(req); } // void callback, pipe
-    if(opts.body) {
-      if (Buffer.isBuffer(opts.body)) {
-        req.body = opts.body; // raw data
+      if(opts.encoding && callback) {
+        req.encoding = opts.encoding;
+        delete req.headers["content-type"];
+        delete req.headers.accept;
       }
-      else { req.body = JSON.stringify(opts.body); } // json data
-    }
-    if(verbose) { console.log(req); }
-    request(req, function(e,h,b){
-      rh = (h && h.headers || {});
-      rh['status-code'] = status_code = (h && h.statusCode || 500);
-      if(e) { return callback(error.request(e,"socket",req,status_code),b,rh); }
-      delete rh.server; // prevent security vunerabilities related to couchdb
-      delete rh["content-length"]; // prevent problems with trims and stalled responses
-      try { parsed = JSON.parse(b); } catch (err) { parsed = b; } // did we get json or binary?
-      if (status_code >= 200 && status_code < 300) {
-        callback(null,parsed,rh);
+      if(opts.content_type) {
+        req.headers["content-type"] = opts.content_type;
+        delete req.headers.accept; // undo headers set
       }
-      else { // proxy the error directly from couchdb
-        if(verbose) { console.log(parsed); }
-        callback(error.couch(parsed.reason,parsed.error,req,status_code),parsed,rh);
+
+      // make sure that all url parameters
+      // are properly encoded as JSON, first.
+      var jsonify_params = function(prms) {
+        for(var key in prms) {
+          if(prms.hasOwnProperty(key))
+            if("object" !== typeof prms[key])
+              prms[key] = JSON.stringify(prms[key])
+            else
+              prms[key] = jsonify_params(prms[key])
+        }
+        return prms;
       }
-    });
+
+      req.uri = url + (_.isEmpty(params) ? "" : "?" + qs.stringify(jsonify_params(params)));
+      if(!callback) { return request(req); } // void callback, pipe
+      if(opts.body) {
+        if (Buffer.isBuffer(opts.body)) {
+          req.body = opts.body; // raw data
+        }
+        else { req.body = JSON.stringify(opts.body); } // json data
+      }
+      if(verbose) { console.log(req); }
+      request(req, function(e,h,b){
+        rh = (h && h.headers || {});
+        rh['status-code'] = status_code = (h && h.statusCode || 500);
+        if(e) { return callback(error.request(e,"socket",req,status_code),b,rh); }
+        delete rh.server; // prevent security vunerabilities related to couchdb
+        delete rh["content-length"]; // prevent problems with trims and stalled responses
+        try { parsed = JSON.parse(b); } catch (err) { parsed = b; } // did we get json or binary?
+        if (status_code >= 200 && status_code < 300) {
+          callback(null,parsed,rh);
+        }
+        else { // proxy the error directly from couchdb
+          if(verbose) { console.log(parsed); }
+          callback(error.couch(parsed.reason,parsed.error,req,status_code),parsed,rh);
+        }
+      });
+    } catch(exc) { callback(error.uncaught(exc)); }
   }
 
  /****************************************************************************
@@ -368,20 +384,19 @@ module.exports = exports = nano = function database_module(cfg) {
         callback = params;
         params   = {};
       }
-
       var path, view, viewPath;
-      path = '_design/' + design_name;
-      view = '/_view/'  + view_name;
+      path     = '_design/' + design_name;
+      view     = '/_view/'  + view_name;
       viewPath = path+view;
-
       if (params.keys) {
         var body = {keys: params.keys};
         delete params.keys;
         return relax({db: db_name, path: viewPath
-                 , method: "POST", params: params, body: body}, callback);
-      } else {
+                     , method: "POST", params: params, body: body}, callback);
+      }
+      else {
         return relax({db: db_name, path: viewPath
-                 , method: "GET", params: params},callback);
+                     , method: "GET", params: params},callback);
       }
     }
 
