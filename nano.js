@@ -119,8 +119,27 @@ module.exports = exports = nano = function database_module(cfg) {
       if(opts.content_type) {
         req.headers["content-type"] = opts.content_type;
         delete req.headers.accept; // undo headers set
+<<<<<<< HEAD
       }
       req.uri = url + (_.isEmpty(params) ? "" : "?" + qs.stringify(params));
+=======
+      }
+
+      // make sure that all url parameters
+      // are properly encoded as JSON, first.
+      var jsonify_params = function(prms) {
+        for(var key in prms) {
+          if(prms.hasOwnProperty(key))
+            if("object" !== typeof prms[key])
+              prms[key] = JSON.stringify(prms[key])
+            else
+              prms[key] = jsonify_params(prms[key])
+        }
+        return prms;
+      }
+
+      req.uri = url + (_.isEmpty(params) ? "" : "?" + qs.stringify(jsonify_params(params)));
+>>>>>>> 4a89576aaa36244123d883d87579a4b713c1c0c4
       if(!callback) { return request(req); } // void callback, pipe
       if(opts.body) {
         if (Buffer.isBuffer(opts.body)) {
@@ -370,6 +389,7 @@ module.exports = exports = nano = function database_module(cfg) {
         callback = params;
         params   = {};
       }
+<<<<<<< HEAD
       var view_path = '_design/' + design_name + '/_view/'  + view_name;
       if (params.keys) {
         var body = {keys: params.keys};
@@ -379,6 +399,20 @@ module.exports = exports = nano = function database_module(cfg) {
       }
       else {
         return relax({db: db_name, path: view_path
+=======
+      var path, view, viewPath;
+      path     = '_design/' + design_name;
+      view     = '/_view/'  + view_name;
+      viewPath = path+view;
+      if (params.keys) {
+        var body = {keys: params.keys};
+        delete params.keys;
+        return relax({db: db_name, path: viewPath
+                     , method: "POST", params: params, body: body}, callback);
+      }
+      else {
+        return relax({db: db_name, path: viewPath
+>>>>>>> 4a89576aaa36244123d883d87579a4b713c1c0c4
                      , method: "GET", params: params},callback);
       }
     }
