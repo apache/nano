@@ -121,11 +121,11 @@ module.exports = exports = nano = function database_module(cfg) {
         delete req.headers.accept; // undo headers set
       }
 
-      // make sure that all url parameters
+      // make sure that all key-based parameters
       // are properly encoded as JSON, first.
       var jsonify_params = function(prms) {
         for(var key in prms) {
-          if(prms.hasOwnProperty(key))
+          if(prms.hasOwnProperty(key) && (/(start|end|^)key$/).test(key))
             if("object" !== typeof prms[key])
               prms[key] = JSON.stringify(prms[key])
             else
