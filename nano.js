@@ -126,7 +126,7 @@ module.exports = exports = nano = function database_module(cfg) {
       var jsonify_params = function(prms) {
         for(var key in prms) {
           if(prms.hasOwnProperty(key) && (/(start|end|^)key$/).test(key))
-            if("object" !== typeof prms[key])
+            if(prms[key].toString() !== "[object Object]")
               prms[key] = JSON.stringify(prms[key])
             else
               prms[key] = jsonify_params(prms[key])
@@ -134,7 +134,21 @@ module.exports = exports = nano = function database_module(cfg) {
         return prms;
       }
 
-      req.uri = url + (_.isEmpty(params) ? "" : "?" + qs.stringify(jsonify_params(params)));
+      // builtin qs.stringify is too smart
+      // for our needs.
+      var queryify = function (prms) {
+        q_str = [];
+        var value;
+        for(var key in prms) {
+          if(prms.hasOwnProperty(key)) {
+            value = prms[key]
+            q_str.push(key+"="+qs.escape(value));
+          }
+        }
+        return q_str.join("&");
+      }
+
+      req.uri = url + (_.isEmpty(params) ? "" : "?" + queryify(jsonify_params(params)));
       if(!callback) { return request(req); } // void callback, pipe
       if(opts.body) {
         if (Buffer.isBuffer(opts.body)) {
