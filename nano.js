@@ -141,7 +141,7 @@ module.exports = exports = nano = function database_module(cfg) {
         var value;
         for(var key in prms) {
           if(prms.hasOwnProperty(key)) {
-            value = prms[key]
+            value = prms[key];
             q_str.push(key+"="+qs.escape(value));
           }
         }
