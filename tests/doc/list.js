@@ -60,7 +60,7 @@ tests.list_doc_params = function (callback) {
       , function(cb) { db('c').insert({"foo": "baz"}, "foobaz", cb); }
       ],
       function(err, results){
-        db('c').list({startkey: '"c"'},callback);
+        db('c').list({startkey: 'c'},callback);
       });
   });
 };

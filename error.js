@@ -97,6 +97,6 @@ function gen_err(scope,error,code,request,status_code) {
   error.request        = request;
   return error;
 }
-exports.uncaught = function (e,c,r,s) { return gen_err('uncaught',e,c,r,s);};
-exports.request  = function (e,c,r,s) { return gen_err('request',e,c,r,s); };
-exports.couch    = function (e,c,r,s) { return gen_err('couch',e,c,r,s);   };
+exports.uncaught = function (e,c,r,s) { return gen_err('uncaught',e,c,r,s); };
+exports.request  = function (e,c,r,s) { return gen_err('request',e,c,r,s);  };
+exports.couch    = function (e,c,r,s) { return gen_err('couch',e,c,r,s);    };

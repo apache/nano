@@ -1,1 +1,1 @@
-module.exports = exports = cfg = { url: 'http://nodejsbug.iriscouch.com' };
+module.exports = exports = cfg = { url: 'http://testnano.iriscouch.com' };

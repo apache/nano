@@ -90,26 +90,26 @@ module.exports = exports = nano = function database_module(cfg) {
   */
   function relax(opts,callback) {
     try {
-      var url    = cfg.url + "/" + opts.db
-        , headers = { "content-type": "application/json"
+      var headers = { "content-type": "application/json"
                     , "accept": "application/json"
                     }
-        , req    = { method: (opts.method || "GET"), headers: headers }
-        , params = opts.params
+        , req     = { method: (opts.method || "GET"), headers: headers
+                    , uri: cfg.url + "/" + opts.db }
+        , params  = opts.params
         , status_code
         , parsed
         , rh;
       if(opts.path) {
-        url += "/" + opts.path;
+        req.uri += "/" + opts.path;
       }
       else if(opts.doc)  {
         if(!/^_design/.test(opts.doc)) {
-          url += "/" + encodeURIComponent(opts.doc); // add the document to the url
+          req.uri += "/" + encodeURIComponent(opts.doc); // add the document to the url
         }
         else {
-          url += "/" + opts.doc;
+          req.uri += "/" + opts.doc;
         }
-        if(opts.att) { url += "/" + opts.att; } // add the attachment to the url
+        if(opts.att) { req.uri += "/" + opts.att; } // add the attachment to the url
       }
       if(opts.encoding && callback) {
         req.encoding = opts.encoding;
@@ -120,35 +120,12 @@ module.exports = exports = nano = function database_module(cfg) {
         req.headers["content-type"] = opts.content_type;
         delete req.headers.accept; // undo headers set
       }
-
-      // make sure that all key-based parameters
-      // are properly encoded as JSON, first.
-      var jsonify_params = function(prms) {
-        for(var key in prms) {
-          if(prms.hasOwnProperty(key) && (/(start|end|^)key$/).test(key))
-            if(prms[key].toString() !== "[object Object]")
-              prms[key] = JSON.stringify(prms[key])
-            else
-              prms[key] = jsonify_params(prms[key])
-        }
-        return prms;
+      if(!_.isEmpty(params)) {
+        ['startkey', 'endkey', 'key'].forEach(function (key) {
+          if (key in params) { params[key] = JSON.stringify(params[key]); }
+        });
+        req.uri += "?" + qs.stringify(params);
       }
-
-      // builtin qs.stringify is too smart
-      // for our needs.
-      var queryify = function (prms) {
-        q_str = [];
-        var value;
-        for(var key in prms) {
-          if(prms.hasOwnProperty(key)) {
-            value = prms[key];
-            q_str.push(key+"="+qs.escape(value));
-          }
-        }
-        return q_str.join("&");
-      }
-
-      req.uri = url + (_.isEmpty(params) ? "" : "?" + queryify(jsonify_params(params)));
       if(!callback) { return request(req); } // void callback, pipe
       if(opts.body) {
         if (Buffer.isBuffer(opts.body)) {
@@ -162,7 +139,7 @@ module.exports = exports = nano = function database_module(cfg) {
         rh['status-code'] = status_code = (h && h.statusCode || 500);
         if(e) { return callback(error.request(e,"socket",req,status_code),b,rh); }
         delete rh.server; // prevent security vunerabilities related to couchdb
-        delete rh["content-length"]; // prevent problems with trims and stalled responses
+        delete rh['content-length']; // prevent problems with trims and stalled responses
         try { parsed = JSON.parse(b); } catch (err) { parsed = b; } // did we get json or binary?
         if (status_code >= 200 && status_code < 300) {
           callback(null,parsed,rh);
@@ -172,7 +149,9 @@ module.exports = exports = nano = function database_module(cfg) {
           callback(error.couch(parsed.reason,parsed.error,req,status_code),parsed,rh);
         }
       });
-    } catch(exc) { callback(error.uncaught(exc)); }
+    } catch(exc) {
+      callback ? callback(error.uncaught(exc)) : console.error(exc);
+    }
   }
 
  /****************************************************************************
@@ -398,7 +377,6 @@ module.exports = exports = nano = function database_module(cfg) {
         callback = params;
         params   = {};
       }
-
       var view_path = '_design/' + design_name + '/_view/'  + view_name;
       if (params.keys) {
         var body = {keys: params.keys};
