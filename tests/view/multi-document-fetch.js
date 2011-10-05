@@ -32,4 +32,4 @@ tests.multi_doc_ok = function (err,view) {
   this.t.equal(view.rows[1].id, 'bar');
 };
 
-ensure(__filename, tests, module);
+ensure(__filename, tests, module,process.argv[2]);

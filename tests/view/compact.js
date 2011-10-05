@@ -33,4 +33,4 @@ tests.compact_view_ok = function (err,view) {
   this.t.equal(view.total_rows, 2);
 };
 
-ensure(__filename, tests, module);
+ensure(__filename, tests, module,process.argv[2]);
