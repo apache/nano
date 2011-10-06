@@ -120,6 +120,9 @@ module.exports = exports = nano = function database_module(cfg) {
         req.headers["content-type"] = opts.content_type;
         delete req.headers.accept; // undo headers set
       }
+      if(cfg.user && cfg.pass) {
+      	req.headers['Authorization'] = "Basic " + new Buffer(cfg.user+":"+cfg.pass).toString('base64');
+	    }
       if(!_.isEmpty(params)) {
         ['startkey', 'endkey', 'key'].forEach(function (key) {
           if (key in params) { params[key] = JSON.stringify(params[key]); }
@@ -282,6 +285,22 @@ module.exports = exports = nano = function database_module(cfg) {
     var body = {source: source, target: target};
     if(continuous) { body.continuous = true; }
     return relax({db: "_replicate", body: body, method: "POST"},callback);
+  }
+  
+ /*
+  * authenticates a user
+  *
+  * e.g. nano.auth(user, password)
+  *
+  * @param {user:string} user name
+  * @param {pass:string} password
+  *
+  * @see relax
+  */
+  function auth_db(user, password, callback) {
+    cfg.user = user;
+    cfg.pass = password;
+    return relax({db: "_session", method: "GET"}, callback);
   }
 
  /****************************************************************************
@@ -512,6 +531,7 @@ module.exports = exports = nano = function database_module(cfg) {
                      , scope: document_module        // alias
                      , request: relax
                      , config: cfg
+                     , auth: auth_db
                      , relax: relax                  // alias
                      , dinosaur: relax               // alias
                      };
