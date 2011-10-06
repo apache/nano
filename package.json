@@ -7,6 +7,7 @@
 , "contributors"    : 
   [ "Thiago Arrais <thiago.arrais@gmail.com> (http://thiagoarrais.com)"
   , "Derek Perez <derek@derekperez.com> (http://blog.derekperez.com)"
+  , "Patrick Heneise (http://patrickheneise.me)"
   ]
 , "keywords"        : ["couchdb", "data", "request", "json", "nosql", "micro", "nano"]
 , "dependencies"    : {"request": "~2.1.1", "underscore": "~1.1.7"}
