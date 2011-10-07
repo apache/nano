@@ -178,10 +178,10 @@ everyone is welcome to contribute. patches, bugfixes, new features
 to run (and configure) the test suite simply:
 
 ``` sh
-cd nano
-vi cfg/tests.js
-npm install # should install ensure and async, if it doesnt install manually
-npm test
+  cd nano
+  vi cfg/tests.js
+  npm install # should install ensure and async, if it doesnt install manually
+  npm test
 ```
 
 after adding a new test you can run it individually (with verbose output) using:
