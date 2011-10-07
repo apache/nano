@@ -173,22 +173,24 @@ everyone is welcome to contribute. patches, bugfixes, new features
 7. push to your branch `git push origin my_branch`
 8. create an pull request
 
-*useful tip*: to run a single test and get verbose output you can do
+# tests
+
+to run (and configure) the test suite simply:
+
+``` sh
+cd nano
+vi cfg/tests.js
+npm install # should install ensure and async, if it doesnt install manually
+npm test
+```
+
+after adding a new test you can run it individually (with verbose output) using:
 
 ``` sh
   NANO_ENV=testing node tests/doc/list.js list_doc_params
 ```
 
 where `list_doc_params` is the test name.
-
-# tests
-
-1. install the packages referred as dev dependencies in `package.json`
-2. browse to `test/` and `./run`.
-
-always make sure all the tests pass before sending in your pull request!
-
-we will tell santa
 
 # meta
 
