@@ -121,8 +121,9 @@ module.exports = exports = nano = function database_module(cfg) {
         delete req.headers.accept; // undo headers set
       }
       if(cfg.user && cfg.pass) {
-      	req.headers['Authorization'] = "Basic " + new Buffer(cfg.user+":"+cfg.pass).toString('base64');
-	    }
+        req.headers['Authorization'] = "Basic " + 
+          new Buffer(cfg.user + ":" + cfg.pass).toString('base64');
+      }
       if(!_.isEmpty(params)) {
         ['startkey', 'endkey', 'key'].forEach(function (key) {
           if (key in params) { params[key] = JSON.stringify(params[key]); }
