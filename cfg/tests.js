@@ -1,1 +1,1 @@
-module.exports = exports = cfg = { url: 'http://testnano.iriscouch.com' };
+module.exports = exports = cfg = { url: 'http://tarantoga:Jet0&kyms!@localhost:5984' };

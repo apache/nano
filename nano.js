@@ -290,29 +290,32 @@ module.exports = exports = nano = function database_module(cfg) {
     return relax({db: "_replicate", body: body, method: "POST"},callback);
   }
   
+ /****************************************************************************
+  * session                                                                  *
+  ****************************************************************************/
  /*
-  * authenticates a user
+  * creates session
   *
-  * e.g. nano.auth(user, password)
+  * e.g. nano.session.create(user, password)
   *
   * @param {user:string} user name
   * @param {pass:string} password
   *
   * @see relax
   */
-  function auth_db(user, password, callback) {
+  function create_session(user, password, callback) {
     var body = new Buffer("name=" + user + "&" + "password=" + password);
     return relax({db: "_session", body:body, method: "POST", content_type: "application/x-www-form-urlencodeddata"}, callback);
   }
 
   /*
-   * ends auth session
+   * deletes session
    *
-   * e.g. nano.unauth()
+   * e.g. nano.session.delete()
    *
    * @see relax
    */
-   function unauth_db(callback) {
+   function delete_session(callback) {
      cfg.cookie = null;  //make sure cookie gets destroyed also if error
      return relax({db: "_session", method: "DELETE"}, callback);
    }
@@ -541,12 +544,13 @@ module.exports = exports = nano = function database_module(cfg) {
                             , replicate: replicate_db
                             , changes: changes_db
                             }
+                     , session: { create: create_session
+                                , delete: delete_session
+                                }
                      , use: document_module
                      , scope: document_module        // alias
                      , request: relax
                      , config: cfg
-                     , auth: auth_db
- 										 , unauth: unauth_db
                      , relax: relax                  // alias
                      , dinosaur: relax               // alias
                      };
