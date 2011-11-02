@@ -120,9 +120,8 @@ module.exports = exports = nano = function database_module(cfg) {
         req.headers["content-type"] = opts.content_type;
         delete req.headers.accept; // undo headers set
       }
-      if(cfg.user && cfg.pass) {
-        req.headers['Authorization'] = "Basic " + 
-          new Buffer(cfg.user + ":" + cfg.pass).toString('base64');
+      if(cfg.cookie){
+        req.headers["cookie"] = cfg.cookie;
       }
       if(!_.isEmpty(params)) {
         ['startkey', 'endkey', 'key'].forEach(function (key) {
@@ -146,6 +145,9 @@ module.exports = exports = nano = function database_module(cfg) {
         delete rh['content-length']; // prevent problems with trims and stalled responses
         try { parsed = JSON.parse(b); } catch (err) { parsed = b; } // did we get json or binary?
         if (status_code >= 200 && status_code < 300) {
+          if (rh['set-cookie']){
+            cfg.cookie = rh['set-cookie']; //get auth cookie
+          }
           callback(null,parsed,rh);
         }
         else { // proxy the error directly from couchdb
@@ -288,21 +290,35 @@ module.exports = exports = nano = function database_module(cfg) {
     return relax({db: "_replicate", body: body, method: "POST"},callback);
   }
   
+ /****************************************************************************
+  * session                                                                  *
+  ****************************************************************************/
  /*
-  * authenticates a user
+  * creates session
   *
-  * e.g. nano.auth(user, password)
+  * e.g. nano.session.create(user, password)
   *
   * @param {user:string} user name
   * @param {pass:string} password
   *
   * @see relax
   */
-  function auth_db(user, password, callback) {
-    cfg.user = user;
-    cfg.pass = password;
-    return relax({db: "_session", method: "GET"}, callback);
+  function create_session(user, password, callback) {
+    var body = new Buffer("name=" + user + "&" + "password=" + password);
+    return relax({db: "_session", body:body, method: "POST", content_type: "application/x-www-form-urlencodeddata"}, callback);
   }
+
+  /*
+   * deletes session
+   *
+   * e.g. nano.session.delete()
+   *
+   * @see relax
+   */
+   function delete_session(callback) {
+     cfg.cookie = null;  //make sure cookie gets destroyed also if error
+     return relax({db: "_session", method: "DELETE"}, callback);
+   }
 
  /****************************************************************************
   * doc                                                                      *
@@ -528,11 +544,13 @@ module.exports = exports = nano = function database_module(cfg) {
                             , replicate: replicate_db
                             , changes: changes_db
                             }
+                     , session: { create: create_session
+                                , delete: delete_session
+                                }
                      , use: document_module
                      , scope: document_module        // alias
                      , request: relax
                      , config: cfg
-                     , auth: auth_db
                      , relax: relax                  // alias
                      , dinosaur: relax               // alias
                      };
