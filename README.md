@@ -11,7 +11,7 @@
 
 a quick example using `nano`
 
-to use `nano` you have to either provide a) a `json` `configuration object`, b) a `url` string, or c) a `configuration file path` like `cfg/tests.js`. refer to [cfg/couch.example.js][4] for a example
+to use `nano` you have to either provide an `endpoint configuration` such as `cfg/tests.js`, or [cfg/couch.example.js][4]
 
 ``` js
   var nano = require('nano')('http://localhost:5984');
@@ -62,7 +62,7 @@ meaning:
       r: the http `response body` from couchdb, if no error.
       h: the http response `headers` from couchdb, if no error.
 
-that's it. don't forget to delete the database you created:
+errors include responses from couchdb which had a non-200 response code. that's it. don't forget to delete the database you created:
 
 ``` js
   nano.db.destroy("alice");
