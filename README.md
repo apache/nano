@@ -9,10 +9,6 @@
 
 # usage
 
-a quick example using `nano`
-
-to use `nano` you have to either provide an `endpoint configuration` such as `cfg/tests.js`, or [cfg/couch.example.js][4]
-
 ``` js
   var nano = require('nano')('http://localhost:5984');
 ```
