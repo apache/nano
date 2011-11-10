@@ -14,7 +14,7 @@ tests.delete_session = function (callback) {
     , "salt"         : "659b9645544dfc82124b7fb07a0bd5f9"
     }, function(err,user) {
       nano.session.create('pat', '123', function(){
-        nano.session.delete(function(e,b,h){
+        nano.session.destroy(function(e,b,h){
           callback(e,user.rev,b,h);
         });
       });
@@ -26,7 +26,7 @@ tests.delete_session_ok = function (err,rev,response,headers) {
   this.t.notOk(err); 
   this.t.equal(headers['status-code'], 200); // header tests go here
   this.t.equal(headers['set-cookie'][0].length, 41);  
-  this.t.equal(response['ok'], true); // response tests go here  
+  this.t.equal(response.ok, true); // response tests go here  
 };
 
 ensure(__filename,tests,module,process.argv[2]);
