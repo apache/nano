@@ -121,7 +121,7 @@ module.exports = exports = nano = function database_module(cfg) {
         delete req.headers.accept; // undo headers set
       }
       if(cfg.cookie){
-        req.headers["cookie"] = cfg.cookie;
+        req.headers.cookie = cfg.cookie;
       }
       if(!_.isEmpty(params)) {
         ['startkey', 'endkey', 'key'].forEach(function (key) {
@@ -156,7 +156,12 @@ module.exports = exports = nano = function database_module(cfg) {
         }
       });
     } catch(exc) {
-      callback ? callback(error.uncaught(exc)) : console.error(exc);
+      if (callback) {
+        callback(error.uncaught(exc));
+      }
+      else {
+        console.error(exc);
+      }
     }
   }
 
@@ -191,7 +196,7 @@ module.exports = exports = nano = function database_module(cfg) {
  /*
   * annihilates a couchdb database
   *
-  * e.g. nano.db.delete(db_name);
+  * e.g. nano.db.destroy(db_name);
   *
   * even though this examples looks sync it is an async function
   *
@@ -309,13 +314,13 @@ module.exports = exports = nano = function database_module(cfg) {
   }
 
   /*
-   * deletes session
+   * destroy session
    *
-   * e.g. nano.session.delete()
+   * e.g. nano.session.destroy()
    *
    * @see relax
    */
-   function delete_session(callback) {
+   function destroy_session(callback) {
      cfg.cookie = null;  //make sure cookie gets destroyed also if error
      return relax({db: "_session", method: "DELETE"}, callback);
    }
@@ -545,7 +550,7 @@ module.exports = exports = nano = function database_module(cfg) {
                             , changes: changes_db
                             }
                      , session: { create: create_session
-                                , delete: delete_session
+                                , destroy: destroy_session
                                 }
                      , use: document_module
                      , scope: document_module        // alias
