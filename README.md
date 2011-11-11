@@ -88,6 +88,8 @@ errors include responses from couchdb which had a non-200 response code. that's 
 `server.use(db_name)`
 `server.request(opts,callback*)`
 `server.config`
+`server.session.create`
+`server.session.destroy`
 
 ### aliases
 
