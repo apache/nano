@@ -2,9 +2,10 @@ var ensure = require('ensure')
   , async  = require('async')
   , cfg    = require('../../cfg/tests.js')
   , nano   = require('../../nano')(cfg)
-  , tests    = exports;
+  , db_name  = require('../utils').db_name("doc_ch")
+  , tests    = exports
+  ;
 
-function db_name(i) { return "doc_ch" + i; }
 function db(i) { return nano.use(db_name(i)); }
 
 tests.changes_db = function (callback) {

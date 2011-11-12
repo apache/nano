@@ -1,9 +1,9 @@
 var ensure   = require('ensure')
   , cfg      = require('../../cfg/tests.js')
   , nano     = require('../../nano')(cfg)
+  , db_name  = require('../utils').db_name("doc_ge")
   , tests    = exports;
 
-function db_name(i) { return "doc_ge" + i; }
 function db(i) { return nano.use(db_name(i)); }
 
 tests.get_doc = function (callback) {

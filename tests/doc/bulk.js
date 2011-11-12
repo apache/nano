@@ -2,9 +2,9 @@ var ensure   = require('ensure')
   , async    = require('async')
   , cfg      = require('../../cfg/tests.js')
   , nano     = require('../../nano')(cfg)
+  , db_name  = require('../utils').db_name("doc_bu")
   , tests    = exports;
 
-function db_name(i) { return "doc_bu" + i; }
 function db(i) { return nano.use(db_name(i)); }
 
 tests.bulk_docs = function (callback) {

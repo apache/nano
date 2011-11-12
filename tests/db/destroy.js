@@ -1,11 +1,12 @@
 var ensure   = require('ensure')
   , cfg      = require('../../cfg/tests.js')
   , nano     = require('../../nano')(cfg)
+  , db_name  = require('../utils').db_name("db_de")
   , tests    = exports;
 
 tests.destroy_db = function (callback) {
-  nano.db.create("db_de1", function () {
-    nano.db.destroy("db_de1", callback);
+  nano.db.create(db_name('1'), function () {
+    nano.db.destroy(db_name('1'), callback);
   });
 };
 

@@ -2,9 +2,9 @@ var ensure   = require('ensure')
   , async    = require('async')
   , cfg      = require('../../cfg/tests.js')
   , nano     = require('../../nano')(cfg)
+  , db_name  = require('../utils').db_name("view_qu")
   , tests    = exports;
 
-function db_name(i) { return "view_qu" + i; }
 function db_gen(i) { return nano.use(db_name(i)); }
 
 tests.recursive_create_view = function (tried,callback) {
@@ -71,17 +71,5 @@ tests.array_in_key_ok = function (e,b,h) {
   this.t.equal(b.rows[0].key[0],'Derek');
   this.t.equal(b.rows[0].key[1],'San Francisco // CA, USA');
 };
-
-// Derek please fix me :)
-//
-//tests.naive_grouping = function (cb) {
-//  complex_key_test(cb,"3",{ startkey: ["San Francisco // CA, USA",''], endkey: ["San Francisco // CA, USA",'~~']});
-//};
-//
-//tests.naive_grouping_ok = function (e,b,h) {
-//  nano.db.destroy(db_name('3'));
-//  this.t.notOk(e);
-//  this.t.equal(b,1);
-//};
 
 ensure(__filename, tests, module, process.argv[2]);

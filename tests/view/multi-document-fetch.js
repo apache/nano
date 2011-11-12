@@ -2,11 +2,13 @@ var ensure = require('ensure')
   , async  = require('async')
   , cfg    = require('../../cfg/tests.js')
   , nano   = require('../../nano')(cfg)
-  , tests    = exports;
+  , db_name  = require('../utils').db_name("view_md")
+  , tests    = exports
+  ;
 
 tests.multi_doc = function (callback) {
-  nano.db.create("view_md1", function () {
-    var db = nano.use("view_md1");
+  nano.db.create(db_name('1'), function () {
+    var db = nano.use(db_name('1'));
     async.parallel(
       [ function(cb) { db.insert({"foo": "bar"},"foo",cb); }
       , function(cb) { db.insert({"bar": "foo"},"bar",cb); }
@@ -25,7 +27,7 @@ tests.multi_doc = function (callback) {
 };
 
 tests.multi_doc_ok = function (err,view) {
-  nano.db.destroy("view_md1");
+  nano.db.destroy(db_name('1'));
   this.t.notOk(err);
   this.t.equal(view.rows.length, 2);
   this.t.equal(view.rows[0].id, 'foo');

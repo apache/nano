@@ -1,9 +1,10 @@
 var ensure   = require('ensure')
   , cfg      = require('../../cfg/tests.js')
   , nano     = require('../../nano')(cfg)
-  , tests    = exports;
+  , db_name  = require('../utils').db_name("att_de")
+  , tests    = exports
+  ;
 
-function db_name(i) { return "att_de" + i; }
 function db(i) { return nano.use(db_name(i)); }
 
 tests.att_des = function (callback) {

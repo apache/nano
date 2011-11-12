@@ -1,10 +1,11 @@
 var ensure   = require('ensure')
   , cfg      = require('../../cfg/tests.js')
   , nano     = require('../../nano')(cfg)
+  , db_name  = require('../utils').db_name("att_ge")
   , tests    = exports
-  , pixel    = "Qk06AAAAAAAAADYAAAAoAAAAAQAAAP////8BABgAAAAAAAAAAAATCwAAEwsAAAAAAAAAAAAAWm2CAA==";
+  , pixel    = "Qk06AAAAAAAAADYAAAAoAAAAAQAAAP////8BABgAAAAAAAAAAAATCwAAEwsAAAAAAAAAAAAAWm2CAA=="
+  ;
 
-function db_name(i) { return "att_ge" + i; }
 function db(i) { return nano.use(db_name(i)); }
 
 tests.att_get = function (callback) {

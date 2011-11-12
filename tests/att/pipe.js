@@ -3,9 +3,9 @@ var ensure    = require('ensure')
   , cfg       = require('../../cfg/tests.js')
   , nano      = require('../../nano')(cfg)
   , tests     = exports
+  , db_name  = require('../utils').db_name("att_pi")
   , pixel     = "Qk06AAAAAAAAADYAAAAoAAAAAQAAAP////8BABgAAAAAAAAAAAATCwAAEwsAAAAAAAAAAAAAWm2CAA==";
 
-function db_name(i) { return "att_pi" + i; }
 function db(i) { return nano.use(db_name(i)); }
 function file_name(i) { return  __dirname + "/." + i + "-tmp.bmp"; }
 function f_s(i) { return fs.createWriteStream(file_name(i)); }
