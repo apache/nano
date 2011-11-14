@@ -25,11 +25,11 @@ you normally don't want to do that though:
 
 ``` js
   // clean up the database we created previously
-  nano.db.destroy("alice", function(err,response,headers) {
+  nano.db.destroy("alice", function() {
     nano.db.create("alice", function() {
       // specify the database we are going to use
       var alice = nano.use("alice");
-      alice.insert({crazy: true}, "rabbit", function(e,r,h){
+      alice.insert({crazy: true}, "rabbit", function(e,b,h){
         if(e) { throw e; }
         console.log("you have inserted the rabbit.")
       });
@@ -43,10 +43,10 @@ the `nano.use` method creates a `scope` where you operate inside a single databa
   // 5: var alice = nano.use("alice");
 ```
 
-in `nano` a callback has always three arguments
+in `nano` *a callback has always the same three arguments*
 
 ``` js
-  // 6: alice.insert({crazy: true}, "rabbit", function(e,r,h) {
+  // 6: alice.insert({crazy: true}, "rabbit", function(e,b,h) {
   // 7:   if(e) { throw e; }
   // 8:   console.log("you have inserted the rabbit.")
   // 9: });
@@ -54,11 +54,11 @@ in `nano` a callback has always three arguments
 
 meaning:
 
-      e: the `error`, if any. check error.js for more info.
-      r: the http `response body` from couchdb, if no error.
-      h: the http response `headers` from couchdb, if no error.
+      e: the `error`, if any
+      b: the http `response body` from couchdb, if no error. json parsed body, binary for non-json responses
+      h: the http response `headers` from couchdb, if no error
 
-errors include responses from couchdb which had a non-200 response code. that's it. don't forget to delete the database you created:
+errors include responses from couchdb which had a non 200 response code. that's it. don't forget to delete the database you created:
 
 ``` js
   nano.db.destroy("alice");
