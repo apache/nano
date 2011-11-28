@@ -124,7 +124,7 @@ module.exports = exports = nano = function database_module(cfg) {
         req.headers.cookie = cfg.cookie;
       }
       if(!_.isEmpty(params)) {
-        ['startkey', 'endkey', 'key'].forEach(function (key) {
+        ['startkey', 'endkey', 'key', 'keys'].forEach(function (key) {
           if (key in params) { params[key] = JSON.stringify(params[key]); }
         });
         req.uri += "?" + qs.stringify(params);
