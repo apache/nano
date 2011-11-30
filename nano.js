@@ -59,7 +59,7 @@ module.exports = exports = nano = function database_module(cfg) {
 
  /****************************************************************************
   * relax                                                                    *
-  ****************************************************************************/
+  ***************************************************************************/
  /*
   * relax
   *
@@ -136,11 +136,15 @@ module.exports = exports = nano = function database_module(cfg) {
         }
         else { req.body = JSON.stringify(opts.body); } // json data
       }
-      if(verbose) { console.log(req); }
+      if(verbose) { console.log('>>'); console.log(req); }
       request(req, function(e,h,b){
+        if(verbose) { console.log('<<'); }
         rh = (h && h.headers || {});
         rh['status-code'] = status_code = (h && h.statusCode || 500);
-        if(e) { return callback(error.request(e,"socket",req,status_code),b,rh); }
+        if(e) {
+          if(verbose) { console.log({err: 'socket', body: b, headers: rh }); }
+          return callback(error.request(e,"socket",req,status_code),b,rh); 
+        }
         delete rh.server; // prevent security vunerabilities related to couchdb
         delete rh['content-length']; // prevent problems with trims and stalled responses
         try { parsed = JSON.parse(b); } catch (err) { parsed = b; } // did we get json or binary?
@@ -148,26 +152,29 @@ module.exports = exports = nano = function database_module(cfg) {
           if (rh['set-cookie']){
             cfg.cookie = rh['set-cookie']; //get auth cookie
           }
+          if(verbose) { console.log({err: null, body: parsed, headers: rh}); }
           callback(null,parsed,rh);
         }
         else { // proxy the error directly from couchdb
-          if(verbose) { console.log(parsed); }
-          callback(error.couch(parsed.reason,parsed.error,req,status_code),parsed,rh);
+          if(verbose) { 
+            console.log({err: 'couch', body: parsed, headers: rh}); 
+          }
+          callback( error.couch(parsed.reason,parsed.error,req,status_code),
+            parsed, rh);
         }
       });
     } catch(exc) {
       if (callback) {
+        if(verbose) { console.log({err: 'uncaught', body: exc}); }
         callback(error.uncaught(exc));
       }
-      else {
-        console.error(exc);
-      }
+      else { console.error({err: 'uncaught', body: exc}); }
     }
   }
 
  /****************************************************************************
   * db                                                                       *
-  ****************************************************************************/
+  ***************************************************************************/
  /*
   * creates a couchdb database
   * http://wiki.apache.org/couchdb/HTTP_database_API
@@ -297,7 +304,7 @@ module.exports = exports = nano = function database_module(cfg) {
   
  /****************************************************************************
   * session                                                                  *
-  ****************************************************************************/
+  ***************************************************************************/
  /*
   * creates session
   *
@@ -327,7 +334,7 @@ module.exports = exports = nano = function database_module(cfg) {
 
  /****************************************************************************
   * doc                                                                      *
-  ****************************************************************************/
+  ***************************************************************************/
   function document_module(db_name) {
     var public_functions = {};
 
@@ -446,7 +453,7 @@ module.exports = exports = nano = function database_module(cfg) {
 
    /**************************************************************************
     * attachment                                                             *
-    **************************************************************************/
+    *************************************************************************/
    /*
     * inserting an attachment
     * [2]: http://wiki.apache.org/couchdb/HTTP_Document_API
