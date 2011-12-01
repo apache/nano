@@ -5,46 +5,9 @@ var ensure   = require('ensure')
   , db_name  = require('../utils').db_name("att_ge")
   , tests    = exports
   , pixel    = "Qk06AAAAAAAAADYAAAAoAAAAAQAAAP////8BABgAAAAAAAAAAAATCwAAEwsAAAAAAAAAAAAAWm2CAA=="
-  , couchdb
   ;
 
-  couchdb  = nock(cfg.url)
-    .put('/' + db_name("a")
-        , ''
-        , { 'content-type': 'application/json'
-          , "accept": 'application/json' })
-    .reply(201, { ok: true },
-      { location: cfg.url + '/' + db_name("a")
-      , date: 'Wed, 30 Nov 2011 17:37:26 GMT'
-      , 'content-type': 'application/json'
-      , 'cache-control': 'must-revalidate'
-      , 'status-code': 201 
-      })
-
-    .put('/' + db_name("a") + '/new/att'
-        , "\"Hello World!\""
-        , { 'content-type': 'text/plain' })
-    .reply(201, { ok: true, id: 'new', rev: '1-5142a2e74e1ec33e6e5b621418210283' },
-      { location: cfg.url + '/' + db_name("a") + '/new/att'
-      , etag: '1-5142a2e74e1ec33e6e5b621418210283'
-      , date: 'Wed, 30 Nov 2011 17:37:27 GMT'
-      , 'content-type': 'application/json'
-      , 'cache-control': 'must-revalidate'
-      , 'status-code': 201 
-      })
-
-    .put('/' + db_name("a") +
-        '/new/att?rev=1-5142a2e74e1ec33e6e5b621418210283'
-      , new Buffer(pixel, 'base64')
-      , { 'content-type': 'image/bmp' })
-    .reply(201,   { ok: true, id: 'new'
-        , rev: '2-3b1f88c637fde74a486cf3ce5558b47e' }
-      , { location: 'http://nodejsbug.iriscouch.com/v061_att_gea/new/att',
-          etag: '"2-3b1f88c637fde74a486cf3ce5558b47e"',
-          date: 'Wed, 30 Nov 2011 17:37:27 GMT',
-          'content-type': 'text/plain;charset=utf-8',
-          'cache-control': 'must-revalidate',
-          'status-code': 201 })
+nock.recorder.rec()
 
 function db(i) { return nano.use(db_name(i)); }
 

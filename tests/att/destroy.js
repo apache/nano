@@ -4,8 +4,6 @@ var ensure   = require('ensure')
   , db_name  = require('../utils').db_name("att_de")
   , tests    = exports
   , nock     = require('nock')
-  , path
-  , location
   , couchdb
   ;
   
