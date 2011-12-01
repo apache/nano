@@ -104,12 +104,14 @@ module.exports = exports = nano = function database_module(cfg) {
       }
       else if(opts.doc)  {
         if(!/^_design/.test(opts.doc)) {
-          req.uri += "/" + encodeURIComponent(opts.doc); // add the document to the url
+          // add the document to the url
+          req.uri += "/" + encodeURIComponent(opts.doc);
         }
         else {
           req.uri += "/" + opts.doc;
         }
-        if(opts.att) { req.uri += "/" + opts.att; } // add the attachment to the url
+        // add the attachment to the url
+        if(opts.att) { req.uri += "/" + opts.att; }
       }
       if(opts.encoding && callback) {
         req.encoding = opts.encoding;
@@ -120,9 +122,9 @@ module.exports = exports = nano = function database_module(cfg) {
         req.headers["content-type"] = opts.content_type;
         delete req.headers.accept; // undo headers set
       }
-      if(cfg.cookie){
-        req.headers.cookie = cfg.cookie;
-      }
+      //if(cfg.cookie){
+      //  req.headers.cookie = cfg.cookie;
+      //}
       if(!_.isEmpty(params)) {
         ['startkey', 'endkey', 'key', 'keys'].forEach(function (key) {
           if (key in params) { params[key] = JSON.stringify(params[key]); }
@@ -145,13 +147,16 @@ module.exports = exports = nano = function database_module(cfg) {
           if(verbose) { console.log({err: 'socket', body: b, headers: rh }); }
           return callback(error.request(e,"socket",req,status_code),b,rh); 
         }
-        delete rh.server; // prevent security vunerabilities related to couchdb
-        delete rh['content-length']; // prevent problems with trims and stalled responses
-        try { parsed = JSON.parse(b); } catch (err) { parsed = b; } // did we get json or binary?
+        // prevent security vunerabilities related to couchdb
+        delete rh.server;
+        // prevent problems with trims and stalled responses
+        delete rh['content-length'];
+        // did we get json or binary?
+        try { parsed = JSON.parse(b); } catch (err) { parsed = b; }
         if (status_code >= 200 && status_code < 300) {
-          if (rh['set-cookie']){
-            cfg.cookie = rh['set-cookie']; //get auth cookie
-          }
+          //if (rh['set-cookie']){
+          //  cfg.cookie = rh['set-cookie']; //get auth cookie
+          //}
           if(verbose) { console.log({err: null, body: parsed, headers: rh}); }
           callback(null,parsed,rh);
         }
@@ -315,10 +320,10 @@ module.exports = exports = nano = function database_module(cfg) {
   *
   * @see relax
   */
-  function create_session(user, password, callback) {
-    var body = new Buffer("name=" + user + "&" + "password=" + password);
-    return relax({db: "_session", body:body, method: "POST", content_type: "application/x-www-form-urlencodeddata"}, callback);
-  }
+  //function create_session(user, password, callback) {
+  //  var body = new Buffer("name=" + user + "&" + "password=" + password);
+  //  return relax({db: "_session", body:body, method: "POST", content_type: "application/x-www-form-urlencodeddata"}, callback);
+  //}
 
   /*
    * destroy session
@@ -327,10 +332,10 @@ module.exports = exports = nano = function database_module(cfg) {
    *
    * @see relax
    */
-   function destroy_session(callback) {
-     cfg.cookie = null;  //make sure cookie gets destroyed also if error
-     return relax({db: "_session", method: "DELETE"}, callback);
-   }
+   //function destroy_session(callback) {
+   //  cfg.cookie = null;  //make sure cookie gets destroyed also if error
+   //  return relax({db: "_session", method: "DELETE"}, callback);
+   //}
 
  /****************************************************************************
   * doc                                                                      *
@@ -556,9 +561,9 @@ module.exports = exports = nano = function database_module(cfg) {
                             , replicate: replicate_db
                             , changes: changes_db
                             }
-                     , session: { create: create_session
-                                , destroy: destroy_session
-                                }
+                     //, session: { create: create_session
+                     //           , destroy: destroy_session
+                     //           }
                      , use: document_module
                      , scope: document_module        // alias
                      , request: relax
