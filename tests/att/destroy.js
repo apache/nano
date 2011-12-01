@@ -53,11 +53,10 @@ tests.att_des = function (callback) {
 };
 
 tests.att_des_ok = function (e,b) {
-  //nano.db.destroy(db_name("a"));
-  this.t.notOk(e);
-  this.t.ok(b.ok);
-  this.t.equal(b.id, "new");
-  this.t.ok(couchdb.isDone(), 'nock not done');
+  this.t.notOk(e, 'No Error');
+  this.t.ok(b.ok, 'Ok is there');
+  this.t.equal(b.id, "new", 'Id is "new"');
+  this.t.ok(couchdb.isDone(), 'Nock not done');
 };
 
 ensure(__filename,tests,module,process.argv[2]);
