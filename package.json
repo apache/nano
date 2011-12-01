@@ -9,6 +9,7 @@
   , "Derek Perez <derek@derekperez.com> (http://blog.derekperez.com)"
   , "Patrick Heneise (http://patrickheneise.me)"
   , "Artur Konarski (http://tarantoga.com)"
+  , "Pedro Teixeira <pedro.teixeira@gmail.com> (http://metaduck.com)"
   ]
 , "keywords"        : ["couchdb", "data", "request", "json", "nosql", "micro", "nano"]
 , "dependencies"    : {"request": "2.2.0", "underscore": "~1.1.7"}
