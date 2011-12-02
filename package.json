@@ -11,7 +11,7 @@
   , "Artur Konarski (http://tarantoga.com)"
   , "Pedro Teixeira <pedro.teixeira@gmail.com> (http://metaduck.com)"
   ]
-, "keywords"        : ["couchdb", "data", "request", "json", "nosql", "micro", "nano"]
+, "keywords"        : ["couchdb", "data", "request", "json", "nosql", "micro", "nano", "database"]
 , "dependencies"    : {"request": "2.2.0", "underscore": "~1.1.7"}
 , "devDependencies" : { "async": "~0.1.9", "ensure": "0.4.6", "nock": "0.5.x"}
 , "scripts"         : { "test": "./node_modules/ensure/bin/tap.js tests/*/*.js" }
