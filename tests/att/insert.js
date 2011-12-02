@@ -11,7 +11,7 @@ var ensure   = require('ensure')
     .put('/' + db_name("a"))
     .reply(201, "{\"ok\":true}\n", 
       { server: 'CouchDB/1.1.1 (Erlang OTP/R14B04)'
-      , location: 'http://nodejsbug.iriscouch.com/v061_att_ina'
+      , location: cfg.url + '/' + db_name("a")
       , date: 'Fri, 02 Dec 2011 00:21:46 GMT'
       , 'content-type': 'application/json'
       , 'content-length': '12'
@@ -19,7 +19,7 @@ var ensure   = require('ensure')
       })
     .put('/' + db_name("a") + '/new/att', '"Hello World!"')
     .reply(201, "{\"ok\":true,\"id\":\"new\",\"rev\":\"1-921bd51ccdef5ab4c84b07bab7b80e7e\"}\n", { server: 'CouchDB/1.1.1 (Erlang OTP/R14B04)',
-     location: 'http://nodejsbug.iriscouch.com/v061_att_ina/new/att',
+     location: cfg.url + '/' + db_name("a") + '/new/att',
      etag: '"1-921bd51ccdef5ab4c84b07bab7b80e7e"',
      date: 'Fri, 02 Dec 2011 00:21:46 GMT',
      'content-type': 'text/plain;charset=utf-8',
@@ -38,6 +38,7 @@ tests.att_new_doc_ok = function (e,b) {
   this.t.notOk(e);
   this.t.ok(b.ok);
   this.t.equal(b.id, "new");
+  this.t.ok(couchdb.isDone(), 'Nock not done');
 };
 
 ensure(__filename,tests,module,process.argv[2]);
