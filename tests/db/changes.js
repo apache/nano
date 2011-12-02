@@ -25,23 +25,23 @@ var ensure = require('ensure')
         'content-type': 'application/json',
         'content-length': '69',
         'cache-control': 'must-revalidate' })
-    .put('/v061_doc_cha/barfoo', {"bar": "foo"})
+    .put('/' + db_name("a") + '/barfoo', {"bar": "foo"})
     .reply(201, "{\"ok\":true,\"id\":\"barfoo\",\"rev\":\"1-41412c293dade3fe73279cba8b4cece4\"}\n", { server: 'CouchDB/1.1.1 (Erlang OTP/R14B04)',
-        location: 'http://nodejsbug.iriscouch.com/v061_doc_cha/barfoo',
+        location: cfg.url + '/' + db_name("a") + '/barfoo',
         etag: '"1-41412c293dade3fe73279cba8b4cece4"',
         date: 'Fri, 02 Dec 2011 00:34:58 GMT',
         'content-type': 'application/json',
         'content-length': '69',
         'cache-control': 'must-revalidate' })
-    .put('/v061_doc_cha/foobaz', {"foo":"baz"})
+    .put('/' + db_name("a") + '/foobaz', {"foo":"baz"})
     .reply(201, "{\"ok\":true,\"id\":\"foobaz\",\"rev\":\"1-cfa20dddac397da5bf0be2b50fb472fe\"}\n", { server: 'CouchDB/1.1.1 (Erlang OTP/R14B04)',
-        location: 'http://nodejsbug.iriscouch.com/v061_doc_cha/foobaz',
+        location: cfg.url + '/' + db_name("a") + '/foobaz',
         etag: '"1-cfa20dddac397da5bf0be2b50fb472fe"',
         date: 'Fri, 02 Dec 2011 00:34:58 GMT',
         'content-type': 'application/json',
         'content-length': '69',
         'cache-control': 'must-revalidate' })
-    .get('/v061_doc_cha/_changes?since=2')
+    .get('/' + db_name("a") + '/_changes?since=2')
     .reply(200, "{\"results\":[\n{\"seq\":3,\"id\":\"foobaz\",\"changes\":[{\"rev\":\"1-cfa20dddac397da5bf0be2b50fb472fe\"}]}\n],\n\"last_seq\":3}\n\n", { 'transfer-encoding': 'chunked',
       server: 'CouchDB/1.1.1 (Erlang OTP/R14B04)',
       etag: '"78IVA6O2WBXVUGGXYKZ7V2GBH"',

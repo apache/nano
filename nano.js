@@ -258,7 +258,7 @@ module.exports = exports = nano = function database_module(cfg) {
       callback = design_name;
       design_name = null;
     }
-    return relax({db: db_name, path: ("_compact" + design_name), method: "POST"},callback);
+    return relax({db: db_name, doc: "_compact", att: design_name, method: "POST"},callback);
   }
 
  /*
