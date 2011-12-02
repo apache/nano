@@ -8,7 +8,7 @@ var ensure   = require('ensure')
   , couch
   ;
 
-couch =   nock(cfg.url)
+couch = nock(cfg.url)
   .put('/' + db_name("1"))
   .reply(201, "{\"ok\":true}\n", { server: 'CouchDB/1.1.1 (Erlang OTP/R14B04)',
   location: cfg.url + '/' + db_name("1") + '',
