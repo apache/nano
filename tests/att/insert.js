@@ -38,7 +38,7 @@ tests.att_new_doc_ok = function (e,b) {
   this.t.notOk(e);
   this.t.ok(b.ok);
   this.t.equal(b.id, "new");
-  this.t.ok(couchdb.isDone(), 'Nock not done');
+  this.t.ok(couch.isDone(), 'Nock not done');
 };
 
 ensure(__filename,tests,module,process.argv[2]);

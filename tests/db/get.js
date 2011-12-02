@@ -15,7 +15,7 @@ couch = nock(cfg.url)
   'content-type': 'application/json',
   'content-length': '12',
   'cache-control': 'must-revalidate' })
-  .get('/v061_db_ge1')
+  .get('/' + db_name('1'))
   .reply(200, "{\"db_name\":\"" + db_name('1') + "\",\"doc_count\":0,\"doc_del_count\":0,\"update_seq\":0,\"purge_seq\":0,\"compact_running\":false,\"disk_size\":79,\"instance_start_time\":\"1322791217213709\",\"disk_format_version\":5,\"committed_update_seq\":0}\n", { server: 'CouchDB/1.1.1 (Erlang OTP/R14B04)',
   date: 'Fri, 02 Dec 2011 02:00:17 GMT',
   'content-type': 'application/json',
