@@ -35,9 +35,9 @@ tests.att_new_doc = function (callback) {
 };
 
 tests.att_new_doc_ok = function (e,b) {
-  this.t.notOk(e);
-  this.t.ok(b.ok);
-  this.t.equal(b.id, "new");
+  this.t.notOk(e, 'No errrs');
+  this.t.ok(b.ok, 'Im oh a OK');
+  this.t.equal(b.id, "new", "Id is new");
   this.t.ok(couch.isDone(), 'Nock not done');
 };
 
