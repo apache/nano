@@ -1,7 +1,36 @@
 var ensure   = require('ensure')
+  , nock     = require('nock')
   , cfg      = require('../../cfg/tests.js')
   , nano     = require('../../nano')
-  , tests    = exports;
+  , tests    = exports
+  , couch
+  ;
+
+  couch = nock(cfg.url)
+    .get('/acb')
+    .reply(404, "{\"error\":\"not_found\",\"reason\":\"no_db_file\"}\n", { server: 'CouchDB/1.1.1 (Erlang OTP/R14B04)',
+    date: 'Fri, 02 Dec 2011 02:53:14 GMT',
+    'content-type': 'application/json',
+    'content-length': '44',
+    'cache-control': 'must-revalidate' })
+    .get('/adb')
+    .reply(404, "{\"error\":\"not_found\",\"reason\":\"no_db_file\"}\n", { server: 'CouchDB/1.1.1 (Erlang OTP/R14B04)',
+    date: 'Fri, 02 Dec 2011 02:53:14 GMT',
+    'content-type': 'application/json',
+    'content-length': '44',
+    'cache-control': 'must-revalidate' })
+    .get('/adb')
+    .reply(404, "{\"error\":\"not_found\",\"reason\":\"no_db_file\"}\n", { server: 'CouchDB/1.1.1 (Erlang OTP/R14B04)',
+    date: 'Fri, 02 Dec 2011 02:53:14 GMT',
+    'content-type': 'application/json',
+    'content-length': '44',
+    'cache-control': 'must-revalidate' })
+    .get('/a')
+    .reply(404, "{\"error\":\"not_found\",\"reason\":\"no_db_file\"}\n", { server: 'CouchDB/1.1.1 (Erlang OTP/R14B04)',
+    date: 'Fri, 02 Dec 2011 02:53:14 GMT',
+    'content-type': 'application/json',
+    'content-length': '44',
+    'cache-control': 'must-revalidate' });
 
 tests.url = function (callback) { callback(null,nano('http://someurl.com')); };
 tests.url_ok = function (_,n) { this.t.equal(n.config.url, "http://someurl.com"); };

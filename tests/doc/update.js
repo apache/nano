@@ -1,8 +1,42 @@
 var ensure   = require('ensure')
+  , nock     = require('nock')
   , cfg      = require('../../cfg/tests.js')
   , nano     = require('../../nano')(cfg)
   , db_name  = require('../utils').db_name("doc_up")
-  , tests    = exports;
+  , tests    = exports
+  , couch
+  ;
+
+  couch = nock(cfg.url)
+    .put('/' + db_name('a'))
+    .reply(201, "{\"ok\":true}\n", 
+      { server: 'CouchDB/1.1.1 (Erlang OTP/R14B04)',
+        location: cfg.url + '/' + db_name('a'),
+        date: 'Fri, 02 Dec 2011 19:38:03 GMT',
+        'content-type': 'application/json',
+        'content-length': '12',
+        'cache-control': 'must-revalidate' })
+    .put('/' + db_name('a') + '/foo', {"foo": "bar"})
+    .reply(201, "{\"ok\": true,\"id\": \"foo\",\"rev\": \"1-4c6114c65e295552ab1019e2b046b10e\"}\n", 
+      { server: 'CouchDB/1.1.1 (Erlang OTP/R14B04)',
+        location: cfg.url + '/' + db_name('a') + '/foo',
+        etag: '"1-4c6114c65e295552ab1019e2b046b10e"',
+        date: 'Fri, 02 Dec 2011 19:38:04 GMT',
+        'content-type': 'application/json',
+        'content-length': '66',
+        'cache-control': 'must-revalidate' })
+    .put('/' + db_name('a') + '/foo', 
+      { "_rev": "1-4c6114c65e295552ab1019e2b046b10e"
+      , "foo":  "baz"
+      })
+    .reply(201, "{\"ok\": true,\"id\": \"foo\",\"rev\": \"2-cfcd6781f13994bde69a1c3320bfdadb\"}\n", 
+      { server: 'CouchDB/1.1.1 (Erlang OTP/R14B04)',
+        location: cfg.url + '/' + db_name('a') + '/foo',
+        etag: '"2-cfcd6781f13994bde69a1c3320bfdadb"',
+        date: 'Fri, 02 Dec 2011 19:38:04 GMT',
+        'content-type': 'application/json',
+        'content-length': '66',
+        'cache-control': 'must-revalidate' });
 
 function db(i) { return nano.use(db_name(i)); }
 
@@ -15,11 +49,11 @@ tests.update_doc = function (callback) {
 };
 
 tests.update_doc_ok = function (e,b) {
-  nano.db.destroy(db_name('a'));
-  this.t.notOk(e);
-  this.t.equal(b.id, "foo");
-  this.t.ok(b.ok);
-  this.t.ok(b.rev);
+  this.t.notOk(e, 'I got err free status');
+  this.t.equal(b.id, "foo", 'My filename is foo');
+  this.t.ok(b.ok, 'I am now ok');
+  this.t.ok(b.rev, 'I got rev');
+  this.t.ok(couch.isDone(), 'Nock is done');
 };
 
 ensure(__filename,tests,module,process.argv[2]);

@@ -1,9 +1,30 @@
 var ensure   = require('ensure')
+  , nock     = require('nock')
   , cfg      = require('../../cfg/tests.js')
   , nano     = require('../../nano')(cfg)
   , db_name  = require('../utils').db_name("att_in")
   , tests    = exports
+  , couch
   ;
+
+  couch = nock(cfg.url)
+    .put('/' + db_name("a"))
+    .reply(201, "{\"ok\":true}\n", 
+      { server: 'CouchDB/1.1.1 (Erlang OTP/R14B04)'
+      , location: cfg.url + '/' + db_name("a")
+      , date: 'Fri, 02 Dec 2011 00:21:46 GMT'
+      , 'content-type': 'application/json'
+      , 'content-length': '12'
+      , 'cache-control': 'must-revalidate' 
+      })
+    .put('/' + db_name("a") + '/new/att', '"Hello World!"')
+    .reply(201, "{\"ok\":true,\"id\":\"new\",\"rev\":\"1-921bd51ccdef5ab4c84b07bab7b80e7e\"}\n", { server: 'CouchDB/1.1.1 (Erlang OTP/R14B04)',
+     location: cfg.url + '/' + db_name("a") + '/new/att',
+     etag: '"1-921bd51ccdef5ab4c84b07bab7b80e7e"',
+     date: 'Fri, 02 Dec 2011 00:21:46 GMT',
+     'content-type': 'text/plain;charset=utf-8',
+     'content-length': '66',
+     'cache-control': 'must-revalidate' });
 
 function db(i) { return nano.use(db_name(i)); }
 
@@ -14,10 +35,10 @@ tests.att_new_doc = function (callback) {
 };
 
 tests.att_new_doc_ok = function (e,b) {
-  nano.db.destroy(db_name("a"));
-  this.t.notOk(e);
-  this.t.ok(b.ok);
-  this.t.equal(b.id, "new");
+  this.t.notOk(e, 'No errrs');
+  this.t.ok(b.ok, 'Im oh a OK');
+  this.t.equal(b.id, "new", "Id is new");
+  this.t.ok(couch.isDone(), 'Nock not done');
 };
 
 ensure(__filename,tests,module,process.argv[2]);
