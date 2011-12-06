@@ -64,10 +64,11 @@ errors include responses from couchdb which had a non 200 response code. that's 
   nano.db.destroy("alice");
 ```
 
-# tutorials
+# tutorials & screencasts
 
-* [nano - a minimalistic couchdb client for nodejs](http://writings.nunojob.com/2011/08/nano-minimalistic-couchdb-client-for-nodejs.html)
-* [getting started with node.js and couchdb](http://writings.nunojob.com/2011/09/getting-started-with-nodejs-and-couchdb.html)
+* screencast: [CouchDB and Nano](http://nodetuts.com/tutorials/30-couchdb-and-nano.html#video)
+* article: [nano - a minimalistic couchdb client for nodejs](http://writings.nunojob.com/2011/08/nano-minimalistic-couchdb-client-for-nodejs.html)
+* article: [getting started with node.js and couchdb](http://writings.nunojob.com/2011/09/getting-started-with-nodejs-and-couchdb.html)
 
 # interfaces
 
