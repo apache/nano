@@ -17,7 +17,8 @@
 , "devDependencies" : 
   { "async": "0.1.15", "ensure": "0.4.6", "nock": "0.5.5"
   , "tap-runner": "0.0.7", "tap-producer": "0.0.1", "tap": "0.1.3"
-  , "inherits": "1.0.0", "yamlish": "0.0.2"}
+  , "inherits": "1.0.0", "yamlish": "0.0.2", "slide": "1.1.3"
+  }
 , "scripts"         : { "test": "./node_modules/ensure/bin/tap.js tests/*/*.js" }
 , "main"            : "./nano.js"
 , "engines"         : { "node": ">=0.3.6" }
