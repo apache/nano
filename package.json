@@ -13,8 +13,8 @@
   ]
 , "keywords"        : 
   ["couchdb", "data", "request", "json", "nosql", "micro", "nano", "database"]
-, "dependencies"    : {"request": "2.2.0", "underscore": "~1.1.7"}
-, "devDependencies" : { "async": "~0.1.9", "ensure": "0.4.6", "nock": "0.5.x"}
+, "dependencies"    : {"request": "2.9.3", "underscore": "1.2.3"}
+, "devDependencies" : { "async": "0.1.15", "ensure": "0.4.6", "nock": "0.5.5"}
 , "scripts"         : { "test": "./node_modules/ensure/bin/tap.js tests/*/*.js" }
 , "main"            : "./nano.js"
 , "engines"         : { "node": ">=0.3.6" }
