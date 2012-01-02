@@ -28,13 +28,13 @@ module.exports = function(logStrategy) {
   // for our logs, and verbose mode is active,
   // simply pipe to console.log.
   if (!logStrategy && verbose)
-    logStrategy = function(eventId, args) { console.log(eventId, args) }
+    logStrategy = function(eventId, args) { console.log(eventId, args) };
 
   // by default, if we have no logging
   // strategy provided, we'll simply return
   // an empty function, no output.
   else if (!logStrategy)
-    logStrategy = function(){}
+    logStrategy = function(){};
 
   // the export returns the `logEvent` root function.
   // calling this function returns a curried `log` function

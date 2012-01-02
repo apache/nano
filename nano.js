@@ -21,7 +21,6 @@ var request     = require('request')
   , u           = require('url')
   , error       = require('./error')
   , default_url = "http://localhost:5984"
-  , verbose     = (process.env.NANO_ENV==='testing')
   , nano
   ;
 
@@ -54,7 +53,12 @@ module.exports = exports = nano = function database_module(cfg) {
     console.error("bad cfg: using default=" + default_url);
     cfg = {url: default_url}; // if everything else fails, use default
   }
-  if(verbose) { console.log(cfg); }
+
+  // configure logging strategy for this
+  // instance of nano
+  var logging = require('./logging')(cfg.log);
+  logging("cfg")(cfg);
+
   path = u.parse(cfg.url);
 
  /****************************************************************************
@@ -96,6 +100,7 @@ module.exports = exports = nano = function database_module(cfg) {
         , req     = { method: (opts.method || "GET"), headers: headers
                     , uri: cfg.url + "/" + opts.db }
         , params  = opts.params
+        , log     = logging()
         , status_code
         , parsed
         , rh;
@@ -138,14 +143,13 @@ module.exports = exports = nano = function database_module(cfg) {
         }
         else { req.body = JSON.stringify(opts.body); } // json data
       }
-      if(verbose) { console.log('>>'); console.log(req); }
+      log(req);
       request(req, function(e,h,b){
-        if(verbose) { console.log('<<'); }
         rh = (h && h.headers || {});
         rh['status-code'] = status_code = (h && h.statusCode || 500);
         if(e) {
-          if(verbose) { console.log({err: 'socket', body: b, headers: rh }); }
-          return callback(error.request(e,"socket",req,status_code),b,rh); 
+          log({err: 'socket', body: b, headers: rh });
+          return callback(error.request(e,"socket",req,status_code),b,rh);
         }
         // prevent security vunerabilities related to couchdb
         delete rh.server;
@@ -157,20 +161,18 @@ module.exports = exports = nano = function database_module(cfg) {
           //if (rh['set-cookie']){
           //  cfg.cookie = rh['set-cookie']; //get auth cookie
           //}
-          if(verbose) { console.log({err: null, body: parsed, headers: rh}); }
+          log({err: null, body: parsed, headers: rh});
           callback(null,parsed,rh);
         }
         else { // proxy the error directly from couchdb
-          if(verbose) { 
-            console.log({err: 'couch', body: parsed, headers: rh}); 
-          }
+          log({err: 'couch', body: parsed, headers: rh});
           callback(error.couch(parsed.reason,parsed.error,req,status_code),
             parsed, rh);
         }
       });
     } catch(exc) {
       if (callback) {
-        if(verbose) { console.log({err: 'uncaught', body: exc}); }
+        log({err: 'uncaught', body: exc});
         callback(error.uncaught(exc));
       }
       else { console.error({err: 'uncaught', body: exc}); }
@@ -306,7 +308,7 @@ module.exports = exports = nano = function database_module(cfg) {
     if(continuous) { body.continuous = true; }
     return relax({db: "_replicate", body: body, method: "POST"},callback);
   }
-  
+
  /****************************************************************************
   * session                                                                  *
   ***************************************************************************/
