@@ -164,6 +164,7 @@ module.exports = exports = nano = function database_module(cfg) {
           if(verbose) { 
             console.log({err: 'couch', body: parsed, headers: rh}); 
           }
+          if (!parsed) { parsed = {}; } // if HEAD request, body will be undefined
           callback(error.couch(parsed.reason,parsed.error,req,status_code),
             parsed, rh);
         }
