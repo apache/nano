@@ -113,10 +113,10 @@ errors include responses from couchdb which had a non 200 response code. that's 
 
 `nano.use` sets `db_name` in scope so you don't have to specify it every time
 
-`server.get: [db.info(callback*)]`
-`server.replicate: [db.replicate(target,continuous*,callback*)]`
-`server.compact:  [db.compact(callback*), db.view.compact(design_name,callback*)]`
-`server.changes: [db.changes(params*,callback*)]`
+`server.db.get: [db.info(callback*)]`
+`server.db.replicate: [db.replicate(target,continuous*,callback*)]`
+`server.db.compact:  [db.compact(callback*), db.view.compact(design_name,callback*)]`
+`server.db.changes: [db.changes(params*,callback*)]`
 `server.config: [db.config]`
 
 ## advanced
