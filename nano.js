@@ -543,7 +543,7 @@ module.exports = exports = nano = function database_module(cfg) {
                        , destroy: destroy_doc
                        , bulk: bulk_docs
                        , list: list_docs
-                       , config: cfg
+                       , config: {url: cfg.url, db: db_name}
                        , attachment: { insert: insert_att
                                      , get: get_att
                                      , destroy: destroy_att
