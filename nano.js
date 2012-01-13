@@ -581,7 +581,7 @@ module.exports = exports = nano = function database_module(cfg) {
   if(path.pathname && !_.isEmpty(path.pathname.split('/')[1])) {
     var auth = path.auth ? path.auth + '@' : '';
     db = path.pathname.split('/')[1];
-    cfg.url = path.protocol + '//' + auth + path.host; // reset url
+    cfg.url = path.protocol + '//' + auth + path.hostname; // reset url
     return document_module(db);
   }
   else   { return public_functions; }
