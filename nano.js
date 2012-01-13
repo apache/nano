@@ -93,6 +93,7 @@ module.exports = exports = nano = function database_module(cfg) {
   * @param {callback:function:optional} function to call back
   */
   function relax(opts,callback) {
+    var log = logging();
     try {
       var headers = { "content-type": "application/json"
                     , "accept": "application/json"
@@ -100,7 +101,6 @@ module.exports = exports = nano = function database_module(cfg) {
         , req     = { method: (opts.method || "GET"), headers: headers
                     , uri: cfg.url + "/" + opts.db }
         , params  = opts.params
-        , log     = logging()
         , status_code
         , parsed
         , rh;
@@ -147,6 +147,7 @@ module.exports = exports = nano = function database_module(cfg) {
       request(req, function(e,h,b){
         rh = (h && h.headers || {});
         rh['status-code'] = status_code = (h && h.statusCode || 500);
+        rh.uri            = req.uri;
         if(e) {
           log({err: 'socket', body: b, headers: rh });
           return callback(error.request(e,"socket",req,status_code),b,rh);
