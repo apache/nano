@@ -572,7 +572,6 @@ module.exports = exports = nano = function database_module(cfg) {
     public_functions.view.compact = function(design_name,cb) {
     return compact_db(db_name,design_name,cb);
     };
-
     return public_functions;
   }
 
