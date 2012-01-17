@@ -448,6 +448,23 @@ module.exports = exports = nano = function database_module(cfg) {
     }
 
    /*
+    * calls and updater
+    *
+    * @param {design_name:string} design document namd
+    * @param {update_name:string} update method to call
+    * @param {doc_name:string} document name to update
+    * @param {params:object} additions to the querystring
+   */
+   function update_doc(design_name, update_name, doc_name, params, callback) {
+     if(typeof params === "function") {
+       callback = params;
+       params = {};
+     }
+     var update_path = '_design/' + design_name + '/_update/' + update_name + '/' + doc_name;
+     return relax({db: db_name, path: update_path, method: "PUT", params: params}, callback);
+   }
+
+   /*
     * bulk update/delete/insert functionality
     * [1]: http://wiki.apache.org/couchdb/HTTP_Bulk_Document_API
     *
@@ -553,6 +570,8 @@ module.exports = exports = nano = function database_module(cfg) {
     public_functions.view.compact = function(design_name,cb) {
     return compact_db(db_name,design_name,cb);
     };
+    // update
+    public_functions.update = update_doc;
     return public_functions;
   }
 
