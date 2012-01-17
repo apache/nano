@@ -448,14 +448,15 @@ module.exports = exports = nano = function database_module(cfg) {
     }
 
    /*
-    * calls and updater
+    * calls document update handler design document
+    *
     *
     * @param {design_name:string} design document namd
     * @param {update_name:string} update method to call
     * @param {doc_name:string} document name to update
     * @param {params:object} additions to the querystring
    */
-   function update_doc(design_name, update_name, doc_name, params, callback) {
+   function update_with_handler_doc(design_name, update_name, doc_name, params, callback) {
      if(typeof params === "function") {
        callback = params;
        params = {};
@@ -565,13 +566,13 @@ module.exports = exports = nano = function database_module(cfg) {
                                      , get: get_att
                                      , destroy: destroy_att
                                      }
+                       , updateWithHandler: update_with_handler_doc
                        };
     public_functions.view = view_docs;
     public_functions.view.compact = function(design_name,cb) {
     return compact_db(db_name,design_name,cb);
     };
-    // update
-    public_functions.update = update_doc;
+
     return public_functions;
   }
 
