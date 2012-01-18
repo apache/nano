@@ -69,6 +69,7 @@ errors include responses from couchdb which had a non 200 response code. that's 
 * screencast: [couchdb and nano](http://nodetuts.com/tutorials/30-couchdb-and-nano.html#video)
 * article: [nano - a minimalistic couchdb client for nodejs](http://writings.nunojob.com/2011/08/nano-minimalistic-couchdb-client-for-nodejs.html)
 * article: [getting started with node.js and couchdb](http://writings.nunojob.com/2011/09/getting-started-with-nodejs-and-couchdb.html)
+* article: [Document Update Handler Support](http://jackhq.tumblr.com/post/16035106690/nano-v1-2-x-document-update-handler-support-v1-2-x)
 
 # interfaces
 
@@ -108,6 +109,7 @@ errors include responses from couchdb which had a non 200 response code. that's 
 `db.attachment.insert(doc_name,att_name,att,content_type,params*,callback*)`
 `db.attachment.get(doc_name,att_name,params*,callback*)`
 `db.attachment.destroy(doc_name,att_name,rev,callback*)`
+`db.updateWithHandler(design_name, update_name, doc_name, params*, callback*)`
 
 ### aliases
 
