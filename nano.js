@@ -49,6 +49,9 @@ module.exports = exports = nano = function database_module(cfg) {
   if(cfg.proxy) {
     request = request.defaults({proxy: cfg.proxy}); // proxy support
   }
+  if(!cfg.jar) {
+    request = request.defaults({jar: false}); // use cookie jar
+  }
   if(!cfg.url) {
     console.error("bad cfg: using default=" + default_url);
     cfg = {url: default_url}; // if everything else fails, use default
@@ -104,6 +107,11 @@ module.exports = exports = nano = function database_module(cfg) {
         , status_code
         , parsed
         , rh;
+
+      if (opts.jar) {
+        req.jar = opts.jar;
+      }
+
       if(opts.path) {
         req.uri += "/" + opts.path;
       }
