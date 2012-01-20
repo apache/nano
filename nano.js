@@ -46,11 +46,11 @@ module.exports = exports = nano = function database_module(cfg) {
     console.error("bad cfg: you passed undefined");
     cfg = {};
   }
-  if(cfg.proxy) {
-    request = request.defaults({proxy: cfg.proxy}); // proxy support
-  }
-  if(!cfg.jar) {
-    request = request.defaults({jar: false}); // use cookie jar
+  if(cfg.proxy || !cfg.jar) {
+    var opts = {};
+    if(cfg.proxy) opts.proxy = cfg.proxy;
+    if(!cfg.jar)  opts.jar   = false;
+    request = require('request').defaults(opts);
   }
   if(!cfg.url) {
     console.error("bad cfg: using default=" + default_url);
