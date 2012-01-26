@@ -103,7 +103,7 @@ errors include responses from couchdb which had a non 200 response code. that's 
 `db.insert(doc,doc_name*,callback*)`
 `db.destroy(doc_name,rev,callback*)`
 `db.get(doc_name,params*,callback*)`
-`db.bulk(docs,callback*)`
+`db.bulk(docs,params*,callback*)`
 `db.list(params*,callback*)`
 `db.view(design_name,view_name,params*,callback*)`
 `db.attachment.insert(doc_name,att_name,att,content_type,params*,callback*)`

@@ -1,3 +1,8 @@
+# 1.3.0
+
+* changed api for bulk docs, added `params`. existing behavior should remain
+the same
+
 # 0.8.4
 
 * added view query support
