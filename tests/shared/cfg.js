@@ -69,16 +69,7 @@ tests.url_db4_ok = function (e,b) {
 tests.file = function (callback) { callback(null,nano(__dirname+ '/../../cfg/tests.js')); };
 tests.file_ok = function (_,n) {  this.t.equal(n.config.url, cfg.url); };
 
-tests.bad_file = function (callback) { callback(null,nano('notafile')); };
-tests.bad_file_ok = function (_,e) { this.t.equal(e.config.url,"http://localhost:5984"); };
-
 tests.obj_cfg = function (callback) { callback(null,nano(cfg)); };
 tests.obj_cfg_ok = function (_,n) { this.t.equal(n.config.url, cfg.url); };
-
-tests.not_string_or_object = function (callback) { callback(null,nano(false)); };
-tests.not_string_or_object_ok = function (_,e) { this.t.equal(e.config.url,"http://localhost:5984"); };
-
-tests.nano_undefined = function (callback) { callback(null,nano()); };
-tests.nano_undefined_ok = function (_,e) { this.t.equal(e.config.url,"http://localhost:5984"); };
 
 ensure(__filename,tests,module,process.argv[2]);

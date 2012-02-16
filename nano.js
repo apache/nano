@@ -20,13 +20,12 @@ var request     = require('request')
   , _           = require('underscore')
   , u           = require('url')
   , error       = require('./error')
-  , default_url = "http://localhost:5984"
   , nano
   ;
 
 /*
  * nano is a library that helps you building requests to couchdb
- * that is built on top of mikeals/request
+ * that is built on top of mikeal/request
  *
  * no more, no less
  * be creative. be silly. have fun! relax (and don't forget to compact).
@@ -34,35 +33,14 @@ var request     = require('request')
  * dinosaurs spaceships!
  */
 module.exports = exports = nano = function database_module(cfg) {
-  var public_functions = {}, path, db;
-  if(typeof cfg === "string") {
-    if(/^https?:/.test(cfg)) { cfg = {url: cfg}; } // url
-    else {
-      try { cfg = require(cfg); } // file path
-      catch(e) { console.error("bad cfg: couldn't load file"); }
-    }
-  }
-  if(!cfg) {
-    console.error("bad cfg: you passed undefined");
-    cfg = {};
-  }
-  if(cfg.proxy || !cfg.jar) {
-    var opts = {};
-    if(cfg.proxy) opts.proxy = cfg.proxy;
-    if(!cfg.jar)  opts.jar   = false;
-    request = require('request').defaults(opts);
-  }
-  if(!cfg.url) {
-    console.error("bad cfg: using default=" + default_url);
-    cfg = {url: default_url}; // if everything else fails, use default
-  }
-
-  // configure logging strategy for this
-  // instance of nano
-  var logging = require('./logging')(cfg.log);
-  logging("cfg")(cfg);
-
-  path = u.parse(cfg.url);
+  var public_functions = {}
+    , request_opts     = {}
+    , logging
+    , path
+    , path_array
+    , db
+    , auth
+    ;
 
  /****************************************************************************
   * relax                                                                    *
@@ -99,14 +77,16 @@ module.exports = exports = nano = function database_module(cfg) {
     var log = logging();
     try {
       var headers = { "content-type": "application/json"
-                    , "accept": "application/json"
+                    , "accept"      : "application/json"
                     }
-        , req     = { method: (opts.method || "GET"), headers: headers
-                    , uri: cfg.url + "/" + opts.db }
+        , req     = { method : (opts.method || "GET")
+                    , headers: headers
+                    , uri    : cfg.url + "/" + opts.db }
         , params  = opts.params
         , status_code
         , parsed
-        , rh;
+        , rh
+        ;
 
       if (opts.jar) {
         req.jar = opts.jar;
@@ -135,9 +115,6 @@ module.exports = exports = nano = function database_module(cfg) {
         req.headers["content-type"] = opts.content_type;
         delete req.headers.accept; // undo headers set
       }
-      //if(cfg.cookie){
-      //  req.headers.cookie = cfg.cookie;
-      //}
       if(!_.isEmpty(params)) {
         ['startkey', 'endkey', 'key', 'keys'].forEach(function (key) {
           if (key in params) { params[key] = JSON.stringify(params[key]); }
@@ -618,25 +595,59 @@ module.exports = exports = nano = function database_module(cfg) {
                             , replicate: replicate_db
                             , changes: changes_db
                             }
-                     //, session: { create: create_session
-                     //           , destroy: destroy_session
-                     //           }
                      , use: document_module
                      , scope: document_module        // alias
                      , request: relax
-                     , config: cfg
                      , relax: relax                  // alias
                      , dinosaur: relax               // alias
                      };
 
-  // does the user want a database, or nano?
-  if(path.pathname && !_.isEmpty(path.pathname.split('/')[1])) {
-    var auth = path.auth ? path.auth + '@' : '';
-    db = path.pathname.split('/')[1];
+  if(typeof cfg === "string") {
+    if(/^https?:/.test(cfg)) { cfg = {url: cfg}; } // url
+    else {
+      try { cfg   = require(cfg); } // file path
+      catch(e) {
+        e.message = "couldn't read config file " + 
+          (cfg ? cfg.toString() : '');
+        throw error.init(e);
+      }
+    }
+  }
+  
+  if(!(cfg && cfg.url))
+    throw error.init("no configuration with a valid url was given");
+
+  public_functions.config = cfg;
+
+  if(cfg.proxy || cfg.jar) {
+    if(cfg.proxy) 
+      request_opts.proxy = cfg.proxy;
+    request_opts.jar     = !!cfg.jar;
+    request              = require('request').defaults(request_opts);
+  }
+  
+  // assuming a cfg.log inside cfg
+  logging = require('./logging')(cfg);
+  
+  try { 
+    path       = u.parse(cfg.url);
+    path_array = path.pathname.split('/').filter(function(e) { return e; });
+  }
+  catch (e2) {
+    e2.message = "your url is invalid: " + cfg.url;
+    throw error.init(e2);
+  }
+  
+  // nano('http://couch.nodejitsu.com/db1') should return a database
+  // nano('http://couch.nodejitsu.com')     should return a nano object
+  if(path.pathname && path_array.length > 0) {
+    auth    = path.auth ? path.auth + '@' : '';
+    db      = path_array[0];
     cfg.url = path.protocol + '//' + auth + path.hostname; // reset url
     return document_module(db);
   }
   else   { return public_functions; }
+
 };
 
 /*

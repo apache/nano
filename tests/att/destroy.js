@@ -44,6 +44,7 @@ var ensure   = require('ensure')
 function db(i) { return nano.use(db_name(i)); }
 
 tests.att_des = function (callback) {
+  console.log(require('../../nano'))
   nano.db.create(db_name("a"), function () {
     db("a").attachment.insert("new", "att", "Hello World!", "text/plain",
       function (e,b) {
