@@ -17,7 +17,7 @@
   ]
 , "keywords"        : 
   ["couchdb", "data", "request", "json", "nosql", "micro", "nano", "database"]
-, "dependencies"    : {"request": "2.9.x", "underscore": "1.2.3"}
+, "dependencies"    : {"request": "2.9.x"}
 , "devDependencies" : 
   { "async": "0.1.15", "ensure": "0.4.6", "nock": "0.5.5"
   , "tap-runner": "0.0.7", "tap-producer": "0.0.1", "tap": "0.1.3"

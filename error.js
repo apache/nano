@@ -1,3 +1,4 @@
+var EventEmitter = require('events').EventEmitter;
 var STATUS_CODES = { '100': 'Continue'
                    , '101': 'Switching Protocols'
                    , '102': 'Processing'
@@ -97,7 +98,25 @@ function gen_err(scope,error,code,request,status_code) {
   error.request        = request;
   return error;
 }
+
+function request_err(error, code, request, callback) {
+  if(typeof request === 'function') {
+    callback = request;
+    request  = {};
+  }
+  error = gen_err('request', error, code, request);
+  if(callback) {
+    callback(error); 
+    return request;
+  } else {
+    var em = new EventEmitter();
+    process.nextTick(function() { em.emit('error', error); });
+    return em;
+  }
+}
+
 exports.uncaught = function (e,c,r,s) { return gen_err('uncaught',e,c,r,s); };
 exports.request  = function (e,c,r,s) { return gen_err('request',e,c,r,s);  };
 exports.couch    = function (e,c,r,s) { return gen_err('couch',e,c,r,s);    };
 exports.init     = function (e,c,r,s) { return gen_err('init',e,c,r,s);     };
+exports.request_err = request_err;
