@@ -7,6 +7,8 @@ var ensure   = require('ensure')
   ;
 
   couch = nock(cfg.url)
+    .get('/')
+    .reply(200, '{"couchdb":"Welcome","version":"1.1.0"}', {})
     .get('/acb')
     .reply(404, "{\"error\":\"not_found\",\"reason\":\"no_db_file\"}\n", { server: 'CouchDB/1.1.1 (Erlang OTP/R14B04)',
     date: 'Fri, 02 Dec 2011 02:53:14 GMT',
@@ -31,6 +33,12 @@ var ensure   = require('ensure')
     'content-type': 'application/json',
     'content-length': '44',
     'cache-control': 'must-revalidate' });
+
+tests.root = function (callback) { nano(cfg.url).dinosaur('', callback); };
+tests.root_ok = function (e,b) {
+  this.t.ok(b.version);
+  this.t.equal(b.version, "1.1.0");
+};
 
 tests.url = function (callback) { callback(null,nano('http://someurl.com')); };
 tests.url_ok = function (_,n) { this.t.equal(n.config.url, "http://someurl.com"); };

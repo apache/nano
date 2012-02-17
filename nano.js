@@ -67,7 +67,8 @@ module.exports = exports = nano = function database_module(cfg) {
   * @error {request:socket} problem connecting to couchdb
   * @error {couch:*} an error proxied from couchdb
   *
-  * @param {opts:object} request options; e.g. {db: "test", method: "GET"}
+  * @param {opts:object|string} request options; 
+  *          e.g. {db: "test", method: "GET"}
   *        {opts.db:string} database name
   *        {opts.method:string:optional} http method, defaults to "GET"
   *        {opts.path:string:optional} a full path, override `doc` and `att`
@@ -79,13 +80,14 @@ module.exports = exports = nano = function database_module(cfg) {
   * @param {callback:function:optional} function to call back
   */
   function relax(opts,callback) {
+    if(typeof opts === 'string') { opts = {path: opts}; }
     var log = logging();
     var headers = { "content-type": "application/json"
                   , "accept"      : "application/json"
                   }
       , req     = { method : (opts.method || "GET")
                   , headers: headers
-                  , uri    : cfg.url + "/" + opts.db }
+                  , uri    : cfg.url }
       , params  = opts.params
       , status_code
       , parsed
@@ -93,7 +95,7 @@ module.exports = exports = nano = function database_module(cfg) {
       ;
 
     if (opts.jar) { req.jar = opts.jar; }
-
+    if(opts.db) { req.uri += "/" + opts.db; }
     if(opts.path) { req.uri += "/" + opts.path; }
     else if(opts.doc)  {
       if(!/^_design/.test(opts.doc)) {
