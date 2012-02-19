@@ -3,6 +3,7 @@
 var verbose = (process.env.NANO_ENV==='testing');
 
 // snippet by Marak Squires.
+// MIT Licenced, Nodejitsu
 function randomString(len, charSet) {
     charSet = charSet || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     var str = '';

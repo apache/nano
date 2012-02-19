@@ -645,7 +645,7 @@ module.exports = exports = nano = function database_module(cfg) {
   if(path.pathname && path_array.length > 0) {
     auth    = path.auth ? path.auth + '@' : '';
     db      = path_array[0];
-    cfg.url = path.protocol + '//' + auth + path.hostname; // reset url
+    cfg.url = u.format({protocol:path.protocol,host:path.host});
     return document_module(db);
   }
   else   { return public_functions; }
