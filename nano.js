@@ -45,6 +45,7 @@ module.exports = exports = nano = function database_module(cfg) {
     , path_array
     , db
     , auth
+    , port
     ;
 
  /****************************************************************************
@@ -644,8 +645,10 @@ module.exports = exports = nano = function database_module(cfg) {
   // nano('http://couch.nodejitsu.com')     should return a nano object
   if(path.pathname && path_array.length > 0) {
     auth    = path.auth ? path.auth + '@' : '';
+    port    = path.port ? ':' + path.port : '';
     db      = path_array[0];
-    cfg.url = u.format({protocol:path.protocol,host: auth + path.host});
+    cfg.url = u.format(
+      {protocol:path.protocol,host: auth + path.hostname + port});
     return document_module(db);
   }
   else   { return public_functions; }
