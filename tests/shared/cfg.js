@@ -49,6 +49,9 @@ tests.url2_ok = function (_,n) { this.t.equal(n.config.url, "http://someurl.com/
 tests.url3 = function (callback) { callback(null,nano('http://someurl.com:5984/a')); };
 tests.url3_ok = function (_,n) { this.t.equal(n.config.url, "http://someurl.com:5984"); };
 
+tests.url4 = function (callback) { callback(null,nano('http://a:b@someurl.com:5984/a')); };
+tests.url4_ok = function (_,n) { this.t.equal(n.config.url, "http://a:b@someurl.com:5984"); };
+
 tests.url_db = function (callback) { nano(cfg.url + "/adb").info(callback); };
 tests.url_db_ok = function (e,b) {
   this.t.equal(e.message,"no_db_file");
