@@ -75,7 +75,7 @@ function user_find(view, id, opts, tried, callback) {
         if(e.message === 'missing_named_view') {
           users.get('_design/users', function (e,b,h) { // create view
             tried.tried += 1;
-            if(e) { return tests.recursive_create_view(tried,callback); }
+            if(e) { return user_find(view,id,opts,tried,callback); }
             b.views[view] = current_view;
             users.insert(b, '_design/users', function (e,b,h) {
               return user_find(view,id,opts,tried,callback);
