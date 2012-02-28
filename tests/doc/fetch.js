@@ -9,21 +9,21 @@ var ensure   = require('ensure')
   ;
 
   couch = nock(cfg.url)
-      .put('/v067_doc_lib')
+      .put('/' + db_name("b"))
       .reply(201, "{\"ok\":true}\n", { server: 'CouchDB/1.1.1 (Erlang OTP/R14B02)',
           location: 'http://localhost:5984/v067_doc_lib',
           date: 'Fri, 24 Feb 2012 14:48:10 GMT',
           'content-type': 'application/json',
           'content-length': '12',
           'cache-control': 'must-revalidate' })
-      .put('/v067_doc_lia')
+      .put('/' + db_name("a"))
       .reply(201, "{\"ok\":true}\n", { server: 'CouchDB/1.1.1 (Erlang OTP/R14B02)',
           location: 'http://localhost:5984/v067_doc_lia',
           date: 'Fri, 24 Feb 2012 14:48:10 GMT',
           'content-type': 'application/json',
           'content-length': '12',
           'cache-control': 'must-revalidate' })
-      .put('/v067_doc_lib/foobaz', "{\"foo\":\"baz\"}")
+      .put('/' + db_name("b") + '/foobaz', "{\"foo\":\"baz\"}")
       .reply(201, "{\"ok\":true,\"id\":\"foobaz\",\"rev\":\"1-cfa20dddac397da5bf0be2b50fb472fe\"}\n", { server: 'CouchDB/1.1.1 (Erlang OTP/R14B02)',
           location: 'http://localhost:5984/v067_doc_lib/foobaz',
           etag: '"1-cfa20dddac397da5bf0be2b50fb472fe"',
@@ -31,7 +31,7 @@ var ensure   = require('ensure')
           'content-type': 'application/json',
           'content-length': '69',
           'cache-control': 'must-revalidate' })
-      .put('/v067_doc_lib/barfoo', "{\"bar\":\"foo\"}")
+      .put('/' + db_name("b")+ '/barfoo', "{\"bar\":\"foo\"}")
       .reply(201, "{\"ok\":true,\"id\":\"barfoo\",\"rev\":\"1-41412c293dade3fe73279cba8b4cece4\"}\n", { server: 'CouchDB/1.1.1 (Erlang OTP/R14B02)',
           location: 'http://localhost:5984/v067_doc_lib/barfoo',
           etag: '"1-41412c293dade3fe73279cba8b4cece4"',
@@ -39,7 +39,7 @@ var ensure   = require('ensure')
           'content-type': 'application/json',
           'content-length': '69',
           'cache-control': 'must-revalidate' })
-      .put('/v067_doc_lib/foobar', "{\"foo\":\"bar\"}")
+      .put('/' + db_name("b")+ '/foobar', "{\"foo\":\"bar\"}")
       .reply(201, "{\"ok\":true,\"id\":\"foobar\",\"rev\":\"1-4c6114c65e295552ab1019e2b046b10e\"}\n", { server: 'CouchDB/1.1.1 (Erlang OTP/R14B02)',
           location: 'http://localhost:5984/v067_doc_lib/foobar',
           etag: '"1-4c6114c65e295552ab1019e2b046b10e"',
@@ -47,7 +47,7 @@ var ensure   = require('ensure')
           'content-type': 'application/json',
           'content-length': '69',
           'cache-control': 'must-revalidate' })
-      .put('/v067_doc_lia/foobar', "{\"foo\":\"bar\"}")
+      .put('/' + db_name("a")+ '/foobar', "{\"foo\":\"bar\"}")
       .reply(201, "{\"ok\":true,\"id\":\"foobar\",\"rev\":\"1-4c6114c65e295552ab1019e2b046b10e\"}\n", { server: 'CouchDB/1.1.1 (Erlang OTP/R14B02)',
           location: 'http://localhost:5984/v067_doc_lia/foobar',
           etag: '"1-4c6114c65e295552ab1019e2b046b10e"',
@@ -55,7 +55,7 @@ var ensure   = require('ensure')
           'content-type': 'application/json',
           'content-length': '69',
           'cache-control': 'must-revalidate' })
-      .put('/v067_doc_lia/barfoo', "{\"bar\":\"foo\"}")
+      .put('/' + db_name("a")+ '/barfoo', "{\"bar\":\"foo\"}")
       .reply(201, "{\"ok\":true,\"id\":\"barfoo\",\"rev\":\"1-41412c293dade3fe73279cba8b4cece4\"}\n", { server: 'CouchDB/1.1.1 (Erlang OTP/R14B02)',
           location: 'http://localhost:5984/v067_doc_lia/barfoo',
           etag: '"1-41412c293dade3fe73279cba8b4cece4"',
@@ -63,7 +63,7 @@ var ensure   = require('ensure')
           'content-type': 'application/json',
           'content-length': '69',
           'cache-control': 'must-revalidate' })
-      .put('/v067_doc_lia/foobaz', "{\"foo\":\"baz\"}")
+      .put('/' + db_name("a")+ '/foobaz', "{\"foo\":\"baz\"}")
       .reply(201, "{\"ok\":true,\"id\":\"foobaz\",\"rev\":\"1-cfa20dddac397da5bf0be2b50fb472fe\"}\n", { server: 'CouchDB/1.1.1 (Erlang OTP/R14B02)',
           location: 'http://localhost:5984/v067_doc_lia/foobaz',
           etag: '"1-cfa20dddac397da5bf0be2b50fb472fe"',
@@ -71,14 +71,14 @@ var ensure   = require('ensure')
           'content-type': 'application/json',
           'content-length': '69',
           'cache-control': 'must-revalidate' })
-      .post('/v067_doc_lib/_all_docs?include_docs=true', "{\"keys\":[\"foobar\",\"barfoo\"]}")
+      .post('/' + db_name("b")+ '/_all_docs?include_docs=true', "{\"keys\":[\"foobar\",\"barfoo\"]}")
       .reply(200, "{\"total_rows\":3,\"offset\":0,\"rows\":[\r\n{\"id\":\"foobar\",\"key\":\"foobar\",\"value\":{\"rev\":\"1-4c6114c65e295552ab1019e2b046b10e\"},\"doc\":{\"_id\":\"foobar\",\"_rev\":\"1-4c6114c65e295552ab1019e2b046b10e\",\"foo\":\"bar\"}},\r\n{\"id\":\"barfoo\",\"key\":\"barfoo\",\"value\":{\"rev\":\"1-41412c293dade3fe73279cba8b4cece4\"},\"doc\":{\"_id\":\"barfoo\",\"_rev\":\"1-41412c293dade3fe73279cba8b4cece4\",\"bar\":\"foo\"}}\r\n]}\n", { 'transfer-encoding': 'chunked',
           server: 'CouchDB/1.1.1 (Erlang OTP/R14B02)',
           etag: '"7X2D919KBXMJ5Z6JJ4RCZXZCB"',
           date: 'Fri, 24 Feb 2012 14:48:10 GMT',
           'content-type': 'application/json',
           'cache-control': 'must-revalidate' })
-      .post('/v067_doc_lia/_all_docs?include_docs=true', "{\"keys\":[\"foobar\"]}")
+      .post('/' + db_name("a")+ '/_all_docs?include_docs=true', "{\"keys\":[\"foobar\"]}")
       .reply(200, "{\"total_rows\":3,\"offset\":0,\"rows\":[\r\n{\"id\":\"foobar\",\"key\":\"foobar\",\"value\":{\"rev\":\"1-4c6114c65e295552ab1019e2b046b10e\"},\"doc\":{\"_id\":\"foobar\",\"_rev\":\"1-4c6114c65e295552ab1019e2b046b10e\",\"foo\":\"bar\"}}\r\n]}\n", { 'transfer-encoding': 'chunked',
           server: 'CouchDB/1.1.1 (Erlang OTP/R14B02)',
           etag: '"2GOFI0AQ1BKE16DH52QAWBY0K"',
