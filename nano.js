@@ -111,7 +111,7 @@ module.exports = exports = nano = function database_module(cfg) {
       }
       if(opts.att) { req.uri += "/" + opts.att; }
     }
-    if(opts.encoding && callback) {
+    if(opts.encoding !== undefined && callback) {
       req.encoding = opts.encoding;
       delete req.headers["content-type"];
       delete req.headers.accept;
@@ -537,7 +537,7 @@ module.exports = exports = nano = function database_module(cfg) {
         params   = {};
       }
       return relax({ db: db_name, att: att_name, method: "GET", doc: doc_name
-                   , params: params, encoding: "binary"},callback);
+                   , params: params, encoding: null},callback);
     }
 
    /*
