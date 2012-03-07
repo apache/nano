@@ -3,3 +3,4 @@ env: NANO_ENV=testing
 node_js:
   - 0.4
   - 0.6
+  - 0.7
