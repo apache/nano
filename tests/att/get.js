@@ -64,6 +64,7 @@ tests.att_get_ok = function (e,b) {
   this.t.notOk(e, 'No Error');
   var from_buffer = new Buffer(b, "binary").toString("base64");
   this.t.equal(from_buffer, pixel, 'Buffer is pixel');
+  this.t.equal(b.toString("base64"), pixel, 'Result buffer is pixel');
   this.t.ok(couch.isDone(), 'Nock is done');
 };
 
