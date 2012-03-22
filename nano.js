@@ -149,7 +149,13 @@ module.exports = exports = nano = function database_module(cfg) {
       }
       else {
         try {
-          req.body = JSON.stringify(opts.body);
+          req.body = JSON.stringify(opts.body, function (key, value) {
+            if (typeof(value) === 'function') {
+              return value.toString();
+            } else {
+              return value;
+            }
+          });
         } catch (ex5) { 
           ex5.message = "couldn't json.stringify the body you provided";
           return error.request_err(ex5, 'jsonstringify', {}, callback);
