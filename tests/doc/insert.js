@@ -33,7 +33,7 @@ var ensure   = require('ensure')
         'content-type': 'application/json',
         'content-length': '95',
         'cache-control': 'must-revalidate' })
-    .put('/' + db_name('b') + '/some%2Fpath', {"foo": "bar", "fn": "function () { return true; }"})
+    .put('/' + db_name('b') + '/some%2Fpath', {"foo": "bar", "fn": "function () { return true; }", fn2: "function () { return false; }"})
     .reply(201, "{\"ok\": true,\"id\": \"some/path\",\"rev\": \"1-4c6114c65e295552ab1019e2b046b10e\"}\n", 
       { server: 'CouchDB/1.1.1 (Erlang OTP/R14B04)',
         location: cfg.url + '/' + db_name('b') + '/some/path',
@@ -61,7 +61,9 @@ tests.insert_doc_ok = function (e,b) {
 
 tests.insert_doc_path = function (callback) {
   nano.db.create(db_name("b"), function () {
-    db("b").insert({foo: "bar", fn: function () { return true; }}, 'some/path', callback);
+    db("b").insert({foo: "bar", fn: function () { return true; },
+      fn2: "function () { return false; }" }, 
+      'some/path', callback);
   });
 };
 
