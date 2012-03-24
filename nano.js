@@ -311,18 +311,18 @@ module.exports = exports = nano = function database_module(cfg) {
   *
   * @param {source:string} name of the source database
   * @param {target:string} name of the target database
-  * @param {continuous:bool:optional} continuous replication on?
+  * @param {opts:object:optional} options to the replicator
   *
   * @see relax
   */
-  function replicate_db(source, target, continuous, callback) {
-    if(typeof continuous === "function") {
-      callback   = continuous;
-      continuous = false;
+  function replicate_db(source, target, opts, callback) {
+    if(typeof opts === "function") {
+      callback  = opts;
+      opts      = {};
     }
-    var body = {source: source, target: target};
-    if(continuous) { body.continuous = true; }
-    return relax({db: "_replicate", body: body, method: "POST"},callback);
+    opts.source = source;
+    opts.target = target;
+    return relax({db: "_replicate", body: opts, method: "POST"}, callback);
   }
 
  /****************************************************************************
@@ -561,12 +561,8 @@ module.exports = exports = nano = function database_module(cfg) {
     }
 
     public_functions = { info: function(cb) { return get_db(db_name,cb); }
-                       , replicate: function(target,continuous,cb) {
-                           if(typeof continuous === "function") {
-                             cb         = continuous;
-                             continuous = false;
-                           }
-                           return replicate_db(db_name,target,continuous,cb);
+                       , replicate: function(target,opts,cb) {
+                           return replicate_db(db_name,target,opts,cb);
                          }
                        , compact: function(cb) { 
                            return compact_db(db_name,cb); 

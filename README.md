@@ -85,7 +85,7 @@ errors include responses from couchdb which had a non 200 response code. that's 
 `server.db.destroy(db_name,callback*)`
 `server.db.list(callback*)`
 `server.db.compact(db_name,design_name*,callback*)`
-`server.db.replicate(source,target,continuous*,callback*)`
+`server.db.replicate(source,target,opts*,callback*)`
 `server.db.changes(db_name,params*,callback*)`
 `server.use(db_name)`
 `server.request(opts,callback*)`
@@ -117,7 +117,7 @@ errors include responses from couchdb which had a non 200 response code. that's 
 `nano.use` sets `db_name` in scope so you don't have to specify it every time
 
 `server.db.get: [db.info(callback*)]`
-`server.db.replicate: [db.replicate(target,continuous*,callback*)]`
+`server.db.replicate: [db.replicate(target,opts*,callback*)]`
 `server.db.compact:  [db.compact(callback*), db.view.compact(design_name,callback*)]`
 `server.db.changes: [db.changes(params*,callback*)]`
 `server.config: [db.config]`
