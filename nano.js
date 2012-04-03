@@ -460,7 +460,7 @@ module.exports = exports = nano = function database_module(cfg) {
     * @param {params:object} additions to the querystring
    */
    function update_with_handler_doc(design_name, update_name, 
-     doc_name, params, callback) {
+     doc_name, body, callback) {
      if(typeof params === "function") {
        callback = params;
        params   = {};
@@ -469,7 +469,7 @@ module.exports = exports = nano = function database_module(cfg) {
        update_name + '/' + doc_name;
      return relax(
        { db: db_name, path: update_path, method: "PUT"
-       , body: params }, callback);
+       , body: body }, callback);
    }
 
    /*
