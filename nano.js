@@ -469,7 +469,7 @@ module.exports = exports = nano = function database_module(cfg) {
        update_name + '/' + doc_name;
      return relax(
        { db: db_name, path: update_path, method: "PUT"
-       , params: params }, callback);
+       , body: params }, callback);
    }
 
    /*
