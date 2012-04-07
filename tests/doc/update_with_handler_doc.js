@@ -37,7 +37,7 @@ var ensure   = require('ensure')
         'content-type': 'application/json',
         'content-length': '66',
         'cache-control': 'must-revalidate' })
-    .put('/' + db_name('a') + '/_design/my_design_doc/_update/in-place/foo?field=bar&value=foo')
+	.put('/' + db_name('a') + '/_design/my_design_doc/_update/in-place/foo {"field":"bar","value":"foo"}')
     .reply(201, "[{\"id\": \"foo\", \"key\": \"foo\", \"value\": { \"foo\": \"baz\", \"bar\": \"foo\"} }, \"set bar to foo\"]", 
       { server: 'CouchDB/1.1.1 (Erlang OTP/R14B04)',
         location: cfg.url + '/' + db_name('a') + '/foo',
