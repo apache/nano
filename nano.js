@@ -461,9 +461,9 @@ module.exports = exports = nano = function database_module(cfg) {
    */
    function update_with_handler_doc(design_name, update_name, 
      doc_name, body, callback) {
-     if(typeof params === "function") {
-       callback = params;
-       params   = {};
+     if(typeof body === "function") {
+       callback = body;
+       body     = {};
      }
      var update_path = '_design/' + design_name + '/_update/' + 
        update_name + '/' + doc_name;

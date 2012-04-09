@@ -110,7 +110,7 @@ errors include responses from couchdb which had a non 200 response code. that's 
 `db.attachment.insert(doc_name,att_name,att,content_type,params*,callback*)`
 `db.attachment.get(doc_name,att_name,params*,callback*)`
 `db.attachment.destroy(doc_name,att_name,rev,callback*)`
-`db.updateWithHandler(design_name, update_name, doc_name, params*, callback*)`
+`db.updateWithHandler(design_name, update_name, doc_name, body*, callback*)`
 
 ### aliases
 
