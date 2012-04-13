@@ -454,7 +454,7 @@ module.exports = exports = nano = function database_module(cfg) {
     * calls document update handler design document
     *
     *
-    * @param {design_name:string} design document namd
+    * @param {design_name:string} design document name
     * @param {update_name:string} update method to call
     * @param {doc_name:string} document name to update
     * @param {params:object} additions to the querystring
