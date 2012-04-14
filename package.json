@@ -17,6 +17,7 @@
   , "Stéphane Alnet <stephane@shimaore.net> (http://blog.shimaore.net)"
   , "Cliffano Subagio (http://blog.cliffano.com)"
   , "Mark Hahn (http://hahnca.com)"
+  , "Francesco Ceccon <francesco@ceccon.me> (http://francesco-cek.com/)"
   ]
 , "keywords"        : 
   ["couchdb", "data", "request", "json", "nosql", "micro", "nano", "database"]
