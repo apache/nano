@@ -1,52 +1,52 @@
 # nano
 
-Minimalistic CouchDB driver for Node.js
+minimalistic couchdb driver for node.js
 
 `nano` features:
 
-* **Minimalistic** - there is only a minimun of abstraction between you and 
-  CouchDB
-* **Pipes** - proxy requests from CouchDB directly to your end user
-* **Errors** - errors are proxied directly from CouchDB: if you know ChouchDB 
+* **minimalistic** - there is only a minimun of abstraction between you and 
+  couchdb
+* **pipes** - proxy requests from couchdb directly to your end user
+* **errors** - errors are proxied directly from couchdb: if you know chouchdb 
   you already know `nano`
 
 
-## Installation
+## installation
 
 1. install [npm][1]
 2. `npm install nano`
 
-## Getting started
+## getting started
 
-To use `nano` you need to connect it to your CouchDB install, to do that:
+to use `nano` you need to connect it to your couchdb install, to do that:
 
 ``` js
 var nano = require('nano')('http://localhost:5984');
 ```
 
-To create a new database:
+to create a new database:
 
 ``` js
 nano.db.create('alice');
 ```
 
-And to use it:
+and to use it:
 
 ``` js
 var alice = nano.db.use('alice');
 ```
 
-In this examples we didn't specify a function `callback`, usually you don't
-want that.
-In `nano` the callback function has always three arguments:
+in this examples we didn't specify a `callback` function, the absence of a 
+callback means _"do this, ignore what happens"_.
+in `nano` the callback function receives always three arguments:
 
 * `err` - the error, if any
 * `body` - the http _response body_ from couchdb, if no error. 
-  JSON parsed body, binary for non JSON responses
-* `header` - the http _response header_ from CouchDB, if no error
+  json parsed body, binary for non json responses
+* `header` - the http _response header_ from couchdb, if no error
 
 
-A simple but complete example using callbacks is:
+a simple but complete example using callbacks is:
 
 ``` js
 var nano = require('nano')('http://localhost:5984');
@@ -63,39 +63,39 @@ nano.db.destroy('alice', function() {
         console.log('[alice.insert] ', err.message);
         return;
       }
-      console.log('You have inserted the rabbit.')
+      console.log('you have inserted the rabbit.')
       console.log(body);
     });
   });
 });
 ```
 
-If you run this example(after starting CouchDB) you will see:
+if you run this example(after starting couchdb) you will see:
 
-    You have inserted the rabbit.
+    you have inserted the rabbit.
     { ok: true,
       id: 'rabbit',
       rev: '1-6e4cb465d49c0368ac3946506d26335d' }
 
-You can also see your document in [Futon](http://localhost:5984/_utils)
+you can also see your document in [futon](http://localhost:5984/_utils)
 
-## Databases functions
+## database functions
 
 ### nano.db.create(name, [callback])
 
-Asynchronously creates a CouchDB database with the given `name`.
+creates a couchdb database with the given `name`.
 
 ``` js
 nano.db.create('alice', function(err, body) {
   if (!err) {
-    console.log('Database alice created!');
+    console.log('database alice created!');
   }
 });
 ```
 
 ### nano.db.get(name, [callback])
 
-Asynchronously get informations about `name`.
+get informations about `name`.
 
 ``` js
 nano.db.get('alice', function(err, body) {
@@ -107,35 +107,35 @@ nano.db.get('alice', function(err, body) {
 
 ### nano.db.destroy(name, [callback])
 
-Asynchronously destroys `name`.
+destroys `name`.
 
 ``` js
 nano.db.destroy('alice');
 ```
 
-Even though this examples looks sync it is an async function.
+even though this examples looks sync it is an async function.
 
 ### nano.db.list([callback])
 
-Asynchronously lists all the databases in CouchDB
+lists all the databases in couchdb
 
 ``` js
 nano.db.list(function(err, body) {
-  // body is an Array
-  body.forEach(function(db) {
+  // body is an array
+  body.foreach(function(db) {
     console.log(db);
   });
 });
 ```
 
-### nano.db.compact(name, [designName], [callback])
+### nano.db.compact(name, [designname], [callback])
 
-Asynchronously compacts `name`, if `designName` is specified also compacts its
+compacts `name`, if `designname` is specified also compacts its
 views.
 
 ### nano.db.replicate(source, target, [opts], [callback])
 
-Asynchronously replicates `source` on `target` with options `opts`. `target`
+replicates `source` on `target` with options `opts`. `target`
 has to exist, add `create_target:true` to `opts` to create it prior to
 replication.
 
@@ -149,7 +149,7 @@ nano.db.replicate('alice', 'http://admin:password@otherhost.com:5984/alice',
 
 ### nano.db.changes(name, [params], [callback])
 
-Asynchonously asks for the changes feed of `name`, `params` contains additions
+asks for the changes feed of `name`, `params` contains additions
 to the querystring.
 
 ``` js
@@ -161,7 +161,7 @@ nano.db.changes('alice', function(err, body) {
 
 ### nano.use(name)
 
-Creates a scope where you operate inside `name`.
+creates a scope where you operate inside `name`.
 
 ``` js
 var alice = nano.use('alice');
@@ -172,22 +172,22 @@ alice.insert({ crazy: true }, 'rabbit', function(err, body) {
 
 ### nano.db.use(name)
 
-Alias for `nano.use`
+alias for `nano.use`
 
 ### nano.db.scope(name)
 
-Alias for `nano.use`
+alias for `nano.use`
 
 ### nano.scope(name)
 
-Alias for `nano.use`
+alias for `nano.use`
 
 ### nano.request(opts, [callback])
 
-Asynchronously makes a request to CouchDB, the available `opts` are:
+makes a request to couchdb, the available `opts` are:
 
 * `opts.db` - the database name
-* `opts.method` - the http method, defaults to `GET`
+* `opts.method` - the http method, defaults to `get`
 * `opts.path` - the full path of the request, overrides `opts.doc` and
   `opts.att`
 * `opts.doc` - the document name
@@ -198,30 +198,29 @@ Asynchronously makes a request to CouchDB, the available `opts` are:
 
 ### nano.relax(opts, [callback])
 
-Alias for `nano.request`
+alias for `nano.request`
 
 ### nano.dinosaur(opts, [callback])
 
-Alias for `nano.request`
+alias for `nano.request`
 
-                / _) ROAR! i'm a vegan!
+                / _) roar! i'm a vegan!
          .-^^^-/ /
       __/       /
      /__.|_|-|_|
  
 ### nano.config
 
-An object containing the nano configurations, possible keys are:
+an object containing the nano configurations, possible keys are:
 
-* `url` - the CouchDB url
+* `url` - the couchdb url
 * `db` - the database name
 
-## Documents functions
+## document functions
 
-### db.insert(doc, [docName], [callback])
+### db.insert(doc, [docname], [callback])
 
-Inserts `doc` in the database with an optional `docName`.  
-This function is asynchronous.
+inserts `doc` in the database with an optional `docname`.  
 
 ``` js
 var alice = nano.use('alice');
@@ -231,9 +230,9 @@ alice.insert({ crazy: true }, 'rabbit', function(err, body) {
 });
 ```
 
-### db.destroy(docName, rev, [callback])
+### db.destroy(docname, rev, [callback])
 
-Asynchronously removes revision `rev` of `docName` from CouchDB.
+removes revision `rev` of `docname` from couchdb.
 
 ``` js
 alice.destroy('alice', '3-66c01cdf99e84c83a9b3fe65b88db8c0', function(err, body) {
@@ -242,9 +241,9 @@ alice.destroy('alice', '3-66c01cdf99e84c83a9b3fe65b88db8c0', function(err, body)
 });
 ```
 
-### db.get(docName, [params], [callback])
+### db.get(docname, [params], [callback])
 
-Asynchronously gets `docName` from the database with optional querystring
+gets `docname` from the database with optional querystring
 additions `params`.
 
 ``` js
@@ -256,44 +255,42 @@ alice.get('rabbit', { revs_info: true }, function(err, body) {
 
 ### db.bulk(docs, [params], [callback])
 
-Bulk operations(update/delete/insert) on the database, refer to the 
-[CouchDB doc](http://wiki.apache.org/couchdb/HTTP_Bulk_Document_API).
+bulk operations(update/delete/insert) on the database, refer to the 
+[couchdb doc](http://wiki.apache.org/couchdb/http_bulk_document_api).
 
 ### db.list([params], [callback])
 
-List all the docs in the database with optional querystring additions `params`.  
-This function is asynchronous.
+list all the docs in the database with optional querystring additions `params`.  
 
 ``` js
 alice.list(function(err, body) {
   if (!err) {
-    body.rows.forEach(function(doc) {
+    body.rows.foreach(function(doc) {
       console.log(doc);
     });
   }
 });
 ```
 
-### db.fetch(docNames, [params], [callback])
+### db.fetch(docnames, [params], [callback])
 
-Bulk fetch of the database documents, `docNames` are specified as per 
-[CouchDB doc](http://wiki.apache.org/couchdb/HTTP_Bulk_Document_API).
-Additionals querystring `params` can be specified, `include_doc` is always set
+bulk fetch of the database documents, `docnames` are specified as per 
+[couchdb doc](http://wiki.apache.org/couchdb/http_bulk_document_api).
+additionals querystring `params` can be specified, `include_doc` is always set
 to `true`.  
-This function is asynchronous.
 
-## Attachments functions
+## attachments functions
 
-### db.attachment.insert(docName, attName, att, contentType, [params], [callback])
+### db.attachment.insert(docname, attname, att, contenttype, [params], [callback])
 
-Asynchronously inserts an attachment `attName` to `docName`, in most cases
- `params.rev` is required. Refer to the
- [doc](http://wiki.apache.org/couchdb/HTTP_Document_API) for more details.
+inserts an attachment `attname` to `docname`, in most cases
+ `params.rev` is required. refer to the
+ [doc](http://wiki.apache.org/couchdb/http_document_api) for more details.
 
 ``` js
 var fs = require('fs');
 
-fs.readFile('rabbit.png', function(err, data) {
+fs.readfile('rabbit.png', function(err, data) {
   if (!err) {
     alice.attachment.insert('rabbit', 'rabbit.png', data, 'image/png',
       { rev: '12-150985a725ec88be471921a54ce91452' }, function(err, body) {
@@ -304,43 +301,42 @@ fs.readFile('rabbit.png', function(err, data) {
 });
 ```
 
-Or using `pipe`:
+or using `pipe`:
 
 ``` js
 var fs = require('fs');
 
-fs.createReadStream('rabbit.png').pipe(
+fs.createreadstream('rabbit.png').pipe(
     alice.attachment.insert('new', 'rab.png', {}, 'image/png')
 );
 ```
 
-### db.attachment.get(docName, attName, [params], [callback])
+### db.attachment.get(docname, attname, [params], [callback])
 
-Get `docName`'s attachment `attName` with optional querystring additions
+get `docname`'s attachment `attname` with optional querystring additions
 `params`.  
-This function is asynchronous.
 
 ``` js
 var fs = require('fs');
 
 alice.attachment.get('rabbit', 'rabbit.png', function(err, body) {
   if (!err) {
-    fs.writeFile('rabbit.png', body);
+    fs.writefile('rabbit.png', body);
   }
 });
 ```
 
-Or using `pipe`:
+or using `pipe`:
 
 ``` js
 var fs = require('fs');
 
-alice.attachment.get('rabbit', 'rabbit.png').pipe(fs.createWriteStream('rabbit.png'));
+alice.attachment.get('rabbit', 'rabbit.png').pipe(fs.createwritestream('rabbit.png'));
 ```
 
-### db.attachment.destroy(docName, attName, rev, [callback])
+### db.attachment.destroy(docname, attname, rev, [callback])
 
-Asynchronously destroy attachment `attName` of `docName`'s revision `rev`.
+destroy attachment `attname` of `docname`'s revision `rev`.
 
 ``` js
 alice.attachment.destroy('rabbit', 'rabbit.png',
@@ -350,84 +346,83 @@ alice.attachment.destroy('rabbit', 'rabbit.png',
 });
 ```
 
-## Views and design functions
+## views and design functions
 
-### db.view(designName, viewName, [params], [callback])
+### db.view(designname, viewname, [params], [callback])
 
-Calls a view of the specified design with optional querystring additions
+calls a view of the specified design with optional querystring additions
 `params`.  
-This function is asynchronous.
 
 ``` js
 alice.view('characters', 'crazy_ones', function(err, body) {
   if (!err) {
-    body.rows.forEach(function(doc) {
+    body.rows.foreach(function(doc) {
       console.log(doc.value);
     });
   }
 });
 ```
 
-### db.updateWithHandler(designName, updateName, docName, [body], [callback])
+### db.updatewithhandler(designname, updatename, docname, [body], [callback])
 
-Calls the design's update function with the specified doc in input.
+calls the design's update function with the specified doc in input.
 
-## Advanced features
+## advanced features
 
-### Extending nano
+### extending nano
 
-Nano is minimalistic but you can add your own features with
+nano is minimalistic but you can add your own features with
 `nano.request(opts, callback)`
 
-For example, to create a function to retrieve a specific revision of the
+for example, to create a function to retrieve a specific revision of the
 `rabbit` document:
 
 ``` js
-function getRabbitRev(rev, callback) {
+function getrabbitrev(rev, callback) {
   nano.request({ db: 'alice',
                  doc: 'rabbit',
-                 method: 'GET',
+                 method: 'get',
                  params: { rev: rev }
                }, callback);
 }
 
-getRabbitRev('4-2e6cdc4c7e26b745c2881a24e0eeece2', function(err, body) {
+getrabbitrev('4-2e6cdc4c7e26b745c2881a24e0eeece2', function(err, body) {
   if (!err) {
     console.log(body);
   }
 });
 ```
-### Pipes
+### pipes
 
-You can pipe in nano like in any other stream.  
-For example if our `rabbit` document has an attachment with name `picture.png`
-(with a picture of our white rabbit, of course!) you can pipe it to a `Writable
-Stream`
+you can pipe in nano like in any other stream.  
+for example if our `rabbit` document has an attachment with name `picture.png`
+(with a picture of our white rabbit, of course!) you can pipe it to a `writable
+stream`
 
 ``` js
 var fs = require('fs'),
     nano = require('nano');
 var alice = nano.use('alice');
-alice.attachment.get('rabbit', 'picture.png').pipe(fs.createWriteStream("/tmp/rabbit.png"));
+alice.attachment.get('rabbit', 'picture.png').pipe(fs.createwritestream("/tmp/rabbit.png"));
 ```
 
-Then open `/tmp/rabbit.png` and you will see the rabbit picture.
+then open `/tmp/rabbit.png` and you will see the rabbit picture.
 
 
-## Tutorials & screencasts
+## tutorials & screencasts
 
 * screencast: [couchdb and nano](http://nodetuts.com/tutorials/30-couchdb-and-nano.html#video)
 * article: [nano - a minimalistic couchdb client for nodejs](http://writings.nunojob.com/2011/08/nano-minimalistic-couchdb-client-for-nodejs.html)
 * article: [getting started with node.js and couchdb](http://writings.nunojob.com/2011/09/getting-started-with-nodejs-and-couchdb.html)
-* article: [Document Update Handler Support](http://jackhq.tumblr.com/post/16035106690/nano-v1-2-x-document-update-handler-support-v1-2-x)
+* article: [document update handler support](http://jackhq.tumblr.com/post/16035106690/nano-v1-2-x-document-update-handler-support-v1-2-x)
 
-## Roadmap
+## roadmap
 
-Check [issues][2]
+check [issues][2]
 
-## Tests
+## tests
 
-To run (and configure) the test suite simply:
+to run (and configure) the test suite simply:
 
 ``` sh
 cd nano
@@ -439,14 +434,14 @@ npm test
 after adding a new test you can run it individually (with verbose output) using:
 
 ``` sh
-NANO_ENV=testing node tests/doc/list.js list_doc_params
+nano_env=testing node tests/doc/list.js list_doc_params
 ```
 
 where `list_doc_params` is the test name.
 
-## Contribute
+## contribute
 
-Everyone is welcome to contribute with patches, bugfixes and new features
+everyone is welcome to contribute with patches, bugfixes and new features
 
 1. create an [issue][2] on github so the community can comment on your idea
 2. fork `nano` in github
@@ -458,10 +453,10 @@ Everyone is welcome to contribute with patches, bugfixes and new features
 8. create a pull request
 
 
-## Meta
+## meta
 
                     _
-                  / _) ROAR! i'm a vegan!
+                  / _) roar! i'm a vegan!
            .-^^^-/ /
         __/       /
        /__.|_|-|_|     cannes est superb
@@ -471,25 +466,25 @@ Everyone is welcome to contribute with patches, bugfixes and new features
 * bugs: <http://github.com/dscape/nano/issues>
 * build: [![build status](https://secure.travis-ci.org/dscape/nano.png)](http://travis-ci.org/dscape/nano)
 
-`(oO)--',-` in [caos][3]
+`(oo)--',-` in [caos][3]
 
 [1]: http://npmjs.org
 [2]: http://github.com/dscape/nano/issues
 [3]: http://caos.di.uminho.pt/
 [4]: https://github.com/dscape/nano/blob/master/cfg/couch.example.js
 
-## License
+## license
 
-Copyright 2011 nuno job <nunojob.com> (oO)--',--
+copyright 2011 nuno job <nunojob.com> (oo)--',--
 
-Licensed under the apache license, version 2.0 (the "license");
+licensed under the apache license, version 2.0 (the "license");
 you may not use this file except in compliance with the license.
-You may obtain a copy of the license at
+you may obtain a copy of the license at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/license-2.0
 
-Unless required by applicable law or agreed to in writing, software
+unless required by applicable law or agreed to in writing, software
 distributed under the license is distributed on an "as is" basis,
 without warranties or conditions of any kind, either express or implied.
-See the license for the specific language governing permissions and
+see the license for the specific language governing permissions and
 limitations under the license.
