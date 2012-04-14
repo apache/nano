@@ -77,7 +77,7 @@ if you run this example(after starting couchdb) you will see:
       id: 'rabbit',
       rev: '1-6e4cb465d49c0368ac3946506d26335d' }
 
-you can also see your document in [futon](http://localhost:5984/_utils)
+you can also see your document in [futon](http://localhost:5984/_utils).
 
 ## database functions
 
@@ -122,7 +122,7 @@ lists all the databases in couchdb
 ``` js
 nano.db.list(function(err, body) {
   // body is an array
-  body.foreach(function(db) {
+  body.forEach(function(db) {
     console.log(db);
   });
 });
@@ -265,7 +265,7 @@ list all the docs in the database with optional querystring additions `params`.
 ``` js
 alice.list(function(err, body) {
   if (!err) {
-    body.rows.foreach(function(doc) {
+    body.rows.forEach(function(doc) {
       console.log(doc);
     });
   }
@@ -290,7 +290,7 @@ inserts an attachment `attname` to `docname`, in most cases
 ``` js
 var fs = require('fs');
 
-fs.readfile('rabbit.png', function(err, data) {
+fs.readFile('rabbit.png', function(err, data) {
   if (!err) {
     alice.attachment.insert('rabbit', 'rabbit.png', data, 'image/png',
       { rev: '12-150985a725ec88be471921a54ce91452' }, function(err, body) {
@@ -306,7 +306,7 @@ or using `pipe`:
 ``` js
 var fs = require('fs');
 
-fs.createreadstream('rabbit.png').pipe(
+fs.createReadStream('rabbit.png').pipe(
     alice.attachment.insert('new', 'rab.png', {}, 'image/png')
 );
 ```
@@ -321,7 +321,7 @@ var fs = require('fs');
 
 alice.attachment.get('rabbit', 'rabbit.png', function(err, body) {
   if (!err) {
-    fs.writefile('rabbit.png', body);
+    fs.writeFile('rabbit.png', body);
   }
 });
 ```
@@ -331,7 +331,7 @@ or using `pipe`:
 ``` js
 var fs = require('fs');
 
-alice.attachment.get('rabbit', 'rabbit.png').pipe(fs.createwritestream('rabbit.png'));
+alice.attachment.get('rabbit', 'rabbit.png').pipe(fs.createWriteStream('rabbit.png'));
 ```
 
 ### db.attachment.destroy(docname, attname, rev, [callback])
@@ -356,14 +356,14 @@ calls a view of the specified design with optional querystring additions
 ``` js
 alice.view('characters', 'crazy_ones', function(err, body) {
   if (!err) {
-    body.rows.foreach(function(doc) {
+    body.rows.forEach(function(doc) {
       console.log(doc.value);
     });
   }
 });
 ```
 
-### db.updatewithhandler(designname, updatename, docname, [body], [callback])
+### db.updateWithHandler(designname, updatename, docname, [body], [callback])
 
 calls the design's update function with the specified doc in input.
 
@@ -403,7 +403,7 @@ stream`
 var fs = require('fs'),
     nano = require('nano');
 var alice = nano.use('alice');
-alice.attachment.get('rabbit', 'picture.png').pipe(fs.createwritestream("/tmp/rabbit.png"));
+alice.attachment.get('rabbit', 'picture.png').pipe(fs.createWriteStream('/tmp/rabbit.png'));
 ```
 
 then open `/tmp/rabbit.png` and you will see the rabbit picture.
