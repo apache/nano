@@ -401,7 +401,7 @@ stream`
 
 ``` js
 var fs = require('fs'),
-    nano = require('nano');
+    nano = require('nano')('http://127.0.0.1:5984/');
 var alice = nano.use('alice');
 alice.attachment.get('rabbit', 'picture.png').pipe(fs.createWriteStream('/tmp/rabbit.png'));
 ```
