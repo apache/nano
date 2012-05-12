@@ -75,4 +75,23 @@ tests.insert_doc_path_ok = function (e,b) {
   this.t.ok(couch.isDone(), 'Nock is done');
 };
 
+tests.insert_doc_stream = function (callback) {
+  nano.db.create(db_name("c"), function () {
+    var buffer = "";
+    var foo = db('c').insert({"foo": "bar"});
+    foo.on('data', function(chunk) { buffer += chunk; });
+    foo.on('end', function () { callback(null, buffer); });
+    foo.on('error', callback);
+  });
+};
+
+tests.insert_doc_stream_ok = function (e,b) {
+  this.t.notOk(e, 'No error');
+  this.t.ok(b.ok, 'This is ok');
+  this.t.ok(b.rev, 'I GOT REVZ');
+  this.t.ok(b.id, 'I got Id!');
+  this.t.ok(couch.isDone(), 'Nock is done');
+};
+
+
 ensure(__filename,tests,module,process.argv[2]);
