@@ -8,7 +8,9 @@ var fs       = require('fs')
   , pixel    = helpers.pixel
   ;
 
-var mock = nock(helpers.couch, "att/pipe");
+var mock = nock(helpers.couch, "att/pipe")
+  , db   = nano.use("att_pipe")
+  ;
 
 specify("att_pipe:setup", timeout, function (assert) {
   nano.db.create("att_pipe", function (err) {
@@ -17,17 +19,14 @@ specify("att_pipe:setup", timeout, function (assert) {
 });
 
 specify("att_pipe:pixel", timeout, function (assert) {
-  var db       = nano.use("att_pipe")
-    , buffer   = new Buffer(pixel, 'base64')
+  var buffer   = new Buffer(pixel, 'base64')
     , filename = path.join(__dirname, '.temp.bmp')
     , ws       = fs.createWriteStream(filename)
     ;
-
     ws.on('close', function () {
       assert.equal(fs.readFileSync(filename).toString('base64'), pixel);
       fs.unlinkSync(filename);
     });
-
     db.attachment.insert("new", "att", buffer, "image/bmp", 
     function (error, bmp) {
       assert.equal(error, undefined, "Should store the pixel");

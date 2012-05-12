@@ -6,7 +6,9 @@ var specify  = require('specify')
   , pixel    = helpers.pixel
   ;
 
-var mock = nock(helpers.couch, "att/update");
+var mock = nock(helpers.couch, "att/update")
+  , db   = nano.use("att_update")
+  ;
 
 specify("att_update:setup", timeout, function (assert) {
   nano.db.create("att_update", function (err) {
@@ -15,10 +17,7 @@ specify("att_update:setup", timeout, function (assert) {
 });
 
 specify("att_update:pixel", timeout, function (assert) {
-  var db     = nano.use("att_update")
-    , buffer = new Buffer(pixel, 'base64')
-    ;
-
+  var buffer = new Buffer(pixel, 'base64');
     db.attachment.insert("new", "att", "Hello", "text/plain", 
     function(error, hello) {
       assert.equal(error, undefined, "Should store hello");
@@ -29,7 +28,6 @@ specify("att_update:pixel", timeout, function (assert) {
         assert.equal(error, undefined, "Should store the pixel");
       });
     });
-
 });
 
 specify("att_update:teardown", timeout, function (assert) {

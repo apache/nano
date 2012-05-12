@@ -5,7 +5,9 @@ var specify  = require('specify')
   , nock     = helpers.nock
   ;
 
-var mock = nock(helpers.couch, "att/destroy");
+var mock = nock(helpers.couch, "att/destroy")
+  , db   = nano.use("att_destroy")
+  ;
 
 specify("att_destroy:setup", timeout, function (assert) {
   nano.db.create("att_destroy", function (err) {
@@ -14,7 +16,6 @@ specify("att_destroy:setup", timeout, function (assert) {
 });
 
 specify("att_destroy:hello", timeout, function (assert) {
-  var db = nano.use("att_destroy");
   db.attachment.insert("new", "att", "Hello World!", "text/plain",
   function (error, att) {
     assert.equal(error, undefined, "Should store the attachment");
