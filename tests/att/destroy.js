@@ -13,7 +13,7 @@ specify("att_destroy:setup", timeout, function (assert) {
   });
 });
 
-specify("att_destroy:storeAtt", timeout, function (assert) {
+specify("att_destroy:store", timeout, function (assert) {
   var db = nano.use("att_destroy");
   db.attachment.insert("new", "att", "Hello World!", "text/plain",
     function (error, att) {

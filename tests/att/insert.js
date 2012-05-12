@@ -1,44 +1,33 @@
-var ensure   = require('ensure')
-  , nock     = require('nock')
-  , cfg      = require('../../cfg/tests.js')
-  , nano     = require('../../nano')(cfg)
-  , db_name  = require('../utils').db_name("att_in")
-  , tests    = exports
-  , couch
+var specify  = require('specify')
+  , helpers  = require('../helpers')
+  , timeout  = helpers.timeout
+  , nano     = helpers.nano
+  , nock     = helpers.nock
   ;
 
-  couch = nock(cfg.url)
-    .put('/' + db_name("a"))
-    .reply(201, "{\"ok\":true}\n", 
-      { server: 'CouchDB/1.1.1 (Erlang OTP/R14B04)'
-      , location: cfg.url + '/' + db_name("a")
-      , date: 'Fri, 02 Dec 2011 00:21:46 GMT'
-      , 'content-type': 'application/json'
-      , 'content-length': '12'
-      , 'cache-control': 'must-revalidate' 
-      })
-    .put('/' + db_name("a") + '/new/att', '"Hello World!"')
-    .reply(201, "{\"ok\":true,\"id\":\"new\",\"rev\":\"1-921bd51ccdef5ab4c84b07bab7b80e7e\"}\n", { server: 'CouchDB/1.1.1 (Erlang OTP/R14B04)',
-     location: cfg.url + '/' + db_name("a") + '/new/att',
-     etag: '"1-921bd51ccdef5ab4c84b07bab7b80e7e"',
-     date: 'Fri, 02 Dec 2011 00:21:46 GMT',
-     'content-type': 'text/plain;charset=utf-8',
-     'content-length': '66',
-     'cache-control': 'must-revalidate' });
+var mock = nock(helpers.couch, "att/insert");
 
-function db(i) { return nano.use(db_name(i)); }
-
-tests.att_new_doc = function (callback) {
-  nano.db.create(db_name("a"), function () {
-    db("a").attachment.insert("new", "att", "Hello World!", "text/plain", callback);
+specify("att_insert:setup", timeout, function (assert) {
+  nano.db.create("att_insert", function (err) {
+    assert.equal(err, undefined, "Failed to create database");
   });
-};
+});
 
-tests.att_new_doc_ok = function (e,b) {
-  this.t.notOk(e, 'No errrs');
-  this.t.ok(b.ok, 'Im oh a OK');
-  this.t.equal(b.id, "new", "Id is new");
-  this.t.ok(couch.isDone(), 'Nock not done');
-};
+specify("att_insert:store", timeout, function (assert) {
+  var db = nano.use("att_insert");
+  db.attachment.insert("new", "att", "Hello World!", "text/plain",
+    function (error, att) {
+      assert.equal(error, undefined, "Should store the attachment");
+      assert.equal(att.ok, true, "Response should be ok");
+      assert.ok(att.rev, "Should have a revision number");
+  });
+});
 
-ensure(__filename,tests,module,process.argv[2]);
+specify("att_insert:teardown", timeout, function (assert) {
+  nano.db.destroy("att_insert", function (err) {
+    assert.equal(err, undefined, "Failed to destroy database");
+    assert.ok(mock.isDone(), "Some mocks didn't run");
+  });
+});
+
+specify.run(process.argv.slice(2));

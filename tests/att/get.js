@@ -14,7 +14,7 @@ specify("att_get:setup", timeout, function (assert) {
   });
 });
 
-specify("att_get:pixelAtt", timeout, function (assert) {
+specify("att_get:pixel", timeout, function (assert) {
   var db     = nano.use("att_get")
     , buffer = new Buffer(pixel, 'base64')
     ;
