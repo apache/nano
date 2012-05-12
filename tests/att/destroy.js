@@ -1,63 +1,38 @@
-var ensure   = require('ensure')
-  , cfg      = require('../../cfg/tests.js')
-  , nano     = require('../../nano')(cfg)
-  , db_name  = require('../utils').db_name("att_de")
-  , tests    = exports
-  , nock     = require('nock')
-  , couchdb
-  ;
-  
-  path = '/' + db_name("a");
-  location = cfg.url + path;
-  couchdb  = nock(cfg.url)
-    .put('/' + db_name("a")
-        , ''
-        , { 'content-type': 'application/json'
-          , "accept": 'application/json' })
-    .reply(201, { ok: true },
-      { location: cfg.url + '/' + db_name("a")
-      , date: 'Wed, 30 Nov 2011 15:21:58 GMT'
-      , 'content-type': 'application/json'
-      , 'cache-control': 'must-revalidate'
-      , 'status-code': 201 
-      })
-      
-    .put(path + '/new/att', "\"Hello World!\"")
-    .reply(201, { ok: true, id: 'new', rev: '1-921bd51ccdef5ab4c84b07bab7b80e7e' },
-      { location: location + '/new/att'
-      , date: 'Wed, 30 Nov 2011 15:21:58 GMT'
-      , 'content-type': 'application/json'
-      , 'cache-control': 'must-revalidate'
-      , 'status-code': 201 
-      })
-      
-     .delete(path + '/new/att?rev=1-921bd51ccdef5ab4c84b07bab7b80e7e')
-     .reply(201, { ok: true, id:'new' },
-       { location: location + '/new/att?rev=1-921bd51ccdef5ab4c84b07bab7b80e7e'
-       , date: 'Wed, 30 Nov 2011 15:21:58 GMT'
-       , 'content-type': 'application/json'
-       , 'cache-control': 'must-revalidate'
-       , 'status-code': 201 
-       })
+var specify  = require('specify')
+  , helpers  = require('../helpers')
+  , timeout  = helpers.timeout
+  , nano     = helpers.nano
+  , nock     = helpers.nock
   ;
 
-function db(i) { return nano.use(db_name(i)); }
+var mock = nock(helpers.couch, "att/destroy");
 
-tests.att_des = function (callback) {
-  console.log(require('../../nano'))
-  nano.db.create(db_name("a"), function () {
-    db("a").attachment.insert("new", "att", "Hello World!", "text/plain",
-      function (e,b) {
-        db("a").attachment.destroy("new", "att", b.rev, callback);
-    });
+specify("att_destroy:setup", timeout, function (assert) {
+  nano.db.create("att_destroy", function (err) {
+    assert.equal(err, undefined, "Failed to create database");
   });
-};
+});
 
-tests.att_des_ok = function (e,b) {
-  this.t.notOk(e, 'No Error');
-  this.t.ok(b.ok, 'Ok is there');
-  this.t.equal(b.id, "new", 'Id is "new"');
-  this.t.ok(couchdb.isDone(), 'Nock not done');
-};
+specify("att_destroy:storeAtt", timeout, function (assert) {
+  var db = nano.use("att_destroy");
+  db.attachment.insert("new", "att", "Hello World!", "text/plain",
+    function (error, att) {
+      assert.equal(error, undefined, "Should store the attachment");
+      assert.equal(att.ok, true, "Response should be ok");
+      assert.ok(att.rev, "Should have a revision number");
+      db.attachment.destroy("new", "att", att.rev, function(error, response) {
+        assert.equal(error, undefined, "Should delete the attachment");
+        assert.equal(response.ok, true, "Response should be ok");
+        assert.equal(response.id, "new", "Id should be new");
+      });
+  });
+});
 
-ensure(__filename,tests,module,process.argv[2]);
+specify("att_destroy:teardown", timeout, function (assert) {
+  nano.db.destroy("att_destroy", function (err) {
+    assert.equal(err, undefined, "Failed to destroy database");
+    assert.ok(mock.isDone(), "Some mocks didn't run");
+  });
+});
+
+specify.run(process.argv.slice(2));

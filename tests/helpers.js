@@ -1,0 +1,71 @@
+var path    = require('path')
+  , fs      = require('fs')
+  , cfg      = require('./fixtures/cfg.json')
+  , nano     = require('../nano')
+  , helpers  = exports
+  ;
+
+function endsWith (string, ending) {
+  return string.length >= ending.length && 
+    string.substr(string.length - ending.length) == ending;
+}
+
+function noop(){}
+
+function fake_chain() {
+  return {
+      "get"                  : fake_chain
+    , "post"                 : fake_chain
+    , "delete"               : fake_chain
+    , "put"                  : fake_chain
+    , "intercept"            : fake_chain
+    , "done"                 : fake_chain
+    , "isDone"               : function () { return true; }
+    , "filteringPath"        : fake_chain
+    , "filteringRequestBody" : fake_chain
+    , "matchHeader"          : fake_chain
+    , "defaultReplyHeaders"  : fake_chain
+    , "log"                  : fake_chain
+  };
+}
+
+helpers.timeout = cfg.timeout;
+helpers.nano = nano(cfg.couch);
+helpers.couch = cfg.couch;
+helpers.pixel = "Qk06AAAAAAAAADYAAAAoAAAAAQAAAP////8BABgAAAAA" + 
+                "AAAAAAATCwAAEwsAAAAAAAAAAAAAWm2CAA==";
+
+helpers.loadFixture = function helpersLoadFixture(filename, json) {
+  var contents = fs.readFileSync(
+    path.join(__dirname, 'fixtures', filename), 'ascii');
+  return json ? JSON.parse(contents): contents;
+};
+
+helpers.nock = function helpersNock(url, fixture) {
+  if(process.env.NOCK) {
+    var nock    = require('nock')
+      , nocks   = helpers.loadFixture(fixture + '.json', true)
+      ;
+    nocks.forEach(function(n) {
+      var path     = n.path
+        , method   = n.method   || "get"
+        , status   = n.status   || 200
+        , response = n.response || ""
+        , headers  = n.headers  || {}
+        , body     = n.buffer    ? new Buffer(n.buffer, 'base64') : n.body
+        ;
+
+      if(typeof response === "string" && endsWith(response, '.json')) {
+        response = helpers.loadFixture(path.join(fixture, response));
+      }
+      if(typeof headers === "string" && endsWith(headers, '.json')) {
+        headers = helpers.loadFixture(path.join(fixture, headers));
+      }
+      nock(url)[method](path, body).reply(status, response, headers);
+    });
+    nock(url).log(console.log);
+    return nock(url);
+  } else {
+    return fake_chain();
+  }
+};
