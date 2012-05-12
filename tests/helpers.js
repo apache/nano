@@ -50,9 +50,13 @@ helpers.nock = function helpersNock(url, fixture) {
       var path     = n.path
         , method   = n.method   || "get"
         , status   = n.status   || 200
-        , response = n.response || ""
+        , response = n.buffer
+                   ? new Buffer(n.buffer, 'base64') 
+                   : n.response || ""
         , headers  = n.headers  || {}
-        , body     = n.buffer    ? new Buffer(n.buffer, 'base64') : n.body
+        , body     = n.base64
+                   ? new Buffer(n.base64, 'base64').toString()
+                   : n.body
         ;
 
       if(typeof response === "string" && endsWith(response, '.json')) {
