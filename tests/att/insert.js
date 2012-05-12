@@ -13,7 +13,7 @@ specify("att_insert:setup", timeout, function (assert) {
   });
 });
 
-specify("att_insert:store", timeout, function (assert) {
+specify("att_insert:hello", timeout, function (assert) {
   var db = nano.use("att_insert");
   db.attachment.insert("new", "att", "Hello World!", "text/plain",
     function (error, att) {

@@ -13,18 +13,18 @@ specify("att_destroy:setup", timeout, function (assert) {
   });
 });
 
-specify("att_destroy:store", timeout, function (assert) {
+specify("att_destroy:hello", timeout, function (assert) {
   var db = nano.use("att_destroy");
   db.attachment.insert("new", "att", "Hello World!", "text/plain",
-    function (error, att) {
-      assert.equal(error, undefined, "Should store the attachment");
-      assert.equal(att.ok, true, "Response should be ok");
-      assert.ok(att.rev, "Should have a revision number");
-      db.attachment.destroy("new", "att", att.rev, function(error, response) {
-        assert.equal(error, undefined, "Should delete the attachment");
-        assert.equal(response.ok, true, "Response should be ok");
-        assert.equal(response.id, "new", "Id should be new");
-      });
+  function (error, att) {
+    assert.equal(error, undefined, "Should store the attachment");
+    assert.equal(att.ok, true, "Response should be ok");
+    assert.ok(att.rev, "Should have a revision number");
+    db.attachment.destroy("new", "att", att.rev, function(error, response) {
+      assert.equal(error, undefined, "Should delete the attachment");
+      assert.equal(response.ok, true, "Response should be ok");
+      assert.equal(response.id, "new", "Id should be new");
+    });
   });
 });
 
