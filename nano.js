@@ -136,13 +136,6 @@ module.exports = exports = nano = function database_module(cfg) {
         return error.request_err(ex3, 'qsstringify', {});
       }
     }
-    if(!callback) { // void callback, stream
-      try {
-        return request(req);
-      } catch (ex4) { 
-        return error.request_err(ex4, 'streamthrow', {});
-      }
-    }
     if(opts.body) {
       if (Buffer.isBuffer(opts.body)) {
         req.body = opts.body; // raw data
@@ -163,6 +156,13 @@ module.exports = exports = nano = function database_module(cfg) {
       } // json data
     }
     log(req);
+    if(!callback) { // void callback, stream
+      try {
+        return request(req);
+      } catch (ex4) { 
+        return error.request_err(ex4, 'streamthrow', {});
+      }
+    }
     try {
       var stream = request(req, function(e,h,b){
         rh = (h && h.headers || {});
