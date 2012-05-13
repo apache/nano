@@ -16,7 +16,7 @@ specify("att_update:setup", timeout, function (assert) {
   });
 });
 
-specify("att_update:pixel", timeout, function (assert) {
+specify("att_update:test", timeout, function (assert) {
   var buffer = new Buffer(pixel, 'base64');
     db.attachment.insert("new", "att", "Hello", "text/plain", 
     function(error, hello) {

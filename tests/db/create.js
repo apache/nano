@@ -7,7 +7,7 @@ var specify  = require('specify')
 
 var mock = nock(helpers.couch, "db/create");
 
-specify("db_create:setup", timeout, function (assert) {
+specify("db_create:test", timeout, function (assert) {
   nano.db.create("db_create", function (err) {
     assert.equal(err, undefined, "Failed to create database");
   });

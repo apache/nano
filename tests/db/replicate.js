@@ -16,24 +16,24 @@ specify("db_replicate:setup", timeout, function (assert) {
     assert.equal(err, undefined, "Failed to create database");
      nano.db.create("db_replica", function (err) {
        assert.equal(err, undefined, "Failed to create replica database");
+       async.parallel(
+         [ function(cb) { db.insert({"foo": "bar"}, "foobar", cb); }
+         , function(cb) { db.insert({"bar": "foo"}, "barfoo", cb); }
+         , function(cb) { db.insert({"foo": "baz"}, "foobaz", cb); }
+         ]
+       , function(error, results){
+         assert.equal(error, undefined, "Should have stored docs");
+       });
      });
   });
 });
 
-specify("db_replicate:three_inserts", timeout, function (assert) {
-  async.parallel(
-    [ function(cb) { db.insert({"foo": "bar"}, "foobar", cb); }
-    , function(cb) { db.insert({"bar": "foo"}, "barfoo", cb); }
-    , function(cb) { db.insert({"foo": "baz"}, "foobaz", cb); }
-    ]
-  , function(error, results){
-    assert.equal(error, undefined, "Should have stored docs");
-    db.replicate("db_replica", function(error) {
-      assert.equal(error, undefined, "Should be able to replicate");
-      replica.list(function (error, list) {
-        assert.equal(error, undefined, "Should be able to list");
-        assert.equal(list.total_rows, 3, "Should have three documents");
-      });
+specify("db_replicate:test", timeout, function (assert) {
+  db.replicate("db_replica", function(error) {
+    assert.equal(error, undefined, "Should be able to replicate");
+    replica.list(function (error, list) {
+      assert.equal(error, undefined, "Should be able to list");
+      assert.equal(list.total_rows, 3, "Should have three documents");
     });
   });
 });

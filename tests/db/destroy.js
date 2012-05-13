@@ -13,7 +13,7 @@ specify("db_destroy:setup", timeout, function (assert) {
   });
 });
 
-specify("db_destroy:teardown", timeout, function (assert) {
+specify("db_destroy:test", timeout, function (assert) {
   nano.db.destroy("db_destroy", function (err) {
     assert.equal(err, undefined, "Failed to destroy database");
     assert.ok(mock.isDone(), "Some mocks didn't run");

@@ -13,7 +13,7 @@ specify("db_list:setup", timeout, function (assert) {
   });
 });
 
-specify("db_list:one_db", timeout, function (assert) {
+specify("db_list:test", timeout, function (assert) {
   nano.db.list(function (error, list) {
     assert.equal(error, undefined, "Failed to list databases");
     var filtered = list.filter(function (e) { 

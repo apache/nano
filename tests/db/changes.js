@@ -13,22 +13,22 @@ var mock = nock(helpers.couch, "db/changes")
 specify("db_changes:setup", timeout, function (assert) {
   nano.db.create("db_changes", function (err) {
     assert.equal(err, undefined, "Failed to create database");
+    async.parallel(
+      [ function(cb) { db.insert({"foo": "bar"}, "foobar", cb); }
+      , function(cb) { db.insert({"bar": "foo"}, "barfoo", cb); }
+      , function(cb) { db.insert({"foo": "baz"}, "foobaz", cb); }
+      ]
+    , function(error, results){
+      assert.equal(error, undefined, "Should have stored docs");
+    });
   });
 });
 
-specify("db_changes:three_inserts", timeout, function (assert) {
-  async.parallel(
-    [ function(cb) { db.insert({"foo": "bar"}, "foobar", cb); }
-    , function(cb) { db.insert({"bar": "foo"}, "barfoo", cb); }
-    , function(cb) { db.insert({"foo": "baz"}, "foobaz", cb); }
-    ]
-  , function(error, results){
-    assert.equal(error, undefined, "Should have stored docs");
-    db.changes({since:2}, function (error, response) {
-      assert.equal(error, undefined, "Changes should respond");
-      assert.equal(response.results.length, 1, 'Gets one result');
-      assert.equal(response.last_seq, 3, 'seq is 3');
-    });
+specify("db_changes:test", timeout, function (assert) {
+  db.changes({since:2}, function (error, response) {
+    assert.equal(error, undefined, "Changes should respond");
+    assert.equal(response.results.length, 1, 'Gets one result');
+    assert.equal(response.last_seq, 3, 'seq is 3');
   });
 });
 

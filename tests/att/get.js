@@ -16,7 +16,7 @@ specify("att_get:setup", timeout, function (assert) {
   });
 });
 
-specify("att_get:hello", timeout, function (assert) {
+specify("att_get:test", timeout, function (assert) {
   db.attachment.insert("new", "att", "Hello", "text/plain", 
   function(error, hello) {
     assert.equal(error, undefined, "Should store hello");

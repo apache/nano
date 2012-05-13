@@ -18,7 +18,7 @@ specify("att_pipe:setup", timeout, function (assert) {
   });
 });
 
-specify("att_pipe:pixel", timeout, function (assert) {
+specify("att_pipe:test", timeout, function (assert) {
   var buffer   = new Buffer(pixel, 'base64')
     , filename = path.join(__dirname, '.temp.bmp')
     , ws       = fs.createWriteStream(filename)

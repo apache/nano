@@ -12,28 +12,28 @@ var mock = nock(helpers.couch, "db/compact")
 specify("db_compact:setup", timeout, function (assert) {
   nano.db.create("db_compact", function (err) {
     assert.equal(err, undefined, "Failed to create database");
+    db.insert({"foo": "baz"}, "foobaz", function (error, foo) {   
+      assert.equal(error, undefined, "Should have stored foo");
+      assert.equal(foo.ok, true, "Response should be ok");
+      db.destroy("foobaz", foo.rev, function (error, response) {
+        assert.equal(error, undefined, "Should have deleted foo");
+        assert.equal(response.ok, true, "Response should be ok");
+      });
+    });
   });
 });
 
-specify("db_compact:foobaz", timeout, function (assert) {
-  db.insert({"foo": "baz"}, "foobaz", function (error, foo) {   
-    assert.equal(error, undefined, "Should have stored foo");
-    assert.equal(foo.ok, true, "Response should be ok");
-    db.destroy("foobaz", foo.rev, function (error, response) {
-      assert.equal(error, undefined, "Should have deleted foo");
-      assert.equal(response.ok, true, "Response should be ok");
-      db.compact(function (error) {
-        assert.equal(error, undefined, "Compact didn't respond");
-        db.info(function (error, info) {
-          assert.equal(error, undefined, "Info didn't respond");
-          assert.equal(info.doc_count, 0, "Document count is not 3");
-          assert.equal(info.doc_del_count, 1, "No deleted documents");
-          assert.equal(info.update_seq, 2, "seq is two");
-          assert.equal(info.compact_running, true, "Compaction is running");
-        });
-      });
-    }); 
-  });
+specify("db_compact:test", timeout, function (assert) {
+   db.compact(function (error) {
+     assert.equal(error, undefined, "Compact didn't respond");
+     db.info(function (error, info) {
+       assert.equal(error, undefined, "Info didn't respond");
+       assert.equal(info.doc_count, 0, "Document count is not 3");
+       assert.equal(info.doc_del_count, 1, "No deleted documents");
+       assert.equal(info.update_seq, 2, "seq is two");
+       assert.equal(info.compact_running, true, "Compaction is running");
+     });
+   });
 });
 
 specify("db_compact:teardown", timeout, function (assert) {

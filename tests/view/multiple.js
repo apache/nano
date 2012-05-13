@@ -21,25 +21,25 @@ specify("view_multiple:setup", timeout, function (assert) {
     }, '_design/alice', function (error, response) {
       assert.equal(error, undefined, "Failed to create views");
       assert.equal(response.ok, true, "Response should be ok");
+      async.parallel(
+        [ function(cb) { db.insert({"foo": "bar"}, "foobar", cb); }
+        , function(cb) { db.insert({"bar": "foo"}, "barfoo", cb); }
+        , function(cb) { db.insert({"foo": "baz"}, "foobaz", cb); }
+        ]
+      , function(error, results) {
+        assert.equal(error, undefined, "Should have stored docs");
+      });
     });
   });
 });
 
-specify("view_multiple:fetch", timeout, function (assert) {
-  async.parallel(
-    [ function(cb) { db.insert({"foo": "bar"}, "foobar", cb); }
-    , function(cb) { db.insert({"bar": "foo"}, "barfoo", cb); }
-    , function(cb) { db.insert({"foo": "baz"}, "foobaz", cb); }
-    ]
-  , function(error, results){
-    assert.equal(error, undefined, "Should have stored docs");
-    db.view('alice','by_id', 
-    { keys: ['foobar', 'barfoo'], include_docs: true }, function (err, view) {
-      assert.equal(err, undefined, "View didn't respond");
-      assert.equal(view.rows.length, 2, 'Has more or less than two rows');
-      assert.equal(view.rows[0].id, 'foobar', 'Foo is not the first id');
-      assert.equal(view.rows[1].id, 'barfoo', 'Bar is not the second id');
-    });
+specify("view_multiple:test", timeout, function (assert) {
+  db.view('alice','by_id', 
+  { keys: ['foobar', 'barfoo'], include_docs: true }, function (err, view) {
+    assert.equal(err, undefined, "View didn't respond");
+    assert.equal(view.rows.length, 2, 'Has more or less than two rows');
+    assert.equal(view.rows[0].id, 'foobar', 'Foo is not the first id');
+    assert.equal(view.rows[1].id, 'barfoo', 'Bar is not the second id');
   });
 });
 
