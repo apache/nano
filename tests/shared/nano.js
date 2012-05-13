@@ -1,11 +1,11 @@
-var ensure = require('ensure')
-  , nano   = require('../../nano')
-  , tests    = exports;
+var specify  = require('specify')
+  , timeout  = require('../helpers').timeout
+  , nano     = require('../../nano')
+  ;
 
-tests.version = function (callback) { callback(null,nano.version); };
-tests.version_ok = function (_,n) { this.t.ok(n); };
+specify("shared_nano:test", timeout, function (assert) {
+  assert.ok(nano.version, "Version is defined");
+  assert.ok(nano.path, "Path is defined");
+});
 
-tests.path = function (callback) { callback(null,nano.path); };
-tests.path_ok = function (_,n) { this.t.ok(n); };
-
-ensure(__filename,tests,module,process.argv[2]);
+specify.run(process.argv.slice(2));
