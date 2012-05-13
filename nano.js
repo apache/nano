@@ -585,7 +585,8 @@ module.exports = exports = nano = function database_module(cfg) {
                                      , get: get_att
                                      , destroy: destroy_att
                                      }
-                       , updateWithHandler: update_with_handler_doc
+                       , atomic: update_with_handler_doc
+                       , updateWithHandler: update_with_handler_doc // alias
                        };
     public_functions.view = view_docs;
     public_functions.view.compact = function(design_name,cb) {
