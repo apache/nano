@@ -27,7 +27,7 @@
   , "nock"          : "0.10.x"
   }
 , "scripts"         : 
-  { "test"          : "./node_modules/ensure/bin/tap.js tests/*/*.js" }
+  { "test"          : "NOCK=on ls -tr tests/*/*.js | xargs -I{} node {}" }
 , "main"            : "./nano.js"
 , "engines"         : { "node": ">=0.3.6" }
 }
