@@ -17,6 +17,7 @@
 , { "method"   : "post"
   , "path"     : "/db_compact/_compact"
   , "response" : "{\"ok\":true}"
+  , "status"   : 202
   }
 , { "method"   : "get"
   , "path"     : "/db_compact"
