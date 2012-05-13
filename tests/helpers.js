@@ -1,6 +1,7 @@
 var path    = require('path')
   , fs      = require('fs')
-  , cfg      = require('./fixtures/cfg.json')
+  , cfg     = JSON.parse(
+    fs.readFileSync(path.join(__dirname, '/fixtures/cfg.json')))
   , nano     = require('../nano')
   , helpers  = exports
   ;
