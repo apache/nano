@@ -81,6 +81,10 @@ module.exports = exports = nano = function database_module(cfg) {
   * @param {callback:function:optional} function to call back
   */
   function relax(opts,callback) {
+    if(typeof opts === "function") {
+      callback = opts;
+      opts     = {path: ""};
+    }
     if(typeof opts === 'string') { opts = {path: opts}; }
     var log = logging();
     var headers = { "content-type": "application/json"
