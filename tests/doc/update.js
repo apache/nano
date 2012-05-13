@@ -1,59 +1,39 @@
-var ensure   = require('ensure')
-  , nock     = require('nock')
-  , cfg      = require('../../cfg/tests.js')
-  , nano     = require('../../nano')(cfg)
-  , db_name  = require('../utils').db_name("doc_up")
-  , tests    = exports
-  , couch
+var specify  = require('specify')
+  , helpers  = require('../helpers')
+  , timeout  = helpers.timeout
+  , nano     = helpers.nano
+  , nock     = helpers.nock
   ;
 
-  couch = nock(cfg.url)
-    .put('/' + db_name('a'))
-    .reply(201, "{\"ok\":true}\n", 
-      { server: 'CouchDB/1.1.1 (Erlang OTP/R14B04)',
-        location: cfg.url + '/' + db_name('a'),
-        date: 'Fri, 02 Dec 2011 19:38:03 GMT',
-        'content-type': 'application/json',
-        'content-length': '12',
-        'cache-control': 'must-revalidate' })
-    .put('/' + db_name('a') + '/foo', {"foo": "bar"})
-    .reply(201, "{\"ok\": true,\"id\": \"foo\",\"rev\": \"1-4c6114c65e295552ab1019e2b046b10e\"}\n", 
-      { server: 'CouchDB/1.1.1 (Erlang OTP/R14B04)',
-        location: cfg.url + '/' + db_name('a') + '/foo',
-        etag: '"1-4c6114c65e295552ab1019e2b046b10e"',
-        date: 'Fri, 02 Dec 2011 19:38:04 GMT',
-        'content-type': 'application/json',
-        'content-length': '66',
-        'cache-control': 'must-revalidate' })
-    .put('/' + db_name('a') + '/foo', 
-      { "_rev": "1-4c6114c65e295552ab1019e2b046b10e"
-      , "foo":  "baz"
-      })
-    .reply(201, "{\"ok\": true,\"id\": \"foo\",\"rev\": \"2-cfcd6781f13994bde69a1c3320bfdadb\"}\n", 
-      { server: 'CouchDB/1.1.1 (Erlang OTP/R14B04)',
-        location: cfg.url + '/' + db_name('a') + '/foo',
-        etag: '"2-cfcd6781f13994bde69a1c3320bfdadb"',
-        date: 'Fri, 02 Dec 2011 19:38:04 GMT',
-        'content-type': 'application/json',
-        'content-length': '66',
-        'cache-control': 'must-revalidate' });
+var mock = nock(helpers.couch, "doc/update")
+  , db   = nano.use("doc_update")
+  , rev
+  ;
 
-function db(i) { return nano.use(db_name(i)); }
-
-tests.update_doc = function (callback) {
-  nano.db.create(db_name('a'), function () {
-    db('a').insert({foo: "bar"}, "foo", function (_,b) {
-      db('a').insert({"_rev": b.rev, foo: "baz"}, "foo", callback);
+specify("doc_update:setup", timeout, function (assert) {
+  nano.db.create("doc_update", function (err) {
+    assert.equal(err, undefined, "Failed to create database");
+    db.insert({"foo": "baz"}, "foobar", function (error, foo) {   
+      assert.equal(error, undefined, "Should have stored foo");
+      assert.equal(foo.ok, true, "Response should be ok");
+      assert.ok(foo.rev, "Response should have rev");
+      rev = foo.rev;
     });
   });
-};
+});
 
-tests.update_doc_ok = function (e,b) {
-  this.t.notOk(e, 'I got err free status');
-  this.t.equal(b.id, "foo", 'My filename is foo');
-  this.t.ok(b.ok, 'I am now ok');
-  this.t.ok(b.rev, 'I got rev');
-  this.t.ok(couch.isDone(), 'Nock is done');
-};
+specify("doc_update:test", timeout, function (assert) {
+  db.insert({foo: "bar", "_rev": rev}, "foobar", function (error, response) {
+    assert.equal(error, undefined, "Should have deleted foo");
+    assert.equal(response.ok, true, "Response should be ok");
+  });
+});
 
-ensure(__filename,tests,module,process.argv[2]);
+specify("doc_update:teardown", timeout, function (assert) {
+  nano.db.destroy("doc_update", function (err) {
+    assert.equal(err, undefined, "Failed to destroy database");
+    assert.ok(mock.isDone(), "Some mocks didn't run");
+  });
+});
+
+specify.run(process.argv.slice(2));
