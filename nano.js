@@ -635,10 +635,10 @@ module.exports = exports = nano = function database_module(cfg) {
     request_opts.jar     = !!cfg.jar;
     request              = require('request').defaults(request_opts);
   }
-  
+
   // assuming a cfg.log inside cfg
-  logging = require('./logging')(cfg);
-  
+  logging = require('./logger')(cfg);
+
   try { 
     path       = u.parse(cfg.url);
     path_array = path.pathname.split('/').filter(function(e) { return e; });
