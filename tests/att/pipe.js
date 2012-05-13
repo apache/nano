@@ -62,7 +62,8 @@ tests.att_pipe = function (callback) {
         db("a").attachment.insert("new", "att", buffer, "image/bmp", {rev: b.rev},
           function (e2,b2) {
           if(e2) { callback(e2); }
-          db("a").attachment.get("new", "att", {rev: b2.rev}).pipe(file_stream);
+          db("a").attachment.get("new", "att", {rev: b2.rev})
+            .pipe(file_stream);
         });
     });
   });
