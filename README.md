@@ -363,9 +363,19 @@ alice.view('characters', 'crazy_ones', function(err, body) {
 });
 ```
 
-### db.updateWithHandler(designname, updatename, docname, [body], [callback])
+### db.atomic(designname, updatename, docname, [body], [callback])
 
 calls the design's update function with the specified doc in input.
+
+``` js
+db.atomic("update", "inplace", "foobar", 
+{field: "foo", value: "bar"}, function (error, response) {
+  assert.equal(error, undefined, "Failed to update");
+  assert.equal(response.foo, "bar", "Update worked");
+});
+```
+
+check out the tests for a fully functioning example.
 
 ## advanced features
 

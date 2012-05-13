@@ -1,0 +1,3 @@
+{ "timeout" : 20000
+, "couch"   : "http://localhost:5984"
+}
