@@ -1,4 +1,4 @@
-# aamples
+# samples
 
 if you have a sample please feel free to send a pull request.
 
