@@ -1,37 +1,33 @@
-var ensure   = require('ensure')
-  , nock     = require('nock')
-  , cfg      = require('../../cfg/tests.js')
-  , nano     = require('../../nano')(cfg)
-  , db_name  = require('../utils').db_name("db_li")
-  , tests    = exports
-  , couch
+var specify  = require('specify')
+  , helpers  = require('../helpers')
+  , timeout  = helpers.timeout
+  , nano     = helpers.nano
+  , nock     = helpers.nock
   ;
 
-couch = nock(cfg.url)
-  .put('/' + db_name('1'))
-  .reply(201, "{\"ok\":true}\n", { server: 'CouchDB/1.1.1 (Erlang OTP/R14B04)',
-  location: cfg.url + '/' + db_name('1'),
-  date: 'Fri, 02 Dec 2011 02:15:54 GMT',
-  'content-type': 'application/json',
-  'content-length': '12',
-  'cache-control': 'must-revalidate' })
-  .get('/_all_dbs')
-  .reply(200, "[\"" + db_name('1') + "\"]\n", { server: 'CouchDB/1.1.1 (Erlang OTP/R14B04)',
-  date: 'Fri, 02 Dec 2011 02:15:54 GMT',
-  'content-type': 'application/json',
-  'content-length': '81',
-  'cache-control': 'must-revalidate' });
+var mock = nock(helpers.couch, "db/list");
 
-tests.list_db = function (callback) {
-  nano.db.create(db_name('1'), function () {
-    nano.db.list(callback);
+specify("db_list:setup", timeout, function (assert) {
+  nano.db.create("db_list", function (err) {
+    assert.equal(err, undefined, "Failed to create database");
   });
-};
+});
 
-tests.list_db_ok = function (e,b) {
-  this.t.notOk(e, 'Exception free since teh last run');
-  this.t.notEqual(b.indexOf(db_name('1')),-1, 'I can haz db name?!');
-  this.t.ok(couch.isDone(), 'Nock is done');
-};
+specify("db_list:one_db", timeout, function (assert) {
+  nano.db.list(function (error, list) {
+    assert.equal(error, undefined, "Failed to list databases");
+    var filtered = list.filter(function (e) { 
+      return e === "db_list" || e === "_replicator" || e === "_users";
+    });
+    assert.equal(filtered.length, 3, "Has exactly those threee dbs");
+  });
+});
 
-ensure(__filename,tests,module,process.argv[2]);
+specify("db_list:teardown", timeout, function (assert) {
+  nano.db.destroy("db_list", function (err) {
+    assert.equal(err, undefined, "Failed to destroy database");
+    assert.ok(mock.isDone(), "Some mocks didn't run");
+  });
+});
+
+specify.run(process.argv.slice(2));
