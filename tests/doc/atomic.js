@@ -5,19 +5,20 @@ var specify  = require("specify")
   , nock     = helpers.nock
   ;
 
-var mock = nock(helpers.couch, "doc/handler")
-  , db   = nano.use("doc_handler")
+var mock = nock(helpers.couch, "doc/atomic")
+  , db   = nano.use("doc_atomic")
   , rev
   ;
 
-specify("doc_handler:setup", timeout, function (assert) {
-  nano.db.create("doc_handler", function (err) {
+specify("doc_atomic:setup", timeout, function (assert) {
+  nano.db.create("doc_atomic", function (err) {
     assert.equal(err, undefined, "Failed to create database");
     db.insert(
     { "updates": 
-      { "in-place": function (doc, req) {
-          var body = toJSON(req.body);
-          return [doc, req.body];
+      { "inplace": function (doc, req) {
+          var body = JSON.parse(req.body);
+          doc[body.field] = body.value;
+          return [doc, JSON.stringify(doc)];
         }
       }
     }, "_design/update", function (error, response) {
@@ -31,20 +32,16 @@ specify("doc_handler:setup", timeout, function (assert) {
   });
 });
 
-specify("doc_handler:test", timeout, function (assert) {
-  db.updateWithHandler("update", "in-place", "foobar", 
+specify("doc_atomic:test", timeout, function (assert) {
+  db.atomic("update", "inplace", "foobar", 
   {field: "foo", value: "bar"}, function (error, response) {
     assert.equal(error, undefined, "Failed to update");
-    db.get("foobar", function (error, foobar) {
-      assert.equal(error, undefined, "Failed to update");
-      assert.equal(foobar._id, "foobar", "My id is foobar");
-      assert.equal(foobar.foo, "bar", "Update worked");
-    });
+    assert.equal(response.foo, "bar", "Update worked");
   });
 });
 
-specify("doc_handler:teardown", timeout, function (assert) {
-  nano.db.destroy("doc_handler", function (err) {
+specify("doc_atomic:teardown", timeout, function (assert) {
+  nano.db.destroy("doc_atomic", function (err) {
     assert.equal(err, undefined, "Failed to destroy database");
     assert.ok(mock.isDone(), "Some mocks didn't run");
   });

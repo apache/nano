@@ -24,7 +24,7 @@
 , "devDependencies" : 
   { "async"         : "0.1.x"
   , "specify"       : "0.4.x"
-  , "nock"          : "0.10.x"
+  , "nock"          : "0.13.x"
   }
 , "scripts"         : 
   { "test"          : "NOCK=on ls -tr tests/*/*.js | xargs -I{} node {}" }

@@ -65,7 +65,13 @@ helpers.nock = function helpersNock(url, fixture) {
       if(typeof headers === "string" && endsWith(headers, '.json')) {
         headers = helpers.loadFixture(path.join(fixture, headers));
       }
-      nock(url)[method](path, body).reply(status, response, headers);
+      if(body==="*") {
+        nock(url).filteringRequestBody(function(path) {
+          return "*";
+        })[method](path, "*").reply(status, response, headers);
+      } else {
+        nock(url)[method](path, body).reply(status, response, headers);
+      }
     });
     nock(url).log(console.log);
     return nock(url);
