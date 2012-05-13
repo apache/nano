@@ -4,10 +4,10 @@ minimalistic couchdb driver for node.js
 
 `nano` features:
 
-* **minimalistic** - there is only a minimun of abstraction between you and 
+* **minimalistic** - there is only a minimum of abstraction between you and 
   couchdb
 * **pipes** - proxy requests from couchdb directly to your end user
-* **errors** - errors are proxied directly from couchdb: if you know chouchdb 
+* **errors** - errors are proxied directly from couchdb: if you know couchdb 
   you already know `nano`
 
 
@@ -150,7 +150,7 @@ nano.db.replicate('alice', 'http://admin:password@otherhost.com:5984/alice',
 ### nano.db.changes(name, [params], [callback])
 
 asks for the changes feed of `name`, `params` contains additions
-to the querystring.
+to the query string.
 
 ``` js
 nano.db.changes('alice', function(err, body) {
@@ -204,11 +204,13 @@ alias for `nano.request`
 
 alias for `nano.request`
 
-                / _) roar! i'm a vegan!
-         .-^^^-/ /
-      __/       /
-     /__.|_|-|_|
- 
+                    _
+                  / '_)  WAT U SAY!
+         _.----._/  /
+        /          /
+      _/  (   | ( |
+     /__.-|_|--|_l
+
 ### nano.config
 
 an object containing the nano configurations, possible keys are:
@@ -243,7 +245,7 @@ alice.destroy('alice', '3-66c01cdf99e84c83a9b3fe65b88db8c0', function(err, body)
 
 ### db.get(docname, [params], [callback])
 
-gets `docname` from the database with optional querystring
+gets `docname` from the database with optional query string
 additions `params`.
 
 ``` js
@@ -260,7 +262,7 @@ bulk operations(update/delete/insert) on the database, refer to the
 
 ### db.list([params], [callback])
 
-list all the docs in the database with optional querystring additions `params`.  
+list all the docs in the database with optional query string additions `params`.  
 
 ``` js
 alice.list(function(err, body) {
@@ -276,7 +278,7 @@ alice.list(function(err, body) {
 
 bulk fetch of the database documents, `docnames` are specified as per 
 [couchdb doc](http://wiki.apache.org/couchdb/http_bulk_document_api).
-additionals querystring `params` can be specified, `include_doc` is always set
+additional query string `params` can be specified, `include_doc` is always set
 to `true`.  
 
 ## attachments functions
@@ -313,7 +315,7 @@ fs.createReadStream('rabbit.png').pipe(
 
 ### db.attachment.get(docname, attname, [params], [callback])
 
-get `docname`'s attachment `attname` with optional querystring additions
+get `docname`'s attachment `attname` with optional query string additions
 `params`.  
 
 ``` js
@@ -350,7 +352,7 @@ alice.attachment.destroy('rabbit', 'rabbit.png',
 
 ### db.view(designname, viewname, [params], [callback])
 
-calls a view of the specified design with optional querystring additions
+calls a view of the specified design with optional query string additions
 `params`.  
 
 ``` js
