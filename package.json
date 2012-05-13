@@ -27,7 +27,7 @@
   , "nock"          : "0.13.x"
   }
 , "scripts"         : 
-  { "test"          : "NOCK=on ls -tr tests/*/*.js | xargs -I{} node {}" }
+  { "test"          : "ls -tr tests/*/*.js | NOCK=on xargs -I{} node {}" }
 , "main"            : "./nano.js"
 , "engines"         : { "node": ">=0.3.6" }
 }
