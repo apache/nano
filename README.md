@@ -79,6 +79,50 @@ if you run this example(after starting couchdb) you will see:
 
 you can also see your document in [futon](http://localhost:5984/_utils).
 
+## configuration
+
+configuring nano to use your database server is as simple as:
+
+``` js
+var server = require('nano')('http://localhost:5984')
+  , db     = server.use('foo')
+  ;
+```
+
+however if you don't need to instrument database objects you can simply:
+
+``` js
+// nano parses the url and knows this is a database
+var db = require('nano')('http://localhost:5984/foo');
+```
+
+you can also pass options to the require:
+
+``` js
+// nano parses the url and knows this is a database
+var db = require('nano')('http://localhost:5984/foo');
+```
+
+to specify further configuration options you can pass an object literal instead:
+
+``` js
+// nano parses the url and knows this is a database
+var db = require('nano')(
+  { "url"             : "http://localhost:5984/foo"
+  , "request_options" : { "proxy" : "http://someproxy" }
+  , "log"             : function (id, args) { 
+      console.log(id, args);
+    }
+  });
+```
+please check [request] for more information on the defaults. they support features like cookie jar, proxies, ssl, etc.
+
+### pool size
+
+a very important configuration parameter if you have a high traffic website and are using nano is setting up the `pool.size`. by default the node.js http agent (client) has a certain size of active connections that can run simultaneously, while others are kept in a queue. 
+
+you can increase the size using `request_options` if this is problematic, and refer to the [request] documentation and examples for further clarification
+
 ## database functions
 
 ### nano.db.create(name, [callback])
@@ -501,6 +545,7 @@ everyone is welcome to contribute with patches, bugfixes and new features
 [3]: http://caos.di.uminho.pt/
 [4]: https://github.com/dscape/nano/blob/master/cfg/couch.example.js
 [follow]: https://github.com/iriscouch/follow
+[request]:  https://github.com/mikeal/request
 
 ## license
 

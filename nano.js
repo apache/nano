@@ -787,12 +787,8 @@ module.exports = exports = nano = function database_module(cfg) {
   // configuration for request
   // please send pull requests if you want to use a option
   // in request that is not exposed
-  if(cfg.proxy || cfg.jar) {
-    if(cfg.proxy) {
-      request_opts.proxy = cfg.proxy;
-    }
-    request_opts.jar     = !!cfg.jar;
-    request              = require('request').defaults(request_opts);
+  if(cfg.request_defaults) {
+    request = require('request').defaults(request_defaults);
   }
 
   // assuming a cfg.log inside cfg
