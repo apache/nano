@@ -8,6 +8,7 @@ var specify  = require('specify')
 
 var mock = nock(helpers.couch, "db/follow")
   , db   = nano.use("db_follow")
+  , feed
   ;
 
 specify("db_follow:setup", timeout, function (assert) {
@@ -29,9 +30,8 @@ if(!process.env.NOCK) {
   // please run tests with local couchdb
   specify("db_follow:stream", timeout, function (assert) {
     assert.expect(2);
-    var feed = db.follow({since: 2})
-      , i    = 2
-      ;
+    feed  = db.follow({since: 3});
+    var i = 3;
     feed.on('change', function (change) {
       assert.ok(change, "Change existed");
       assert.equal(change.seq, i+1, "Seq is set correctly");
@@ -52,6 +52,9 @@ if(!process.env.NOCK) {
 }
 
 specify("db_follow:teardown", timeout, function (assert) {
+  if (feed && typeof feed.stop === "function") {
+    feed.stop();
+  }
   nano.db.destroy("db_follow", function (err) {
     assert.equal(err, undefined, "Failed to destroy database");
     assert.ok(mock.isDone(), "Some mocks didn't run");

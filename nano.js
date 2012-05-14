@@ -19,9 +19,11 @@ var request     = require('request')
   , qs          = require('querystring')
   , u           = require('url')
   , errs        = require('errs')
-  , follow      = require('follow')
+  , follow
   , nano
   ;
+
+try { follow = require('follow'); } catch (err) {}
 
 function isEmpty(object) {
   for(var property in object) {
@@ -423,6 +425,23 @@ module.exports = exports = nano = function database_module(cfg) {
     // case only db name is given
     params     = params || {};
     params.db  = u.resolve(cfg.url, db_name);
+
+    if(!follow) {
+      var stream = errs.handle(
+        { "note"  : "follow is only supported on node 0.6+"
+        , "scope" : "follow"
+        , "errid" : "no_soup_for_you"
+        }, callback);
+      // streaming mode will call unexisting follow stream
+      stream.follow = function () {
+        return errs.handle(
+          { "note"  : "follow is only supported on node 0.6+"
+          , "scope" : "follow"
+          , "errid" : "no_soup_for_you"
+          }, callback);
+      };
+      return stream;
+    }
 
     if(typeof callback === "function") {
       return follow(params, callback);
