@@ -2,7 +2,7 @@ var specify  = require('specify')
   , helpers  = require('../helpers')
   , timeout  = helpers.timeout
   , nano     = helpers.nano
-  , Nano     = require('../../nano')
+  , Nano     = helpers.Nano
   , nock     = helpers.nock
   ;
 

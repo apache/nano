@@ -18,7 +18,7 @@ var request     = require('request')
   , fs          = require('fs')
   , qs          = require('querystring')
   , u           = require('url')
-  , error       = require('./error')
+  , errs        = require('errs')
   , nano
   ;
 
@@ -81,65 +81,115 @@ module.exports = exports = nano = function database_module(cfg) {
   * @param {callback:function:optional} function to call back
   */
   function relax(opts,callback) {
+    // most simple case is no opts, which returns the root
     if(typeof opts === "function") {
       callback = opts;
       opts     = {path: ""};
     }
-    if(typeof opts === 'string') { opts = {path: opts}; }
-    var log = logging();
-    var headers = { "content-type": "application/json"
+
+    // string is the same as a simple get request to that path
+    if(typeof opts === 'string') {
+      opts = {path: opts};
+    }
+
+    // no opts, meaning stream root
+    if(!opts) {
+      opts     = {path: ""};
+      callback = null;
+    }
+
+    var log     = logging()
+      , params  = opts.params
+      , headers = { "content-type": "application/json"
                   , "accept"      : "application/json"
                   }
-      , req     = { method : (opts.method || "GET")
-                  , headers: headers
-                  , uri    : cfg.url }
-      , params  = opts.params
+      , req     = { method  : (opts.method || "GET")
+                  , headers : headers
+                  , uri     : cfg.url }
       , status_code
       , parsed
       , rh
       ;
 
-    if (opts.jar) { req.jar = opts.jar; }
-    if(opts.db) { req.uri += "/" + opts.db; }
-    if(opts.path) { req.uri += "/" + opts.path; }
+    // cookie jar support
+    // check github.com/mikeal/request for docs
+    if (opts.jar) { 
+      req.jar = opts.jar;
+    }
+
+    if(opts.db) {
+      req.uri += "/" + opts.db;
+    }
+
+    if(opts.path) {
+      req.uri += "/" + opts.path;
+    }
     else if(opts.doc)  {
       if(!/^_design/.test(opts.doc)) {
         try { req.uri += "/" + encodeURIComponent(opts.doc); }
-        catch (ex1) {
-          ex1.message = 'couldnt encode: ' + opts.doc + ' as an uri';
-          return error.request_err(ex, 'encodeuri', {});
+        catch (error) {
+          return errs.handle(errs.merge(error,
+            { "note"  : "couldnt encode: " + (opts && opts.doc) + " as an uri"
+            , "scope" : "nano"
+            , "code"  : "encode_uri"
+            }), callback);
         }
       }
       else {
         req.uri += "/" + opts.doc;
       }
-      if(opts.att) { req.uri += "/" + opts.att; }
+
+      if(opts.att) {
+        req.uri += "/" + opts.att;
+      }
     }
+
     if(opts.encoding !== undefined && callback) {
       req.encoding = opts.encoding;
       delete req.headers["content-type"];
       delete req.headers.accept;
     }
+
     if(opts.content_type) {
       req.headers["content-type"] = opts.content_type;
       delete req.headers.accept; // undo headers set
     }
+
+    // these need to be encoded
     if(!isEmpty(params)) {
-      ['startkey', 'endkey', 'key', 'keys'].forEach(function (key) {
-        if (key in params) {
-          try { params[key] = JSON.stringify(params[key]); }
-          catch (ex2) { 
-            ex2.message = 'bad params: ' + key + ' = ' + params[key];
-            return error.request_err(ex, 'jsonstringify', {}); 
+      try {
+        ['startkey', 'endkey', 'key', 'keys'].forEach(function (key) {
+          if (key in params) {
+            try { params[key] = JSON.stringify(params[key]); }
+            catch (err) { 
+              return errs.handle(errs.merge(err,
+                { "note"  : "bad params: " + key + " = " + params[key]
+                , "scope" : "nano"
+                , "code"  : "encode_keys"
+                }), callback);
+            }
           }
-        }
-      });
-      try { req.uri += "?" + qs.stringify(params); }
-      catch (ex3) {
-        ex3.message = 'invalid params: ' + params.toString();
-        return error.request_err(ex3, 'qsstringify', {});
+        });
+      } catch (err6) {
+        return errs.handle(errs.merge(err6,
+          { "note"  : "params is not an object"
+          , "scope" : "nano"
+          , "code"  : "bad_params"
+          }), callback);
+      }
+
+      try { 
+        req.uri += "?" + qs.stringify(params);
+      }
+      catch (err2) {
+        return errs.handle(errs.merge(err2,
+           { "note"  : "invalid params: " + params.toString()
+           , "scope" : "nano"
+           , "code"  : "encode_params"
+           }), callback);
       }
     }
+
     if(opts.body) {
       if (Buffer.isBuffer(opts.body)) {
         req.body = opts.body; // raw data
@@ -147,39 +197,61 @@ module.exports = exports = nano = function database_module(cfg) {
       else {
         try {
           req.body = JSON.stringify(opts.body, function (key, value) {
+            // don't encode functions
+            // this allows functions to be given without pre-escaping
             if (typeof(value) === 'function') {
               return value.toString();
             } else {
               return value;
             }
           });
-        } catch (ex5) { 
-          ex5.message = "couldn't json.stringify the body you provided";
-          return error.request_err(ex5, 'jsonstringify', {}, callback);
+        } catch (err3) { 
+          return errs.handle(errs.merge(err3,
+             { "note"  : "body seems to be invalid json"
+             , "scope" : "nano"
+             , "code"  : "encode_body"
+             }), callback);
         }
       } // json data
     }
+
     log(req);
-    if(!callback) { // void callback, stream
+
+    // streaming mode
+    if(!callback) {
       try {
         return request(req);
-      } catch (ex4) { 
-        return error.request_err(ex4, 'streamthrow', {});
+      } catch (err4) { 
+        return errs.handle(errs.merge(err4,
+           { "note"  : "request threw when you tried to stream"
+           , "scope" : "request"
+           , "code"  : "stream"
+           }), callback);
       }
     }
+
     try {
-      var stream = request(req, function(e,h,b){
+      var stream = request(req, function(e,h,b) {
+        // make sure headers exist
         rh = (h && h.headers || {});
         rh['status-code'] = status_code = (h && h.statusCode || 500);
         rh.uri            = req.uri;
+
         if(e) {
           log({err: 'socket', body: b, headers: rh });
-          callback(error.request(e,"socket",req,status_code),b,rh);
+          errs.handle(errs.merge(e,
+             { "note"  : "error happened during your connection"
+             , "scope" : "socket"
+             , "code"  : "request"
+             }), callback);
           return stream;
         }
+
         delete rh.server;
         delete rh['content-length'];
+
         try { parsed = JSON.parse(b); } catch (err) { parsed = b; }
+
         if (status_code >= 200 && status_code < 300) {
           log({err: null, body: parsed, headers: rh});
           callback(null,parsed,rh);
@@ -188,14 +260,24 @@ module.exports = exports = nano = function database_module(cfg) {
         else { // proxy the error directly from couchdb
           log({err: 'couch', body: parsed, headers: rh});
           if (!parsed) { parsed = {}; }
-          callback(error.couch(parsed.reason,parsed.error,req,status_code),
-            parsed, rh);
+          errs.handle(errs.merge(errs.create(parsed),
+             { "scope"       : "couch"
+             , "status_code" : status_code
+             , "status-code" : status_code
+             , "request"     : req
+             , "headers"     : rh
+             , "code"        : "non_200"
+             }), callback);
           return stream;
         }
       });
       return stream;
-    } catch(ex6) { 
-      return error.request_err(ex6, 'callbackthrow', {});
+    } catch(err5) { 
+      return errs.merge(err5,
+         { "note"  : "request threw when you tried to create the object"
+         , "scope" : "request"
+         , "code"  : "callback"
+         });
     }
   }
 
@@ -285,7 +367,9 @@ module.exports = exports = nano = function database_module(cfg) {
       callback = design_name;
       design_name = null;
     }
-    return relax({db: db_name, doc: "_compact", att: design_name, method: "POST"},callback);
+    return relax(
+      { db: db_name, doc: "_compact", att: design_name
+      , method: "POST" }, callback);
   }
 
  /*
@@ -305,7 +389,9 @@ module.exports = exports = nano = function database_module(cfg) {
       callback = params;
       params = {};
     }
-    return relax({db: db_name, path: "_changes", params: params, method: "GET"},callback);
+    return relax(
+      { db: db_name, path: "_changes", params: params
+      , method: "GET" }, callback);
   }
 
  /*
@@ -367,8 +453,9 @@ module.exports = exports = nano = function database_module(cfg) {
     * @see relax
     */
     function destroy_doc(doc_name,rev,callback) {
-      return relax({db: db_name, doc: doc_name, method: "DELETE", params: {rev: rev}},
-        callback);
+      return relax(
+        { db: db_name, doc: doc_name, method: "DELETE"
+        , params: {rev: rev} }, callback);
     }
 
    /*
@@ -389,7 +476,9 @@ module.exports = exports = nano = function database_module(cfg) {
         callback = params;
         params   = {};
       }
-      return relax({db: db_name, doc: doc_name, method: "GET", params: params},callback);
+      return relax(
+        { db: db_name, doc: doc_name, method: "GET"
+        , params: params }, callback);
     }
 
    /*
@@ -405,7 +494,9 @@ module.exports = exports = nano = function database_module(cfg) {
         callback = params;
         params   = {};
       }
-      return relax({db: db_name, path: "_all_docs", method: "GET", params: params},callback);
+      return relax(
+        { db: db_name, path: "_all_docs", method: "GET"
+        , params: params }, callback);
     }
 
    /*
@@ -424,7 +515,9 @@ module.exports = exports = nano = function database_module(cfg) {
         params   = {};
       }
       params.include_docs = true;
-      return relax({db: db_name, path: "_all_docs", method: "POST", params: params, body: doc_names},callback);
+      return relax(
+        { db: db_name, path: "_all_docs", method: "POST"
+        , params: params, body: doc_names }, callback);
     }
 
    /*
@@ -588,7 +681,7 @@ module.exports = exports = nano = function database_module(cfg) {
                        , atomic: update_with_handler_doc
                        , updateWithHandler: update_with_handler_doc // alias
                        };
-    public_functions.view = view_docs;
+    public_functions.view         = view_docs;
     public_functions.view.compact = function(design_name,cb) {
       return compact_db(db_name,design_name,cb);
     };
@@ -612,26 +705,43 @@ module.exports = exports = nano = function database_module(cfg) {
                      , dinosaur: relax               // alias
                      };
 
+  // handle different type of configs
   if(typeof cfg === "string") {
+    // just an url
     if(/^https?:/.test(cfg)) { cfg = {url: cfg}; } // url
     else {
-      try { cfg   = require(cfg); } // file path
-      catch(e) {
-        e.message = "couldn't read config file " + 
-          (cfg ? cfg.toString() : '');
-        throw error.init(e, "badfile");
+      // a file that you can require
+      try {
+        cfg   = require(cfg);
+      }
+      catch(error) {
+        throw errs.merge(error,
+           { "scope"       : "init"
+           , "note"        : "couldn't read config file " + cfg
+           , "code"        : "bad_file"
+           });
       }
     }
   }
   
-  if(!(cfg && cfg.url))
-    throw error.init("no configuration with a valid url was given", "badurl");
+  if(!(cfg && cfg.url)) {
+    throw errs.create(
+        { "scope"       : "init"
+        , "note"        : "no configuration with a valid url was given"
+        , "code"        : "bad_url"
+        });
+  }
 
+  // alias so config is public in nano once set
   public_functions.config = cfg;
 
+  // configuration for request
+  // please send pull requests if you want to use a option
+  // in request that is not exposed
   if(cfg.proxy || cfg.jar) {
-    if(cfg.proxy) 
+    if(cfg.proxy) {
       request_opts.proxy = cfg.proxy;
+    }
     request_opts.jar     = !!cfg.jar;
     request              = require('request').defaults(request_opts);
   }
@@ -639,17 +749,13 @@ module.exports = exports = nano = function database_module(cfg) {
   // assuming a cfg.log inside cfg
   logging = require('./logger')(cfg);
 
-  try { 
-    path       = u.parse(cfg.url);
-    path_array = path.pathname.split('/').filter(function(e) { return e; });
-  }
-  catch (e2) {
-    e2.message = "your url is invalid: " + cfg.url;
-    throw error.init(e2, "invalidurl");
-  }
-  
-  // nano('http://couch.nodejitsu.com/db1') should return a database
-  // nano('http://couch.nodejitsu.com')     should return a nano object
+  path       = u.parse(cfg.url);
+  path_array = path.pathname.split('/').filter(function(e) { return e; });
+
+  // nano('http://couch.nodejitsu.com/db1') 
+  //   should return a database
+  // nano('http://couch.nodejitsu.com')
+  //   should return a nano object
   if(path.pathname && path_array.length > 0) {
     auth    = path.auth ? path.auth + '@' : '';
     port    = path.port ? ':' + path.port : '';
@@ -671,9 +777,6 @@ module.exports = exports = nano = function database_module(cfg) {
  * /__.|_|-|_|
  *
  * thanks for visiting! come again!
- *
- * LH1059-A321
- * LH1178-A321
  */
 
 nano.version = JSON.parse(

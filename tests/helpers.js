@@ -32,6 +32,7 @@ function fake_chain() {
 
 helpers.timeout = cfg.timeout;
 helpers.nano = nano(cfg.couch);
+helpers.Nano = nano;
 helpers.couch = cfg.couch;
 helpers.pixel = "Qk06AAAAAAAAADYAAAAoAAAAAQAAAP////8BABgAAAAA" + 
                 "AAAAAAATCwAAEwsAAAAAAAAAAAAAWm2CAA==";
