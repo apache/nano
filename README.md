@@ -487,6 +487,7 @@ then open `/tmp/rabbit.png` and you will see the rabbit picture.
 * article: [nano - a minimalistic couchdb client for nodejs](http://writings.nunojob.com/2011/08/nano-minimalistic-couchdb-client-for-nodejs.html)
 * article: [getting started with node.js and couchdb](http://writings.nunojob.com/2011/09/getting-started-with-nodejs-and-couchdb.html)
 * article: [document update handler support](http://jackhq.tumblr.com/post/16035106690/nano-v1-2-x-document-update-handler-support-v1-2-x)
+* article: [nano 3](http://writings.nunojob.com/2012/05/Nano-3.html)
 
 ## roadmap
 
