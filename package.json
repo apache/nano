@@ -21,7 +21,7 @@
   ]
 , "keywords"        : 
   ["couchdb", "data", "request", "json", "nosql", "micro", "nano", "database"]
-, "dependencies"    : {"request": "2.9.x"}
+, "dependencies"    : {"request": "2.9.x", "follow": "*"}
 , "devDependencies" : 
   { "async"         : "0.1.x"
   , "specify"       : "0.4.x"
@@ -30,7 +30,7 @@
   }
 , "scripts"         : 
   { "test"          : "ls -tr tests/*/*.js | NOCK=on xargs -I{} node {}"
-  , "nock_off"      : "ls -tr tests/*/*.js | NANO_ENV=testing xargs -I{} node {}"
+  , "nock_off"      : "ls -tr tests/*/*.js | xargs -I{} node {}"
   }
 , "main"            : "./nano.js"
 , "engines"         : { "node": ">=0.3.6" }

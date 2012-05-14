@@ -19,6 +19,7 @@ var request     = require('request')
   , qs          = require('querystring')
   , u           = require('url')
   , errs        = require('errs')
+  , follow      = require('follow')
   , nano
   ;
 
@@ -118,15 +119,18 @@ module.exports = exports = nano = function database_module(cfg) {
     }
 
     if(opts.db) {
-      req.uri += "/" + opts.db;
+      req.uri = u.resolve(req.uri, opts.db);
     }
 
     if(opts.path) {
       req.uri += "/" + opts.path;
     }
     else if(opts.doc)  {
+      // not a design document
       if(!/^_design/.test(opts.doc)) {
-        try { req.uri += "/" + encodeURIComponent(opts.doc); }
+        try { 
+          req.uri += "/" + encodeURIComponent(opts.doc);
+        }
         catch (error) {
           return errs.handle(errs.merge(error,
             { "note"  : "couldnt encode: " + (opts && opts.doc) + " as an uri"
@@ -136,6 +140,7 @@ module.exports = exports = nano = function database_module(cfg) {
         }
       }
       else {
+        // design document
         req.uri += "/" + opts.doc;
       }
 
@@ -387,11 +392,43 @@ module.exports = exports = nano = function database_module(cfg) {
   function changes_db(db_name, params, callback) {
     if(typeof params === "function") {
       callback = params;
-      params = {};
+      params   = {};
     }
     return relax(
       { db: db_name, path: "_changes", params: params
       , method: "GET" }, callback);
+  }
+
+  /*
+   * couchdb database follow support
+   *
+   * e.g. var feed = nano.db.follow(db_name, {since: "now"});
+   *      feed.on('change', function (change) { console.log(change); });
+   *      feed.follow();
+   *
+   * @param {db_name:string} database name
+   * @param {params:object:optional} additions to the querystring
+   *   check the follow documentation for the full api
+   *   https://github.com/iriscouch/follow
+   * 
+   *
+   * @see relax
+   */
+  function follow_db(db_name, params, callback) {
+    if(typeof params === "function") {
+      callback = params;
+      params   = {};
+    }
+
+    // case only db name is given
+    params     = params || {};
+    params.db  = u.resolve(cfg.url, db_name);
+
+    if(typeof callback === "function") {
+      return follow(params, callback);
+    } else {
+      return new follow.Feed(params);
+    }
   }
 
  /*
@@ -657,53 +694,65 @@ module.exports = exports = nano = function database_module(cfg) {
                   , doc: doc_name, params: {rev: rev}},callback);
     }
 
-    public_functions = { info: function(cb) { return get_db(db_name,cb); }
-                       , replicate: function(target,opts,cb) {
-                           return replicate_db(db_name,target,opts,cb);
-                         }
-                       , compact: function(cb) { 
-                           return compact_db(db_name,cb); 
-                         }
-                       , changes: function(params,cb) {
-                           return changes_db(db_name,params,cb);
-                         }
-                       , insert: insert_doc
-                       , get: get_doc
-                       , destroy: destroy_doc
-                       , bulk: bulk_docs
-                       , list: list_docs
-                       , fetch: fetch_docs
-                       , config: {url: cfg.url, db: db_name}
-                       , attachment: { insert: insert_att
-                                     , get: get_att
-                                     , destroy: destroy_att
-                                     }
-                       , atomic: update_with_handler_doc
-                       , updateWithHandler: update_with_handler_doc // alias
-                       };
+    // db level exports
+    public_functions =
+      { info              : function(cb) { return get_db(db_name,cb); }
+      , replicate         : function(target,opts,cb) {
+          return replicate_db(db_name,target,opts,cb);
+        }
+      , compact           : function(cb) { 
+          return compact_db(db_name,cb); 
+        }
+      , changes           : function(params,cb) {
+          return changes_db(db_name,params,cb);
+        }
+      , follow            : function(params,cb) {
+            return follow_db(db_name,params,cb);
+        }
+      , insert            : insert_doc
+      , get               : get_doc
+      , destroy           : destroy_doc
+      , bulk              : bulk_docs
+      , list              : list_docs
+      , fetch             : fetch_docs
+      , config            : {url: cfg.url, db: db_name}
+      , attachment        : 
+        { insert          : insert_att
+        , get             : get_att
+        , destroy         : destroy_att
+        }
+      , atomic            : update_with_handler_doc
+      , updateWithHandler : update_with_handler_doc // alias
+      };
+
     public_functions.view         = view_docs;
     public_functions.view.compact = function(design_name,cb) {
       return compact_db(db_name,design_name,cb);
     };
+
     return public_functions;
   }
 
-  public_functions = { db:  { create: create_db
-                            , get: get_db
-                            , destroy: destroy_db
-                            , list: list_dbs
-                            , use: document_module   // alias
-                            , scope: document_module // alias
-                            , compact: compact_db
-                            , replicate: replicate_db
-                            , changes: changes_db
-                            }
-                     , use: document_module
-                     , scope: document_module        // alias
-                     , request: relax
-                     , relax: relax                  // alias
-                     , dinosaur: relax               // alias
-                     };
+  // server level exports
+  public_functions = 
+    { db          :
+      { create    : create_db
+      , get       : get_db
+      , destroy   : destroy_db
+      , list      : list_dbs
+      , use       : document_module   // alias
+      , scope     : document_module // alias
+      , compact   : compact_db
+      , replicate : replicate_db
+      , changes   : changes_db
+      , follow    : follow_db
+      }
+    , use         : document_module
+    , scope       : document_module        // alias
+    , request     : relax
+    , relax       : relax                  // alias
+    , dinosaur    : relax               // alias
+    };
 
   // handle different type of configs
   if(typeof cfg === "string") {
@@ -747,7 +796,7 @@ module.exports = exports = nano = function database_module(cfg) {
   }
 
   // assuming a cfg.log inside cfg
-  logging = require('./logger')(cfg);
+  logging    = require('./logger')(cfg);
 
   path       = u.parse(cfg.url);
   path_array = path.pathname.split('/').filter(function(e) { return e; });
@@ -779,6 +828,7 @@ module.exports = exports = nano = function database_module(cfg) {
  * thanks for visiting! come again!
  */
 
+// nano level exports
 nano.version = JSON.parse(
   fs.readFileSync(__dirname + "/package.json")).version;
 nano.path    = __dirname;

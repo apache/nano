@@ -154,8 +154,24 @@ to the query string.
 
 ``` js
 nano.db.changes('alice', function(err, body) {
-  if (!err)
+  if (!err) {
     console.log(body);
+  }
+});
+```
+
+### nano.db.follow(name, [params], [callback])
+
+uses [follow] to create a solid changes feed. please consult follow documentation for more information as this is a very complete api on it's own
+
+``` js
+var feed = db.follow({since: "now"});
+feed.on('change', function (change) {
+  console.log("change: ", change);
+});
+feed.follow();
+process.nextTick(function () {
+  db.insert({"bar": "baz"}, "bar");
 });
 ```
 
@@ -484,6 +500,7 @@ everyone is welcome to contribute with patches, bugfixes and new features
 [2]: http://github.com/dscape/nano/issues
 [3]: http://caos.di.uminho.pt/
 [4]: https://github.com/dscape/nano/blob/master/cfg/couch.example.js
+[follow]: https://github.com/iriscouch/follow
 
 ## license
 

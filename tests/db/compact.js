@@ -37,10 +37,20 @@ specify("db_compact:test", timeout, function (assert) {
 });
 
 specify("db_compact:teardown", timeout, function (assert) {
-  nano.db.destroy("db_compact", function (err) {
-    assert.equal(err, undefined, "Failed to destroy database");
-    assert.ok(mock.isDone(), "Some mocks didn't run");
-  });
+  // you can really mess up couchdb by trying to
+  // delete while a db is compacting
+  (function destroy_when_compact_finished(timeout) {
+    timeout = timeout || 50;
+    db.info(function (error, info) {
+      if(error || info && info.compact_running) {
+        return setTimeout(destroy_when_compact_finished, timeout*2);
+      }
+      nano.db.destroy("db_compact", function (err) {
+        assert.equal(err, undefined, "Failed to destroy database");
+        assert.ok(mock.isDone(), "Some mocks didn't run");
+      });
+    });
+  })();
 });
 
 specify.run(process.argv.slice(2));
