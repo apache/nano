@@ -131,7 +131,7 @@ module.exports = exports = nano = function database_module(cfg) {
           return errs.handle(errs.merge(error,
             { "note"  : "couldnt encode: " + (opts && opts.doc) + " as an uri"
             , "scope" : "nano"
-            , "code"  : "encode_uri"
+            , "errid" : "encode_uri"
             }), callback);
         }
       }
@@ -165,7 +165,7 @@ module.exports = exports = nano = function database_module(cfg) {
               return errs.handle(errs.merge(err,
                 { "note"  : "bad params: " + key + " = " + params[key]
                 , "scope" : "nano"
-                , "code"  : "encode_keys"
+                , "errid" : "encode_keys"
                 }), callback);
             }
           }
@@ -174,7 +174,7 @@ module.exports = exports = nano = function database_module(cfg) {
         return errs.handle(errs.merge(err6,
           { "note"  : "params is not an object"
           , "scope" : "nano"
-          , "code"  : "bad_params"
+          , "errid" : "bad_params"
           }), callback);
       }
 
@@ -185,7 +185,7 @@ module.exports = exports = nano = function database_module(cfg) {
         return errs.handle(errs.merge(err2,
            { "note"  : "invalid params: " + params.toString()
            , "scope" : "nano"
-           , "code"  : "encode_params"
+           , "errid" : "encode_params"
            }), callback);
       }
     }
@@ -209,7 +209,7 @@ module.exports = exports = nano = function database_module(cfg) {
           return errs.handle(errs.merge(err3,
              { "note"  : "body seems to be invalid json"
              , "scope" : "nano"
-             , "code"  : "encode_body"
+             , "errid" : "encode_body"
              }), callback);
         }
       } // json data
@@ -225,7 +225,7 @@ module.exports = exports = nano = function database_module(cfg) {
         return errs.handle(errs.merge(err4,
            { "note"  : "request threw when you tried to stream"
            , "scope" : "request"
-           , "code"  : "stream"
+           , "errid" : "stream"
            }), callback);
       }
     }
@@ -242,7 +242,7 @@ module.exports = exports = nano = function database_module(cfg) {
           errs.handle(errs.merge(e,
              { "note"  : "error happened during your connection"
              , "scope" : "socket"
-             , "code"  : "request"
+             , "errid" : "request"
              }), callback);
           return stream;
         }
@@ -266,7 +266,7 @@ module.exports = exports = nano = function database_module(cfg) {
              , "status-code" : status_code
              , "request"     : req
              , "headers"     : rh
-             , "code"        : "non_200"
+             , "errid"       : "non_200"
              }), callback);
           return stream;
         }
@@ -276,7 +276,7 @@ module.exports = exports = nano = function database_module(cfg) {
       return errs.merge(err5,
          { "note"  : "request threw when you tried to create the object"
          , "scope" : "request"
-         , "code"  : "callback"
+         , "errid" : "callback"
          });
     }
   }
@@ -718,7 +718,7 @@ module.exports = exports = nano = function database_module(cfg) {
         throw errs.merge(error,
            { "scope"       : "init"
            , "note"        : "couldn't read config file " + cfg
-           , "code"        : "bad_file"
+           , "errid"       : "bad_file"
            });
       }
     }
@@ -728,7 +728,7 @@ module.exports = exports = nano = function database_module(cfg) {
     throw errs.create(
         { "scope"       : "init"
         , "note"        : "no configuration with a valid url was given"
-        , "code"        : "bad_url"
+        , "errid"       : "bad_url"
         });
   }
 

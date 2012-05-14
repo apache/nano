@@ -36,7 +36,7 @@ specify("shared_error:init", timeout, function (assert) {
   } catch(err) {
     assert.ok(err, "There must be an error");
     assert.ok(err.note, "A note is given");
-    assert.equal(err.code, "bad_file", "Code is right");
+    assert.equal(err.errid, "bad_file", "Code is right");
     assert.equal(err.scope, "init", "Scope is init");
   }
   try {
@@ -44,7 +44,7 @@ specify("shared_error:init", timeout, function (assert) {
   } catch(err2) {
     assert.ok(err2, "There must be an error");
     assert.ok(err2.note, "A note is given");
-    assert.equal(err2.code, "bad_url", "Code is right");
+    assert.equal(err2.errid, "bad_url", "Code is right");
     assert.equal(err2.scope, "init", "Scope is init");
   }
 });
@@ -63,7 +63,7 @@ specify("shared_error:root", timeout, function (assert) {
 specify("shared_error:stream", timeout, function (assert) {
   db.list("bad params").on('error', function (error) {
     assert.ok(error.note, "A note is given");
-    assert.equal(error.code, "bad_params", "Code is right");
+    assert.equal(error.errid, "bad_params", "Code is right");
     assert.equal(error.scope, "nano", "Scope exists");
   });
 });
@@ -72,7 +72,7 @@ specify("shared_error:callback", timeout, function (assert) {
   db.list("bad params", function (error, response) {
     assert.ok(error, "There must be an error");
     assert.ok(error.note, "A note is given");
-    assert.equal(error.code, "bad_params", "Code is right");
+    assert.equal(error.errid, "bad_params", "Code is right");
     assert.equal(error.scope, "nano", "Scope exists");
   });
 });
