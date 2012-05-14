@@ -499,8 +499,7 @@ to run (and configure) the test suite simply:
 
 ``` sh
 cd nano
-vi cfg/tests.js
-npm install # should install ensure and async, if it doesn't install manually
+npm install
 npm test
 ```
 
