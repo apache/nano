@@ -1,0 +1,17 @@
+[
+  { "method"   : "put"
+  , "path"     : "/shared_cookie"
+  , "status"   : 201
+  , "response" : "{ \"ok\": true }" 
+  }
+, { "method"   : "post"
+  , "status"   : 201
+  , "path"     : "/shared_cookie"
+  , "body"     : "{\"foo\":\"bar\"}"
+  , "response" : "{\"ok\":true,\"id\":\"234\",\"rev\":\"1-333231\",\"request\":{\"headers\":{\"X-CouchDB-WWW-Authenticate\":\"Cookie\",\"cookie\":\"abc123\"}}}"
+  }
+, { "method"   : "delete"
+  , "path"     : "/shared_cookie"
+  , "response" : "{ \"ok\": true }" 
+  }
+]
