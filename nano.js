@@ -162,6 +162,11 @@ module.exports = exports = nano = function database_module(cfg) {
       delete req.headers.accept; // undo headers set
     }
 
+    if(cfg.cookie) {
+      req.headers["X-CouchDB-WWW-Authenticate"] = "Cookie";
+      req.headers.cookie = cfg.cookie;
+    }
+
     // these need to be encoded
     if(!isEmpty(params)) {
       try {
@@ -807,7 +812,7 @@ module.exports = exports = nano = function database_module(cfg) {
   // please send pull requests if you want to use a option
   // in request that is not exposed
   if(cfg.request_defaults) {
-    request = require('request').defaults(request_defaults);
+    request = require('request').defaults(cfg.request_defaults);
   }
 
   // assuming a cfg.log inside cfg
