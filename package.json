@@ -2,7 +2,7 @@
 , "description"     : "minimalistic couchdb driver for node.js"
 , "homepage"        : "http://github.com/dscape/nano"
 , "repository"      : "git://github.com/dscape/nano"
-, "version"         : "3.0.0"
+, "version"         : "3.0.1"
 , "author"          : "Nuno Job <nunojobpinto@gmail.com> (http://nunojob.com)"
 , "contributors"    :
   [ "Thiago Arrais <thiago.arrais@gmail.com> (http://thiagoarrais.com)"
@@ -21,12 +21,15 @@
   ]
 , "keywords"        : 
   ["couchdb", "data", "request", "json", "nosql", "micro", "nano", "database"]
-, "dependencies"    : {"request": "2.9.x", "follow": "*"}
+, "dependencies"    : 
+  { "request"       : "2.9.x"
+  , "follow"        : "0.8.x"
+  , "errs"          : "0.2.x"
+  }
 , "devDependencies" : 
   { "async"         : "0.1.x"
   , "specify"       : "0.4.x"
   , "nock"          : "0.13.x"
-  , "errs"          : "0.2.x"
   }
 , "scripts"         : 
   { "test"          : "ls -tr tests/*/*.js | NOCK=on xargs -I{} node {}"
