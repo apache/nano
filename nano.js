@@ -227,6 +227,11 @@ module.exports = exports = nano = function database_module(cfg) {
       } // json data
     }
 
+    if(opts.form) {
+      req.headers['content-type'] = 'application/x-www-form-urlencoded; charset=utf-8';
+      req.body = qs.stringify(opts.form).toString('utf8');
+    }
+    
     log(req);
 
     // streaming mode
