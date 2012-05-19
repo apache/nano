@@ -360,6 +360,17 @@ module.exports = exports = nano = function database_module(cfg) {
   }
 
  /*
+  * get a new id from couchdb/_uuids
+  * callsback with (err, uuid_string)
+  */
+  function get_uuid(callback) {
+    relax('_uuids', function(e,b) {
+      if (!e) { callback(null, b.uuids[0]) }   // return one id string
+      else    { callback(err) };
+    });
+  }
+
+ /*
   * compacts a couchdb database
   *
   * e.g. nano.db.compact(db_name);
@@ -645,6 +656,8 @@ module.exports = exports = nano = function database_module(cfg) {
        , method: "POST", params: params}, callback);
     }
 
+
+
    /**************************************************************************
     * attachment                                                             *
     *************************************************************************/
@@ -728,6 +741,7 @@ module.exports = exports = nano = function database_module(cfg) {
       , follow            : function(params,cb) {
             return follow_db(db_name,params,cb);
         }
+      , newid             : get_uuid
       , insert            : insert_doc
       , get               : get_doc
       , destroy           : destroy_doc
@@ -766,6 +780,7 @@ module.exports = exports = nano = function database_module(cfg) {
       , changes   : changes_db
       , follow    : follow_db
       }
+    , newid       : get_uuid
     , use         : document_module
     , scope       : document_module        // alias
     , request     : relax
