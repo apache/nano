@@ -538,6 +538,24 @@ module.exports = exports = nano = function database_module(cfg) {
     }
 
    /*
+    * get the head of a document from a couchdb database
+    *
+    * e.g. db2.head("foo", function (e,b) {
+    *        console.log(e,b,h);
+    *        return;
+    *      });
+    *
+    * @param {doc_name:string} document name
+    *
+    * @see relax
+    */
+    function head_doc(doc_name,callback) {
+      return relax(
+        { db: db_name, doc: doc_name, method: "HEAD"
+        , params: {} }, callback);
+    }
+
+   /*
     * lists all the documents in a couchdb database
     *
     * @param {params:object:optional} additions to the querystring
@@ -730,6 +748,7 @@ module.exports = exports = nano = function database_module(cfg) {
         }
       , insert            : insert_doc
       , get               : get_doc
+      , head              : head_doc
       , destroy           : destroy_doc
       , bulk              : bulk_docs
       , list              : list_docs
