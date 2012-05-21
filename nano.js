@@ -14,7 +14,7 @@
  * see the license for the specific language governing permissions and
  * limitations under the license.
  */
-var request     = require('request')
+var request     = require('request').defaults({ jar: false })
   , fs          = require('fs')
   , qs          = require('querystring')
   , u           = require('url')
