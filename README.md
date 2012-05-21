@@ -513,7 +513,7 @@ where `list_doc_params` is the test name.
 
 ## contribute
 
-everyone is welcome to contribute with patches, bugfixes and new features
+everyone is welcome to contribute with patches, bug-fixes and new features
 
 1. create an [issue][2] on github so the community can comment on your idea
 2. fork `nano` in github
@@ -524,6 +524,13 @@ everyone is welcome to contribute with patches, bugfixes and new features
 7. push to your branch `git push origin my_branch`
 8. create a pull request
 
+to run tests make sure you npm test but also run tests without mocks:
+
+``` sh
+npm run nock_off
+```
+
+Check this [blogpost](http://writings.nunojob.com/2012/05/Mock-HTTP-Integration-Testing-in-Node.js-using-Nock-and-Specify.html) to learn more about how to write your own tests.
 
 ## meta
 
