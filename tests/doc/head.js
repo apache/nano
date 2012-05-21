@@ -24,15 +24,9 @@ specify("doc_head:setup", timeout, function (assert) {
 });
 
 specify("doc_head:test", timeout, function (assert) {
-  db.insert({"foo": "bar"}, "foobaz", function (error, response) {
-    assert.equal(error["status-code"], 409, "Should be conflict");
-    assert.equal(error.scope, "couch", "Scope is couch");
-    assert.equal(error.error, "conflict", "Error is conflict");
-    db.head("foobaz", function (error, body, h) {
-      assert.equal(error, undefined, "Should get the head of foobaz");
-      assert.equal(body, undefined, "Should have no body");
-      assert.equal(h["status-code"], 200, "Should be ok");
-    });
+  db.head("foobaz", function (error, body, headers) {
+    assert.equal(error, undefined, "Should get the head of foobaz");
+    assert.equal(headers["status-code"], 200, "Should be ok");
   });
 });
 

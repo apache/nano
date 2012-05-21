@@ -58,7 +58,7 @@ helpers.nock = function helpersNock(url, fixture) {
         , headers  = n.headers  || {}
         , body     = n.base64
                    ? new Buffer(n.base64, 'base64').toString()
-                   : n.body
+                   : n.body     || ""
         ;
 
       if(typeof response === "string" && endsWith(response, '.json')) {
