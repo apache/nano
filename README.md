@@ -315,6 +315,17 @@ alice.get('rabbit', { revs_info: true }, function(err, body) {
 });
 ```
 
+### db.head(docname, [params], [callback])
+
+same as `get` but lightweight version that returns headers only.
+
+``` js
+alice.head('rabbit', { revs_info: true }, function(err, _, headers) {
+  if (!err)
+    console.log(headers);
+});
+```
+
 ### db.bulk(docs, [params], [callback])
 
 bulk operations(update/delete/insert) on the database, refer to the 
