@@ -14,7 +14,7 @@
  * see the license for the specific language governing permissions and
  * limitations under the license.
  */
-var request     = require('request')
+var request     = require('request').defaults({ jar: false })
   , fs          = require('fs')
   , qs          = require('querystring')
   , u           = require('url')
@@ -227,6 +227,11 @@ module.exports = exports = nano = function database_module(cfg) {
       } // json data
     }
 
+    if(opts.form) {
+      req.headers['content-type'] = 'application/x-www-form-urlencoded; charset=utf-8';
+      req.body = qs.stringify(opts.form).toString('utf8');
+    }
+    
     log(req);
 
     // streaming mode
@@ -812,7 +817,7 @@ module.exports = exports = nano = function database_module(cfg) {
   // please send pull requests if you want to use a option
   // in request that is not exposed
   if(cfg.request_defaults) {
-    request = require('request').defaults(cfg.request_defaults);
+    request = require('request').defaults(request_defaults);
   }
 
   // assuming a cfg.log inside cfg
