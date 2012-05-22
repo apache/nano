@@ -162,6 +162,11 @@ module.exports = exports = nano = function database_module(cfg) {
       delete req.headers.accept; // undo headers set
     }
 
+    if(cfg.cookie) {
+      req.headers["X-CouchDB-WWW-Authenticate"] = "Cookie";
+      req.headers.cookie = cfg.cookie;
+    }
+
     // these need to be encoded
     if(!isEmpty(params)) {
       try {
@@ -222,6 +227,11 @@ module.exports = exports = nano = function database_module(cfg) {
       } // json data
     }
 
+    if(opts.form) {
+      req.headers['content-type'] = 'application/x-www-form-urlencoded; charset=utf-8';
+      req.body = qs.stringify(opts.form).toString('utf8');
+    }
+    
     log(req);
 
     // streaming mode
