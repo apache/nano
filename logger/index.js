@@ -4,7 +4,6 @@ var verbose = (process.env.NANO_ENV==='testing')
 
 module.exports = function logging(cfg) {
   var logStrategy = cfg ? cfg.log : undefined;
-  this.cfg = cfg;
   if (typeof logStrategy !== 'function') {
     if(verbose) {
       logStrategy = function consoleLog(eventId, args) { 
