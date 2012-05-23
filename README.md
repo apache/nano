@@ -123,6 +123,32 @@ a very important configuration parameter if you have a high traffic website and 
 
 you can increase the size using `request_options` if this is problematic, and refer to the [request] documentation and examples for further clarification
 
+### using cookie authentication
+
+nano supports making requests using couchdb [cookie authentication](http://guide.couchdb.org/editions/1/en/security.html#cookies). Once authenticated, all nano operations can be performed as usual, but with the use of cookie authentication - simply by adding the cookie value to your configuration options:
+
+``` js
+var db = require('nano')({ 
+  "url"             : "http://localhost:5984/foo"
+  , "cookie"        : "couchdb_cookie_value_here"
+});
+```
+
+because couchdb cookies have a sliding expiry, it is important that you check for any updated 'set-cookie' values on response. For example:
+
+``` js
+db.insert(doc, null,
+    function (err, body, headers) {
+        if (headers && headers['set-cookie']) {
+            res.cookie('cookie_name', JSON.stringify(headers['set-cookie']));
+        }
+        if (!err) {
+            res.send('ok');
+        }
+    }
+  );
+```
+
 ## database functions
 
 ### nano.db.create(name, [callback])
