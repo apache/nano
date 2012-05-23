@@ -801,7 +801,7 @@ module.exports = exports = nano = function database_module(cfg) {
       }
     }
   }
-  
+
   if(!(cfg && cfg.url)) {
     throw errs.create(
         { "scope"       : "init"

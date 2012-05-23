@@ -31,11 +31,17 @@ function fake_chain() {
 }
 
 helpers.timeout = cfg.timeout;
-helpers.nano = nano(cfg.couch);
-helpers.Nano = nano;
-helpers.couch = cfg.couch;
-helpers.pixel = "Qk06AAAAAAAAADYAAAAoAAAAAQAAAP////8BABgAAAAA" + 
-                "AAAAAAATCwAAEwsAAAAAAAAAAAAAWm2CAA==";
+helpers.nano    = nano(cfg.couch);
+helpers.Nano    = nano;
+helpers.couch   = cfg.couch;
+helpers.admin   = cfg.admin;
+helpers.pixel   = "Qk06AAAAAAAAADYAAAAoAAAAAQAAAP////8BABgAAAAA" + 
+                  "AAAAAAATCwAAEwsAAAAAAAAAAAAAWm2CAA==";
+
+var auth        = require("url").parse(cfg.admin).auth.split(":");
+
+helpers.username = auth[0];
+helpers.password = auth[1];
 
 helpers.loadFixture = function helpersLoadFixture(filename, json) {
   var contents = fs.readFileSync(
