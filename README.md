@@ -471,8 +471,6 @@ var nano = require('nano')('http://localhost:5984'),
 
 ... perform tasks using cookie authentication ...
 
-because couchdb cookies have a sliding expiry, it is important that you check for any updated 'set-cookie' values on response. For example:
-
 ``` js
 var auth = req.cookies['AuthSession'],
     nano;
@@ -495,7 +493,7 @@ alice.insert(doc, null,
   );
 ```
 
-... finally, logout ...
+... and finally, logout ...
 
 ``` js
 // The couchdb cookie name is AuthSession
