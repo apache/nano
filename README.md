@@ -123,32 +123,6 @@ a very important configuration parameter if you have a high traffic website and 
 
 you can increase the size using `request_options` if this is problematic, and refer to the [request] documentation and examples for further clarification
 
-### using cookie authentication
-
-nano supports making requests using couchdb [cookie authentication](http://guide.couchdb.org/editions/1/en/security.html#cookies). Once authenticated, all nano operations can be performed as usual, but with the use of cookie authentication - simply by adding the cookie value to your configuration options:
-
-``` js
-var db = require('nano')({ 
-  "url"             : "http://localhost:5984/foo"
-  , "cookie"        : "couchdb_cookie_value_here"
-});
-```
-
-because couchdb cookies have a sliding expiry, it is important that you check for any updated 'set-cookie' values on response. For example:
-
-``` js
-db.insert(doc, null,
-    function (err, body, headers) {
-        if (headers && headers['set-cookie']) {
-            res.cookie('cookie_name', JSON.stringify(headers['set-cookie']));
-        }
-        if (!err) {
-            res.send('ok');
-        }
-    }
-  );
-```
-
 ## database functions
 
 ### nano.db.create(name, [callback])
@@ -475,6 +449,68 @@ db.atomic("update", "inplace", "foobar",
 ```
 
 check out the tests for a fully functioning example.
+
+## using cookie authentication
+
+nano supports making requests using couchdb's [cookie authentication](http://guide.couchdb.org/editions/1/en/security.html#cookies) functionality. There's a [step-by-step guide here](http://mahoney.eu/2012/05/23/couchdb-cookie-authentication-nodejs-nano/), but essentially you just:
+
+login...
+
+``` js
+var nano = require('nano')('http://localhost:5984'),
+    username = 'user', // your user's credentials (passed in from a form on your site for example)
+    userpass = 'pass';
+
+
+    nano.request({
+            method: "POST",
+            db: "_session",
+            form: { name: username, password: userpass },
+            content_type: "application/x-www-form-urlencoded; charset=utf-8"
+        },
+        function (err, body, headers) {
+            if (err) { res.send(err.reason); return; }
+
+            // Send CouchDB's cookie right on through to the client
+            if (headers && headers['set-cookie']) {
+                res.cookie(headers['set-cookie']);
+            }
+
+            res.send('Logged in!');
+        });
+```
+
+... perform tasks using cookie authentication ...
+
+``` js
+var auth = req.cookies['AuthSession'],
+    nano;
+
+if (!auth) { res.send(401); return; }
+// set-up nano with cookie authentication
+nano = require('nano')({ url : 'http://localhost:5984', cookie: 'AuthSession=' + auth });
+
+var alice = nano.use('alice');
+
+alice.insert(doc, null,
+    function (err, body, headers) {
+        if (err) { res.send(err.reason); return; }
+
+        // update the cookie held in the browser, if couchdb has sent an updated version
+        if (headers && headers['set-cookie']) { res.cookie(headers['set-cookie']); }
+
+        res.send('ok');
+    }
+  );
+```
+
+... and finally, logout ...
+
+``` js
+// The couchdb cookie name is AuthSession
+res.clearCookie('AuthSession');
+res.send('Logged out!');
+```
 
 ## advanced features
 
