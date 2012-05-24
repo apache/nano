@@ -443,8 +443,8 @@ calls the design's update function with the specified doc in input.
 ``` js
 db.atomic("update", "inplace", "foobar", 
 {field: "foo", value: "bar"}, function (error, response) {
-  assert.equal(error, undefined, "Failed to update");
-  assert.equal(response.foo, "bar", "Update worked");
+  assert.equal(error, undefined, "failed to update");
+  assert.equal(response.foo, "bar", "update worked");
 });
 ```
 
@@ -452,7 +452,7 @@ check out the tests for a fully functioning example.
 
 ## using cookie authentication
 
-nano supports making requests using couchdb's [cookie authentication](http://guide.couchdb.org/editions/1/en/security.html#cookies) functionality. There's a [step-by-step guide here](http://mahoney.eu/2012/05/23/couchdb-cookie-authentication-nodejs-nano/), but essentially you just:
+nano supports making requests using couchdb's [cookie authentication](http://guide.couchdb.org/editions/1/en/security.html#cookies) functionality. there's a [step-by-step guide here](http://mahoney.eu/2012/05/23/couchdb-cookie-authentication-nodejs-nano/), but essentially you just:
 
 login...
 
@@ -471,12 +471,12 @@ var nano = require('nano')('http://localhost:5984'),
         function (err, body, headers) {
             if (err) { res.send(err.reason); return; }
 
-            // Send CouchDB's cookie right on through to the client
+            // send couchdb's cookie right on through to the client
             if (headers && headers['set-cookie']) {
                 res.cookie(headers['set-cookie']);
             }
 
-            res.send('Logged in!');
+            res.send('logged in!');
         });
 ```
 
@@ -507,9 +507,9 @@ alice.insert(doc, null,
 ... and finally, logout ...
 
 ``` js
-// The couchdb cookie name is AuthSession
+// the couchdb cookie name is AuthSession
 res.clearCookie('AuthSession');
-res.send('Logged out!');
+res.send('logged out!');
 ```
 
 ## advanced features
@@ -561,7 +561,7 @@ then open `/tmp/rabbit.png` and you will see the rabbit picture.
 * article: [getting started with node.js and couchdb](http://writings.nunojob.com/2011/09/getting-started-with-nodejs-and-couchdb.html)
 * article: [document update handler support](http://jackhq.tumblr.com/post/16035106690/nano-v1-2-x-document-update-handler-support-v1-2-x)
 * article: [nano 3](http://writings.nunojob.com/2012/05/Nano-3.html)
-* article: [Securing a site with CouchDB cookie authentication using node.js and nano](http://mahoney.eu/2012/05/23/couchdb-cookie-authentication-nodejs-nano/)
+* article: [securing a site with couchdb cookie authentication using node.js and nano](http://mahoney.eu/2012/05/23/couchdb-cookie-authentication-nodejs-nano/)
 
 ## roadmap
 
@@ -604,7 +604,7 @@ to run tests make sure you npm test but also run tests without mocks:
 npm run nock_off
 ```
 
-Check this [blogpost](http://writings.nunojob.com/2012/05/Mock-HTTP-Integration-Testing-in-Node.js-using-Nock-and-Specify.html) to learn more about how to write your own tests.
+check this [blogpost](http://writings.nunojob.com/2012/05/Mock-HTTP-Integration-Testing-in-Node.js-using-Nock-and-Specify.html) to learn more about how to write your own tests.
 
 ## meta
 
