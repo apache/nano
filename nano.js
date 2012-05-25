@@ -124,6 +124,12 @@ module.exports = exports = nano = function database_module(cfg) {
       req.uri = u.resolve(req.uri, opts.db);
     }
 
+    if (opts.headers) {
+      for (var k in opts.headers) {
+        req.headers[k] = opts.headers[k];
+      }
+    }
+
     if(opts.path) {
       req.uri += "/" + opts.path;
     }
