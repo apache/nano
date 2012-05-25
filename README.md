@@ -380,7 +380,7 @@ or using `pipe`:
 var fs = require('fs');
 
 fs.createReadStream('rabbit.png').pipe(
-    alice.attachment.insert('new', 'rab.png', {}, 'image/png')
+    alice.attachment.insert('new', 'rab.png', null, 'image/png')
 );
 ```
 
