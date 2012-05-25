@@ -18,7 +18,7 @@ specify("att_pipe:setup", timeout, function (assert) {
   });
 });
 
-specify("att_pipe:test", timeout, function (assert) {
+specify("att_pipe:write", timeout, function (assert) {
   var buffer   = new Buffer(pixel, 'base64')
     , filename = path.join(__dirname, '.temp.bmp')
     , ws       = fs.createWriteStream(filename)
@@ -32,7 +32,24 @@ specify("att_pipe:test", timeout, function (assert) {
       assert.equal(error, undefined, "Should store the pixel");
       db.attachment.get("new", "att", {rev: bmp.rev}).pipe(ws);
     });
+});
 
+specify("att_pipe:read", timeout, function (assert) {
+  var logo = __dirname + "/../fixtures/logo.png"
+    , rs   = fs.createReadStream(logo)
+    , is   = db.attachment.insert("nodejs", "logo.png", null, "image/png")
+    ;
+
+  is.on('end', function () {
+    db.attachment.get("nodejs", "logo.png", function (err, buffer) {
+      assert.equal(err, undefined, "Should get the logo");
+      assert.equal(
+        fs.readFileSync(logo).toString('base64'), buffer.toString('base64'),
+        "Data should remain unchanged");
+    });
+  });
+
+  rs.pipe(is);
 });
 
 specify("att_pipe:teardown", timeout, function (assert) {

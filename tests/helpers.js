@@ -45,7 +45,7 @@ helpers.password = auth[1];
 
 helpers.loadFixture = function helpersLoadFixture(filename, json) {
   var contents = fs.readFileSync(
-    path.join(__dirname, 'fixtures', filename), 'ascii');
+    path.join(__dirname, 'fixtures', filename), (json ? 'ascii' : null));
   return json ? JSON.parse(contents): contents;
 };
 
@@ -55,11 +55,13 @@ helpers.nock = function helpersNock(url, fixture) {
       , nocks   = helpers.loadFixture(fixture + '.json', true)
       ;
     nocks.forEach(function(n) {
-      var path     = n.path
+      var npath    = n.path
         , method   = n.method   || "get"
         , status   = n.status   || 200
         , response = n.buffer
-                   ? new Buffer(n.buffer, 'base64') 
+                   ? endsWith(n.buffer, '.png') 
+                     ? helpers.loadFixture(n.buffer)
+                     : new Buffer(n.buffer, 'base64') 
                    : n.response || ""
         , headers  = n.headers  || {}
         , body     = n.base64
@@ -76,9 +78,9 @@ helpers.nock = function helpersNock(url, fixture) {
       if(body==="*") {
         nock(url).filteringRequestBody(function(path) {
           return "*";
-        })[method](path, "*").reply(status, response, headers);
+        })[method](npath, "*").reply(status, response, headers);
       } else {
-        nock(url)[method](path, body).reply(status, response, headers);
+        nock(url)[method](npath, body).reply(status, response, headers);
       }
     });
     nock(url).log(console.log);

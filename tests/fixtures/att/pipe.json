@@ -14,6 +14,15 @@
   , "status"   : 200
   , "buffer"   : "Qk06AAAAAAAAADYAAAAoAAAAAQAAAP////8BABgAAAAAAAAAAAATCwAAEwsAAAAAAAAAAAAAWm2CAA=="
   }
+, { "method"   : "put"
+  , "path"     : "/att_pipe/nodejs/logo.png"
+  , "body"     : "*"
+  , "response" : "{ \"ok\": true, \"id\": \"new\", \"rev\": \"1-64b327\" }"
+  }
+, { "method"   : "get"
+  , "path"     : "/att_pipe/nodejs/logo.png"
+  , "buffer"   : "logo.png"
+  }
 , { "method"   : "delete"
   , "path"     : "/att_pipe"
   , "status"   : 200
