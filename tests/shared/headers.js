@@ -6,37 +6,37 @@ var specify  = require('specify')
   , nock     = helpers.nock
   ;
 
-var mock = nock(helpers.couch, "opts/headers")
-  , db   = nano.use("opts_headers")
+var mock = nock(helpers.couch, "shared/headers")
+  , db   = nano.use("shared_headers")
   ;
 
 
-specify("opts_headers:setup", timeout, function (assert) {
-  nano.db.create("opts_headers", function (err) {
+specify("shared_headers:setup", timeout, function (assert) {
+  nano.db.create("shared_headers", function (err) {
     assert.equal(err, undefined, "Failed to create database");
   });
 });
 
-specify("opts_headers:test", timeout, function (assert) {
+specify("shared_headers:test", timeout, function (assert) {
   db.attachment.insert("new", "att", "Hello", "text/plain", 
   function(error, hello) {
     assert.equal(error, undefined, "Should store hello");
     assert.equal(hello.ok, true, "Response should be ok");
     assert.ok(hello.rev, "Should have a revision number");
     nano.request({
-      db: "opts_headers",
+      db: "shared_headers",
       doc: "new",
       att: "att",
-      headers: {
-        "If-None-Match": "\"1-5142a2e74e1ec33e6e5b621418210283\""
-      }
+      // should be JSON.stringify(hello.rev)
+      // this should fail npm test
+      headers: { "If-None-Match": "FooBAR" }
     },
     function (error, helloWorld, rh) {
       assert.equal(error, undefined, "Should get the hello");
       assert.equal(rh["status-code"], 304, "status is 'not modified'");
     });
     nano.request({
-      db: "opts_headers",
+      db: "shared_headers",
       doc: "new",
       att: "att"
     },
@@ -47,8 +47,8 @@ specify("opts_headers:test", timeout, function (assert) {
   });
 });
 
-specify("opts_headers:teardown", timeout, function (assert) {
-  nano.db.destroy("opts_headers", function (err) {
+specify("shared_headers:teardown", timeout, function (assert) {
+  nano.db.destroy("shared_headers", function (err) {
     assert.equal(err, undefined, "Failed to destroy database");
     assert.ok(mock.isDone(), "Some mocks didn't run");
   });

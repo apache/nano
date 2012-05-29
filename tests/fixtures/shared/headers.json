@@ -1,28 +1,28 @@
 [
   { "method"   : "put"
-  , "path"     : "/opts_headers"
+  , "path"     : "/shared_headers"
   , "status"   : 201
   , "response" : "{ \"ok\": true }" 
   }
 , { "method"   : "put"
-  , "path"     : "/opts_headers/new/att"
+  , "path"     : "/shared_headers/new/att"
   , "body"     : "\"Hello\""
   , "status"   : 201
   , "response" : "{\"ok\":true,\"id\":\"new\",\"rev\":\"1-5142a2\"}"
   }
-, { "path"       : "/opts_headers/new/att"
+, { "path"       : "/shared_headers/new/att"
   , "status"     : 304
   , "response"   : ""
   , "reqheaders" : {
-      "If-None-Match": "\"1-5142a2e74e1ec33e6e5b621418210283\""
+      "If-None-Match": "\"1-5142a2\""
     }
   }
-, { "path"     : "/opts_headers/new/att"
+, { "path"     : "/shared_headers/new/att"
   , "status"   : 200
   , "response" : "\"Hello\""
   }
 , { "method"   : "delete"
-  , "path"     : "/opts_headers"
+  , "path"     : "/shared_headers"
   , "status"   : 200
   , "response" : "{ \"ok\": true }" 
   }
