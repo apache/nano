@@ -27,9 +27,7 @@ specify("shared_headers:test", timeout, function (assert) {
       db: "shared_headers",
       doc: "new",
       att: "att",
-      // should be JSON.stringify(hello.rev)
-      // this should fail npm test
-      headers: { "If-None-Match": "FooBAR" }
+      headers: { "If-None-Match": JSON.stringify(hello.rev) }
     },
     function (error, helloWorld, rh) {
       assert.equal(error, undefined, "Should get the hello");
