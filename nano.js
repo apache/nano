@@ -275,7 +275,7 @@ module.exports = exports = nano = function database_module(cfg) {
 
         try { parsed = JSON.parse(b); } catch (err) { parsed = b; }
 
-        if (status_code >= 200 && status_code < 300) {
+        if (status_code >= 200 && status_code < 400) {
           log({err: null, body: parsed, headers: rh});
           callback(null,parsed,rh);
           return stream;
