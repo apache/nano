@@ -55,16 +55,17 @@ helpers.nock = function helpersNock(url, fixture) {
       , nocks   = helpers.loadFixture(fixture + '.json', true)
       ;
     nocks.forEach(function(n) {
-      var path     = n.path
-        , method   = n.method   || "get"
-        , status   = n.status   || 200
-        , response = n.buffer
-                   ? new Buffer(n.buffer, 'base64') 
-                   : n.response || ""
-        , headers  = n.headers  || {}
-        , body     = n.base64
-                   ? new Buffer(n.base64, 'base64').toString()
-                   : n.body     || ""
+      var path       = n.path
+        , method     = n.method     || "get"
+        , status     = n.status     || 200
+        , response   = n.buffer
+                     ? new Buffer(n.buffer, 'base64') 
+                     : n.response   || ""
+        , headers    = n.headers    || {}
+        , reqHeaders = n.reqHeaders || {}
+        , body       = n.base64
+                     ? new Buffer(n.base64, 'base64').toString()
+                     : n.body       || ""
         ;
 
       if(typeof response === "string" && endsWith(response, '.json')) {
@@ -73,13 +74,21 @@ helpers.nock = function helpersNock(url, fixture) {
       if(typeof headers === "string" && endsWith(headers, '.json')) {
         headers = helpers.loadFixture(path.join(fixture, headers));
       }
+      var n = nock(url);
+      var b = body;
       if(body==="*") {
-        nock(url).filteringRequestBody(function(path) {
+        n = n.filteringRequestBody(function(path) {
           return "*";
-        })[method](path, "*").reply(status, response, headers);
-      } else {
-        nock(url)[method](path, body).reply(status, response, headers);
+        });
+        b = "*";
       }
+      if(reqHeaders==={}) {
+        for (var k in reqHeaders) {
+          n = n.matchHeader(k, reqHeaders[k]);
+        }
+      }
+
+      n[method](path, b).reply(status, response, headers);
     });
     nock(url).log(console.log);
     return nock(url);
