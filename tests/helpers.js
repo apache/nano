@@ -62,7 +62,7 @@ helpers.nock = function helpersNock(url, fixture) {
                      ? new Buffer(n.buffer, 'base64') 
                      : n.response   || ""
         , headers    = n.headers    || {}
-        , reqHeaders = n.reqHeaders || {}
+        , reqheaders = n.reqheaders || {}
         , body       = n.base64
                      ? new Buffer(n.base64, 'base64').toString()
                      : n.body       || ""
@@ -82,9 +82,9 @@ helpers.nock = function helpersNock(url, fixture) {
         });
         b = "*";
       }
-      if(reqHeaders==={}) {
-        for (var k in reqHeaders) {
-          n = n.matchHeader(k, reqHeaders[k]);
+      if(reqheaders!=={}) {
+        for (var k in reqheaders) {
+          n = n.matchHeader(k, reqheaders[k]);
         }
       }
 

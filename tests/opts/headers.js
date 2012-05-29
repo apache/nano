@@ -35,6 +35,15 @@ specify("opts_headers:test", timeout, function (assert) {
       assert.equal(error, undefined, "Should get the hello");
       assert.equal(rh["status-code"], 304, "status is 'not modified'");
     });
+    nano.request({
+      db: "opts_headers",
+      doc: "new",
+      att: "att"
+    },
+    function (error, helloWorld, rh) {
+      assert.equal(error, undefined, "Should get the hello");
+      assert.equal(rh["status-code"], 200, "status is 'ok'");
+    });
   });
 });
 

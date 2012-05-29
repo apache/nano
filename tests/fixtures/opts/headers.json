@@ -13,8 +13,8 @@
 , { "path"       : "/opts_headers/new/att"
   , "status"     : 304
   , "response"   : ""
-  , "reqHeaders" : {
-      "If-None-Match": "1-5142a2e74e1ec33e6e5b621418210283"
+  , "reqheaders" : {
+      "If-None-Match": "\"1-5142a2e74e1ec33e6e5b621418210283\""
     }
   }
 , { "path"     : "/opts_headers/new/att"
