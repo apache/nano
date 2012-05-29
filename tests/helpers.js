@@ -82,13 +82,13 @@ helpers.nock = function helpersNock(url, fixture) {
           return "*";
         })[method](npath, "*").reply(status, response, headers);
       } else {
-		var n = nock(url);
+        var nk = nock(url);
         if(reqheaders !== {}) {
           for (var k in reqheaders) {
-            n = n.matchHeader(k, reqheaders[k]);
+            nk = nk.matchHeader(k, reqheaders[k]);
           }
         }
-        n[method](npath, body).reply(status, response, headers);
+        nk[method](npath, body).reply(status, response, headers);
       }
     });
     nock(url).log(console.log);
