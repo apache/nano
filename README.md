@@ -329,7 +329,7 @@ alice.head('rabbit', { revs_info: true }, function(err, _, headers) {
 ### db.bulk(docs, [params], [callback])
 
 bulk operations(update/delete/insert) on the database, refer to the 
-[couchdb doc](http://wiki.apache.org/couchdb/http_bulk_document_api).
+[couchdb doc](http://wiki.apache.org/couchdb/HTTP_Bulk_Document_API).
 
 ### db.list([params], [callback])
 
@@ -348,7 +348,7 @@ alice.list(function(err, body) {
 ### db.fetch(docnames, [params], [callback])
 
 bulk fetch of the database documents, `docnames` are specified as per 
-[couchdb doc](http://wiki.apache.org/couchdb/http_bulk_document_api).
+[couchdb doc](http://wiki.apache.org/couchdb/HTTP_Bulk_Document_API).
 additional query string `params` can be specified, `include_doc` is always set
 to `true`.  
 
