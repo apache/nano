@@ -78,6 +78,7 @@ module.exports = exports = nano = function database_module(cfg) {
   *        {opts.path:string:optional} a full path, override `doc` and `att`
   *        {opts.doc:string:optional} document name
   *        {opts.att:string:optional} attachment name
+  *        {opts.headers:object:optional} additional http headers
   *        {opts.content_type:string:optional} content type, default to json
   *        {opts.body:object|string|binary:optional} document or attachment body
   *        {opts.encoding:string:optional} encoding for attachments

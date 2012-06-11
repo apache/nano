@@ -246,15 +246,16 @@ alias for `nano.use`
 
 makes a request to couchdb, the available `opts` are:
 
-* `opts.db` - the database name
-* `opts.method` - the http method, defaults to `get`
-* `opts.path` - the full path of the request, overrides `opts.doc` and
+* `opts.db` – the database name
+* `opts.method` – the http method, defaults to `get`
+* `opts.path` – the full path of the request, overrides `opts.doc` and
   `opts.att`
-* `opts.doc` - the document name
-* `opts.att` - the attachment name
-* `opts.content_type` - the content type of the request, default to `json`
-* `opts.body` - the document or attachment body
-* `opts.encoding` - the encoding for attachments
+* `opts.doc` – the document name
+* `opts.att` – the attachment name
+* `opts.content_type` – the content type of the request, default to `json`
+* `opts.headers` – additional http headers, overrides existing ones
+* `opts.body` – the document or attachment body
+* `opts.encoding` – the encoding for attachments
 
 ### nano.relax(opts, [callback])
 
