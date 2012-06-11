@@ -21,6 +21,7 @@
   , "Oliver Leics (http://oleics.github.com)"
   , "Jonathan Mahoney (http://mahoney.eu)"
   , "Dominique Sandoz <dominique.sandoz@gmail.com>"
+  , "John Lancaster (http://jlank.com)"
   ]
 , "keywords"        : 
   ["couchdb", "data", "request", "json", "nosql", "micro", "nano", "database"]
