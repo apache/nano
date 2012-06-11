@@ -316,12 +316,12 @@ alice.get('rabbit', { revs_info: true }, function(err, body) {
 });
 ```
 
-### db.head(docname, [params], [callback])
+### db.head(docname, [callback])
 
 same as `get` but lightweight version that returns headers only.
 
 ``` js
-alice.head('rabbit', { revs_info: true }, function(err, _, headers) {
+alice.head('rabbit', function(err, _, headers) {
   if (!err)
     console.log(headers);
 });
