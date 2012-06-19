@@ -10,6 +10,11 @@
   , "response" : "{ \"ok\": true }" 
   }
 , { "method"   : "put"
+  , "path"     : "/db_replica2"
+  , "status"   : 201
+  , "response" : "{ \"ok\": true }" 
+  }
+, { "method"   : "put"
   , "status"   : 201
   , "path"     : "/db_replicate/foobar"
   , "body"     : "{\"foo\":\"bar\"}"
@@ -37,6 +42,16 @@
   , "status"   : 200
   , "response" : "{\"total_rows\":3,\"offset\":0,\"rows\":[{\"id\":\"barfoo\",\"key\":\"barfoo\",\"value\":{\"rev\":\"1-41412c293dade3fe73279cba8b4cece4\"}},{\"id\":\"foobar\",\"key\":\"foobar\",\"value\":{\"rev\":\"1-4c6114c65e295552ab1019e2b046b10e\"}},{\"id\":\"foobaz\",\"key\":\"foobaz\",\"value\":{\"rev\":\"1-cfa20dddac397da5bf0be2b50fb472fe\"}}]}" 
   }
+, { "method"   : "post"
+  , "status"   : 201
+  , "path"     : "/_replicate"
+  , "body"     : "{\"source\":\"http://localhost:5984/db_replicate\",\"target\":\"http://localhost:5984/db_replica2\"}"
+  , "response" : "{\"ok\":true}"
+  }
+, { "path"     : "/db_replica2/_all_docs"
+  , "status"   : 200
+  , "response" : "{\"total_rows\":3,\"offset\":0,\"rows\":[{\"id\":\"barfoo\",\"key\":\"barfoo\",\"value\":{\"rev\":\"1-41412c293dade3fe73279cba8b4cece4\"}},{\"id\":\"foobar\",\"key\":\"foobar\",\"value\":{\"rev\":\"1-4c6114c65e295552ab1019e2b046b10e\"}},{\"id\":\"foobaz\",\"key\":\"foobaz\",\"value\":{\"rev\":\"1-cfa20dddac397da5bf0be2b50fb472fe\"}}]}" 
+  }
 , { "method"   : "delete"
   , "path"     : "/db_replicate"
   , "status"   : 200
@@ -44,6 +59,11 @@
   }
 , { "method"   : "delete"
   , "path"     : "/db_replica"
+  , "status"   : 200
+  , "response" : "{ \"ok\": true }" 
+  }
+, { "method"   : "delete"
+  , "path"     : "/db_replica2"
   , "status"   : 200
   , "response" : "{ \"ok\": true }" 
   }

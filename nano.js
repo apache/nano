@@ -472,8 +472,8 @@ module.exports = exports = nano = function database_module(cfg) {
   *
   * e.g. nano.db.replicate(db_1, db_2);
   *
-  * @param {source:string} name of the source database
-  * @param {target:string} name of the target database
+  * @param {source:string|object} name of the source database, or database
+  * @param {target:string|object} name of the target database, or database
   * @param {opts:object:optional} options to the replicator
   *
   * @see relax
@@ -482,6 +482,32 @@ module.exports = exports = nano = function database_module(cfg) {
     if(typeof opts === "function") {
       callback  = opts;
       opts      = {};
+    }
+    if(typeof target === "object") {
+      var target_cfg = target.config || {};
+      if(target_cfg.url && target_cfg.db) {
+        target = u.resolve(target_cfg.url, target_cfg.db);
+      }
+      else {
+        return errs.handle(errs.create(
+          { "note"  : "replication target is invalid"
+          , "scope" : "nano"
+          , "errid" : "replication_target"
+          }), callback);
+      }
+    }
+    if(typeof source === "object") {
+      var source_cfg = source.config || {};
+      if(source_cfg.url && source_cfg.db) {
+        source = u.resolve(source_cfg.url, source_cfg.db);
+      }
+      else {
+        return errs.handle(errs.create(
+          { "note"  : "replication source is invalid"
+          , "scope" : "nano"
+          , "errid" : "replication_source"
+          }), callback);
+      }
     }
     opts.source = source;
     opts.target = target;
@@ -646,7 +672,7 @@ module.exports = exports = nano = function database_module(cfg) {
     * @param {update_name:string} update method to call
     * @param {doc_name:string} document name to update
     * @param {params:object} additions to the querystring
-   */
+    */
    function update_with_handler_doc(design_name, update_name, 
      doc_name, body, callback) {
      if(typeof body === "function") {
@@ -751,7 +777,7 @@ module.exports = exports = nano = function database_module(cfg) {
     // db level exports
     public_functions =
       { info              : function(cb) { return get_db(db_name,cb); }
-      , replicate         : function(target,opts,cb) {
+      , replicate         : function(target, opts, cb) {
           return replicate_db(db_name,target,opts,cb);
         }
       , compact           : function(cb) { 
