@@ -48,11 +48,11 @@ specify("view_query:test", timeout, function (assert) {
   });
 });
 
-//specify("view_query:teardown", timeout, function (assert) {
-//  nano.db.destroy("view_query", function (err) {
-//    assert.equal(err, undefined, "Failed to destroy database");
-//    assert.ok(mock.isDone(), "Some mocks didn't run");
-//  });
-//});
-//
+specify("view_query:teardown", timeout, function (assert) {
+  nano.db.destroy("view_query", function (err) {
+    assert.equal(err, undefined, "Failed to destroy database");
+    assert.ok(mock.isDone(), "Some mocks didn't run");
+  });
+});
+
 specify.run(process.argv.slice(2));
