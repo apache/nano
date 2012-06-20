@@ -39,6 +39,7 @@ function isEmpty(object) {
  * be creative. be silly. have fun! relax (and don't forget to compact).
  *
  * dinosaurs spaceships!
+ *
  */
 module.exports = exports = nano = function database_module(cfg) {
   var public_functions = {}
@@ -51,8 +52,8 @@ module.exports = exports = nano = function database_module(cfg) {
     , port
     ;
 
- /****************************************************************************
-  * relax                                                                    *
+ /***************************************************************************
+  * relax                                                                   *
   ***************************************************************************/
  /*
   * relax
@@ -305,8 +306,39 @@ module.exports = exports = nano = function database_module(cfg) {
     }
   }
 
- /****************************************************************************
-  * db                                                                       *
+ /***************************************************************************
+  * auth                                                                    *
+  ***************************************************************************/
+  /*
+   * gets a session going on for you
+   *
+   * e.g.
+   * nano.auth(username, password, function (err, body, headers) {
+   *   if (err) { 
+   *     return console.log("oh noes!")
+   *   }
+   * 
+   *   if (headers && headers['set-cookie']) {
+   *     console.log("cookie monster likes " + headers['set-cookie']);
+   *   }
+   * });
+   * 
+   * @param {username:string} username
+   * @param {password:string} password
+   *
+   * @see relax
+   */
+  function auth_server(username, password, callback) {
+    return relax(
+      { method       : "POST"
+      , db           : "_session"
+      , form         : { "name" : username, "password" : password }
+      , content_type : "application/x-www-form-urlencoded; charset=utf-8"
+      }, callback);
+  }
+
+ /***************************************************************************
+  * db                                                                      *
   ***************************************************************************/
  /*
   * creates a couchdb database
@@ -789,6 +821,7 @@ module.exports = exports = nano = function database_module(cfg) {
       , follow            : function(params,cb) {
             return follow_db(db_name,params,cb);
         }
+      , auth              : auth_server                      // alias
       , insert            : insert_doc
       , get               : get_doc
       , head              : head_doc
@@ -803,7 +836,7 @@ module.exports = exports = nano = function database_module(cfg) {
         , destroy         : destroy_att
         }
       , atomic            : update_with_handler_doc
-      , updateWithHandler : update_with_handler_doc // alias
+      , updateWithHandler : update_with_handler_doc          // alias
       };
 
     public_functions.view         = view_docs;
@@ -822,7 +855,7 @@ module.exports = exports = nano = function database_module(cfg) {
       , destroy   : destroy_db
       , list      : list_dbs
       , use       : document_module   // alias
-      , scope     : document_module // alias
+      , scope     : document_module   // alias
       , compact   : compact_db
       , replicate : replicate_db
       , changes   : changes_db
@@ -832,7 +865,8 @@ module.exports = exports = nano = function database_module(cfg) {
     , scope       : document_module        // alias
     , request     : relax
     , relax       : relax                  // alias
-    , dinosaur    : relax               // alias
+    , dinosaur    : relax                  // alias
+    , auth        : auth_server
     };
 
   // handle different type of configs

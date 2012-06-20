@@ -24,12 +24,8 @@ specify("shared_cookie:setup", timeout, function (assert) {
     }, function (err, response, headers) {
       assert.equal(err, undefined, "Failed to create admin user");
       // authenticate
-      nano.relax(
-      { method       : "POST"
-      , db           : "_session"
-      , form         : { "name" : "admin", "password" : "password" }
-      , content_type : "application/x-www-form-urlencoded; charset=utf-8"
-      }, function (err, response, headers) {
+      nano.auth(helpers.username, helpers.password, 
+      function (err, response, headers) {
         assert.equal(err, undefined, "Should have logged in successfully");
         assert.ok(headers['set-cookie'], 
           "Response should have a set-cookie header");
