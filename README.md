@@ -463,13 +463,7 @@ var nano     = require('nano')('http://localhost:5984')
   , cookies  = {} // store cookies, normally redis or something
   ;
 
-nano.request(
-  { method      : "POST"
-  , db          : "_session"
-  , form        : { name: username, password: userpass }
-  ,content_type : "application/x-www-form-urlencoded; charset=utf-8"
-  }
-, function (err, body, headers) {
+nano.auth(username, userpass, function (err, body, headers) {
   if (err) { 
     return callback(err);
   }
