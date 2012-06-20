@@ -455,8 +455,6 @@ check out the tests for a fully functioning example.
 
 nano supports making requests using couchdb's [cookie authentication](http://guide.couchdb.org/editions/1/en/security.html#cookies) functionality. there's a [step-by-step guide here](http://mahoney.eu/2012/05/23/couchdb-cookie-authentication-nodejs-nano/), but essentially you just:
 
-this is code similar to what a login would look like:
-
 ``` js
 var nano     = require('nano')('http://localhost:5984')
   , username = 'user'
@@ -484,7 +482,7 @@ nano.request(
 });
 ```
 
-reusing a cookie
+reusing a cookie:
 
 ``` js
 var auth = "some stored cookie"
