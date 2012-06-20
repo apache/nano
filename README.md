@@ -455,62 +455,56 @@ check out the tests for a fully functioning example.
 
 nano supports making requests using couchdb's [cookie authentication](http://guide.couchdb.org/editions/1/en/security.html#cookies) functionality. there's a [step-by-step guide here](http://mahoney.eu/2012/05/23/couchdb-cookie-authentication-nodejs-nano/), but essentially you just:
 
-login...
+this is code similar to what a login would look like:
 
 ``` js
-var nano = require('nano')('http://localhost:5984'),
-    username = 'user', // your user's credentials (passed in from a form on your site for example)
-    userpass = 'pass';
+var nano     = require('nano')('http://localhost:5984')
+  , username = 'user'
+  , userpass = 'pass'
+  , callback = console.log // this would normally be some callback
+  , cookies  = {} // store cookies, normally redis or something
+  ;
 
+nano.request(
+  { method      : "POST"
+  , db          : "_session"
+  , form        : { name: username, password: userpass }
+  ,content_type : "application/x-www-form-urlencoded; charset=utf-8"
+  }
+, function (err, body, headers) {
+  if (err) { 
+    return callback(err);
+  }
 
-    nano.request({
-            method: "POST",
-            db: "_session",
-            form: { name: username, password: userpass },
-            content_type: "application/x-www-form-urlencoded; charset=utf-8"
-        },
-        function (err, body, headers) {
-            if (err) { res.send(err.reason); return; }
+  if (headers && headers['set-cookie']) {
+    cookies[user] = headers['set-cookie'];
+  }
 
-            // send couchdb's cookie right on through to the client
-            if (headers && headers['set-cookie']) {
-                res.cookie(headers['set-cookie']);
-            }
-
-            res.send('logged in!');
-        });
+  callback(null, "It worked");
+});
 ```
 
-... perform tasks using cookie authentication ...
+reusing a cookie
 
 ``` js
-var auth = req.cookies['AuthSession'],
-    nano;
+var auth = "some stored cookie"
+  , callback = console.log // this would normally be some callback
+  , nano require('nano')(
+    { url : 'http://localhost:5984/alice', cookie: 'AuthSession=' + auth });
+  ;
 
-if (!auth) { res.send(401); return; }
-// set-up nano with cookie authentication
-nano = require('nano')({ url : 'http://localhost:5984', cookie: 'AuthSession=' + auth });
+alice.insert(doc, function (err, body, headers) {
+  if (err) {
+    return callback(err);
+  }
 
-var alice = nano.use('alice');
+  // change the cookie if couchdb tells us too
+  if (headers && headers['set-cookie']) {
+    auth = headers['set-cookie'];
+  }
 
-alice.insert(doc, null,
-    function (err, body, headers) {
-        if (err) { res.send(err.reason); return; }
-
-        // update the cookie held in the browser, if couchdb has sent an updated version
-        if (headers && headers['set-cookie']) { res.cookie(headers['set-cookie']); }
-
-        res.send('ok');
-    }
-  );
-```
-
-... and finally, logout ...
-
-``` js
-// the couchdb cookie name is AuthSession
-res.clearCookie('AuthSession');
-res.send('logged out!');
+  callback(null, "It worked");
+});
 ```
 
 ## advanced features
