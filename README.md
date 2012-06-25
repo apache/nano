@@ -327,6 +327,19 @@ alice.head('rabbit', function(err, _, headers) {
 });
 ```
 
+### db.copy(src_doc, dest_doc, opts, [callback])
+
+`copy` the contents (and attachments) of a document
+to a new document, or overwrite an existing target document
+
+``` js
+alice.copy('rabbit', 'rabbit2', { overwrite: true }, function(err, _, headers) {
+  if (!err)
+    console.log(headers);
+});
+```
+
+
 ### db.bulk(docs, [params], [callback])
 
 bulk operations(update/delete/insert) on the database, refer to the 
