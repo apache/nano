@@ -72,7 +72,7 @@ module.exports = exports = nano = function database_module(cfg) {
   * @error {request:socket} problem connecting to couchdb
   * @error {couch:*} an error proxied from couchdb
   *
-  * @param {opts:object|string} request options; 
+  * @param {opts:object|string} request options;
   *          e.g. {db: "test", method: "GET"}
   *        {opts.db:string} database name
   *        {opts.method:string:optional} http method, defaults to "GET"
@@ -81,7 +81,8 @@ module.exports = exports = nano = function database_module(cfg) {
   *        {opts.att:string:optional} attachment name
   *        {opts.headers:object:optional} additional http headers
   *        {opts.content_type:string:optional} content type, default to json
-  *        {opts.body:object|string|binary:optional} document or attachment body
+  *        {opts.body:object|string|binary:optional} document or attachment
+  *        body
   *        {opts.encoding:string:optional} encoding for attachments
   * @param {callback:function:optional} function to call back
   */
@@ -118,7 +119,7 @@ module.exports = exports = nano = function database_module(cfg) {
 
     // cookie jar support
     // check github.com/mikeal/request for docs
-    if (opts.jar) { 
+    if (opts.jar) {
       req.jar = opts.jar;
     }
 
@@ -138,7 +139,7 @@ module.exports = exports = nano = function database_module(cfg) {
     else if(opts.doc)  {
       // not a design document
       if(!/^_design/.test(opts.doc)) {
-        try { 
+        try {
           req.uri += "/" + encodeURIComponent(opts.doc);
         }
         catch (error) {
@@ -181,7 +182,7 @@ module.exports = exports = nano = function database_module(cfg) {
         ['startkey', 'endkey', 'key', 'keys'].forEach(function (key) {
           if (key in params) {
             try { params[key] = JSON.stringify(params[key]); }
-            catch (err) { 
+            catch (err) {
               return errs.handle(errs.merge(err,
                 { "note"  : "bad params: " + key + " = " + params[key]
                 , "scope" : "nano"
@@ -198,7 +199,7 @@ module.exports = exports = nano = function database_module(cfg) {
           }), callback);
       }
 
-      try { 
+      try {
         req.uri += "?" + qs.stringify(params);
       }
       catch (err2) {
@@ -225,7 +226,7 @@ module.exports = exports = nano = function database_module(cfg) {
               return value;
             }
           });
-        } catch (err3) { 
+        } catch (err3) {
           return errs.handle(errs.merge(err3,
              { "note"  : "body seems to be invalid json"
              , "scope" : "nano"
@@ -236,17 +237,18 @@ module.exports = exports = nano = function database_module(cfg) {
     }
 
     if(opts.form) {
-      req.headers['content-type'] = 'application/x-www-form-urlencoded; charset=utf-8';
+      req.headers['content-type'] = 
+        'application/x-www-form-urlencoded; charset=utf-8';
       req.body = qs.stringify(opts.form).toString('utf8');
     }
-    
+
     log(req);
 
     // streaming mode
     if(!callback) {
       try {
         return request(req);
-      } catch (err4) { 
+      } catch (err4) {
         return errs.handle(errs.merge(err4,
            { "note"  : "request threw when you tried to stream"
            , "scope" : "request"
@@ -297,7 +299,7 @@ module.exports = exports = nano = function database_module(cfg) {
         }
       });
       return stream;
-    } catch(err5) { 
+    } catch(err5) {
       return errs.merge(err5,
          { "note"  : "request threw when you tried to create the object"
          , "scope" : "request"
@@ -461,7 +463,7 @@ module.exports = exports = nano = function database_module(cfg) {
    * @param {params:object:optional} additions to the querystring
    *   check the follow documentation for the full api
    *   https://github.com/iriscouch/follow
-   * 
+   *
    *
    * @see relax
    */
@@ -615,7 +617,7 @@ module.exports = exports = nano = function database_module(cfg) {
    /*
     * get the head of a document from a couchdb database
     *
-    * e.g. db2.head("foo", function (e,b) {
+    * e.g. db2.head("foo", function (e,b,h) {
     *        console.log(e,b,h);
     *        return;
     *      });
@@ -628,6 +630,37 @@ module.exports = exports = nano = function database_module(cfg) {
       return relax(
         { db: db_name, doc: doc_name, method: "HEAD"
         , params: {} }, callback);
+    }
+
+   /*
+    * copy a document to a new document, or overwrite an existing document
+    * [1]: http://wiki.apache.org/couchdb/HTTP_Document_API#COPY
+    *
+    * e.g. db2.copy("source", "target", { overwrite: true }, function(e,b,h) {
+    *        console.log(e,b,h);
+    *        return;
+    *      });
+    *
+    * @param {doc_src:string} source document name
+    * @param {doc_dest:string} destination document name
+    * @param {opts:object:optional} set overwrite preference
+    *
+    * @see relax
+    */
+    function copy_doc(doc_src, doc_dest, opts, callback) {
+      if(typeof opts === "function") {
+        callback = opts;
+        opts     = {};
+      }
+      var params = { db: db_name, doc: doc_src, method: "COPY"
+        , headers: {"Destination": doc_dest} };
+      head_doc(doc_dest, function (e,b,h) {
+        if (!e && opts.overwrite) {
+          params.headers.Destination += "?rev=" + 
+            h.etag.substring(1, h.etag.length - 1);
+        }
+        return relax(params, callback);
+      });
     }
 
    /*
@@ -653,7 +686,8 @@ module.exports = exports = nano = function database_module(cfg) {
     * [1]: http://wiki.apache.org/couchdb/HTTP_Bulk_Document_API
     *
     * @param {doc_names:object} document keys as per the couchdb api[1]
-    * @param {params:object} additions to the querystring, note that include_docs is always set to true
+    * @param {params:object} additions to the querystring, note 
+    * that include_docs is always set to true
     *
     * @see get_doc
     * @see relax
@@ -705,13 +739,13 @@ module.exports = exports = nano = function database_module(cfg) {
     * @param {doc_name:string} document name to update
     * @param {params:object} additions to the querystring
     */
-   function update_with_handler_doc(design_name, update_name, 
+   function update_with_handler_doc(design_name, update_name,
      doc_name, body, callback) {
      if(typeof body === "function") {
        callback = body;
        body     = {};
      }
-     var update_path = '_design/' + design_name + '/_update/' + 
+     var update_path = '_design/' + design_name + '/_update/' +
        update_name + '/' + doc_name;
      return relax(
        { db: db_name, path: update_path, method: "PUT"
@@ -812,8 +846,8 @@ module.exports = exports = nano = function database_module(cfg) {
       , replicate         : function(target, opts, cb) {
           return replicate_db(db_name,target,opts,cb);
         }
-      , compact           : function(cb) { 
-          return compact_db(db_name,cb); 
+      , compact           : function(cb) {
+          return compact_db(db_name,cb);
         }
       , changes           : function(params,cb) {
           return changes_db(db_name,params,cb);
@@ -825,12 +859,13 @@ module.exports = exports = nano = function database_module(cfg) {
       , insert            : insert_doc
       , get               : get_doc
       , head              : head_doc
+      , copy              : copy_doc
       , destroy           : destroy_doc
       , bulk              : bulk_docs
       , list              : list_docs
       , fetch             : fetch_docs
       , config            : {url: cfg.url, db: db_name}
-      , attachment        : 
+      , attachment        :
         { insert          : insert_att
         , get             : get_att
         , destroy         : destroy_att
@@ -848,7 +883,7 @@ module.exports = exports = nano = function database_module(cfg) {
   }
 
   // server level exports
-  public_functions = 
+  public_functions =
     { db          :
       { create    : create_db
       , get       : get_db
@@ -912,7 +947,7 @@ module.exports = exports = nano = function database_module(cfg) {
   path       = u.parse(cfg.url);
   path_array = path.pathname.split('/').filter(function(e) { return e; });
 
-  // nano('http://couch.nodejitsu.com/db1') 
+  // nano('http://couch.nodejitsu.com/db1')
   //   should return a database
   // nano('http://couch.nodejitsu.com')
   //   should return a nano object
