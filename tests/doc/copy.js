@@ -7,7 +7,6 @@ var specify  = require('specify')
 
 var mock = nock(helpers.couch, "doc/copy")
   , db   = nano.use("doc_copy")
-  , rev
   ;
 
 specify("doc_copy:setup", timeout, function (assert) {
@@ -17,27 +16,34 @@ specify("doc_copy:setup", timeout, function (assert) {
       assert.equal(error, undefined, "Should have stored foo");
       assert.equal(foo.ok, true, "Response should be ok");
       assert.ok(foo.rev, "Response should have rev");
-      rev = foo.rev;
     });
     db.insert({"baz": "foo"}, "foo_dest", function (error, foo) {
       assert.equal(error, undefined, "Should have stored foo");
       assert.equal(foo.ok, true, "Response should be ok");
       assert.ok(foo.rev, "Response should have rev");
-      rev = foo.rev;
     });
   });
 });
 
-specify("doc_copy:test", timeout, function (assert) {
-  db.copy("foo_src", "foo_dest", { overwrite: true }, function (error, response, headers) {
-    assert.equal(error, undefined, "Should have copied and overwritten foo_src to foo_dest");
+specify("doc_copy:overwrite", timeout, function (assert) {
+  db.copy("foo_src", "foo_dest", { overwrite: true }, 
+  function (error, response, headers) {
+    assert.equal(error, undefined, 
+      "Should have copied and overwritten foo_src to foo_dest");
     assert.equal(headers["status-code"], 201, "Status code should be 201");
   });
-  db.copy("foo_src", "foo_dest", { overwrite: false }, function (error, response, headers) {
+});
+
+specify("doc_copy:no_overwrite", timeout, function (assert) {
+  db.copy("foo_src", "foo_dest", function (error, response, headers) {
     assert.equal(error.error, "conflict", "Should have a document conflict.");
   });
+});
+
+specify("doc_copy:new_doc", timeout, function (assert) {
   db.copy("foo_src", "baz_dest", function (error, response, headers) {
-    assert.equal(error, undefined, "Should have copied foo_src to new baz_dest document");
+    assert.equal(error, undefined, 
+      "Should have copied foo_src to new baz_dest document");
     assert.equal(headers["status-code"], 201, "Status code should be 201");
   });
 });
