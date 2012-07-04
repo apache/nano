@@ -562,6 +562,7 @@ then open `/tmp/rabbit.png` and you will see the rabbit picture.
 * article: [document update handler support](http://jackhq.tumblr.com/post/16035106690/nano-v1-2-x-document-update-handler-support-v1-2-x)
 * article: [nano 3](http://writings.nunojob.com/2012/05/Nano-3.html)
 * article: [securing a site with couchdb cookie authentication using node.js and nano](http://mahoney.eu/2012/05/23/couchdb-cookie-authentication-nodejs-nano/)
+* article: [adding copy to nano](http://blog.jlank.com/2012/07/04/adding-copy-to-nano/)
 
 ## roadmap
 
