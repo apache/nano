@@ -88,7 +88,7 @@ helpers.nock = function helpersNock(url, fixture) {
             nk = nk.matchHeader(k, reqheaders[k]);
           }
         }
-        nk[method](npath, body).reply(status, response, headers);
+        nk.intercept(npath, method, body).reply(status, response, headers);
       }
     });
     nock(url).log(console.log);
