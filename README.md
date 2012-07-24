@@ -450,6 +450,21 @@ alice.view('characters', 'crazy_ones', function(err, body) {
 });
 ```
 
+### db.show(designname, showname, docId, [params], [callback])
+
+calls a show function of the specified design for the document specified by docId with 
+optional query string additions `params`.  
+
+``` js
+alice.show('characters', 'formatDoc', '3621898430' function(err, doc) {
+  if (!err) {
+    console.log(doc);
+  }
+});
+```
+take a look at the [couchdb wiki](http://wiki.apache.org/couchdb/Formatting_with_Show_and_List#Showing_Documents)
+for possible query paramaters and more information on show functions.
+
 ### db.atomic(designname, updatename, docname, [body], [callback])
 
 calls the design's update function with the specified doc in input.

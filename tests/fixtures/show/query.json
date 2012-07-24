@@ -1,0 +1,39 @@
+[
+  { "method"   : "put"
+  , "path"     : "/show_query"
+  , "status"   : 201
+  , "response" : "{ \"ok\": true }" 
+  }
+, { "method"   : "put"
+  , "path"     : "/show_query/_design/people"
+  , "body"     : "{\"shows\":{\"singleDoc\":\"function (doc, req) { return { body: { name: doc.name, city: doc.city, format: 'json' }, headers: { 'Content-Type': 'application/json' } }; }\"}}"
+  , "status"   : 201
+  , "response" : "{\"ok\":true,\"id\":\"_design/people\",\"rev\":\"1-14e6bc\"}"
+  }
+, { "method"   : "put"
+  , "status"   : 201
+  , "path"     : "/show_query/p_clemens"
+  , "body"     : "{\"name\":\"Clemens\",\"city\":\"Dresden\"}"
+  , "response" : "{\"ok\":true,\"id\":\"p_clemens\",\"rev\":\"1-4c6114\"}"
+  }
+, { "method"   : "put"
+  , "status"   : 201
+  , "path"     : "/show_query/p_randall"
+  , "body"     : "{\"name\":\"Randall\",\"city\":\"San Francisco\"}"
+  , "response" : "{\"ok\":true,\"id\":\"p_randall\",\"rev\":\"1-4c6114\"}"
+  }
+, { "method"   : "put"
+  , "status"   : 201
+  , "path"     : "/show_query/p_nuno"
+  , "body"     : "{\"name\":\"Nuno\",\"city\":\"New York\"}"
+  , "response" : "{\"ok\":true,\"id\":\"p_nuno\",\"rev\":\"1-4c6114\"}"
+  }
+, { "path"     : "/show_query/_design/people/_show/singleDoc/p_clemens"
+  , "response" : "{\"name\":\"Clemens\",\"city\":\"Dresden\",\"format\":\"json\"}\n"
+  }
+, { "method"   : "delete"
+  , "path"     : "/show_query"
+  , "status"   : 200
+  , "response" : "{ \"ok\": true }" 
+  }
+]

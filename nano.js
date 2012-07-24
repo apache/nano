@@ -736,6 +736,26 @@ module.exports = exports = nano = function database_module(cfg) {
       }
     }
 
+    /*
+    * calls a show function
+    *
+    * @param {design_name:string} design document name
+    * @param {show_fn_name:string} show function to call
+    * @param {docId:string} id of the doc
+    * @param {params:object:optional} additions to the querystring
+    *
+    * @see relax
+    */
+    function show_doc(design_name,show_fn_name,docId,params,callback) {
+      if(typeof params === "function") {
+        callback = params;
+        params   = {};
+      }
+      var show_fn_path = '_design/' + design_name + '/_show/'  + show_fn_name + '/' + docId;
+      return relax({db: db_name, path: show_fn_path
+                   , method: "GET", params: params},callback);
+    }
+
    /*
     * calls document update handler design document
     *
@@ -876,6 +896,7 @@ module.exports = exports = nano = function database_module(cfg) {
         , get             : get_att
         , destroy         : destroy_att
         }
+      , show              : show_doc
       , atomic            : update_with_handler_doc
       , updateWithHandler : update_with_handler_doc          // alias
       };
