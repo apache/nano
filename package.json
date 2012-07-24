@@ -32,12 +32,12 @@
   }
 , "devDependencies" : 
   { "async"         : "0.1.x"
-  , "specify"       : "0.4.x"
+  , "specify"       : "0.5.x"
   , "nock"          : "0.13.x"
   }
 , "scripts"         : 
-  { "test"          : "ls -tr tests/*/*.js | NOCK=on xargs -I{} node {}"
-  , "nock_off"      : "ls -tr tests/*/*.js | xargs -I{} node {}"
+  { "test"          : "NOCK=ON node node_modules/specify/bin/specify"
+  , "nock_off"      : "node node_modules/specify/bin/specify"
   }
 , "main"            : "./nano.js"
 , "engines"         : { "node": ">=0.3.6" }
