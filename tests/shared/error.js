@@ -25,6 +25,7 @@ specify("shared_error:setup", timeout, function (assert) {
 specify("shared_error:conflict", timeout, function (assert) {
   db.insert({"foo": "bar"}, "foobaz", function (error, response) {
     assert.equal(error["status-code"], 409, "Should be conflict");
+    assert.equal(error.message, error.reason, "Message should be reason");
     assert.equal(error.scope, "couch", "Scope is couch");
     assert.equal(error.error, "conflict", "Error is conflict");
   });
@@ -35,7 +36,7 @@ specify("shared_error:init", timeout, function (assert) {
     Nano('Not a File');
   } catch(err) {
     assert.ok(err, "There must be an error");
-    assert.ok(err.note, "A note is given");
+    assert.ok(err.message, "A note is given");
     assert.equal(err.errid, "bad_file", "Code is right");
     assert.equal(err.scope, "init", "Scope is init");
   }
@@ -43,7 +44,7 @@ specify("shared_error:init", timeout, function (assert) {
     Nano({});
   } catch(err2) {
     assert.ok(err2, "There must be an error");
-    assert.ok(err2.note, "A note is given");
+    assert.ok(err2.message, "A note is given");
     assert.equal(err2.errid, "bad_url", "Code is right");
     assert.equal(err2.scope, "init", "Scope is init");
   }
@@ -62,7 +63,7 @@ specify("shared_error:root", timeout, function (assert) {
 
 specify("shared_error:stream", timeout, function (assert) {
   db.list("bad params").on('error', function (error) {
-    assert.ok(error.note, "A note is given");
+    assert.ok(error.message, "A note is given");
     assert.equal(error.errid, "bad_params", "Code is right");
     assert.equal(error.scope, "nano", "Scope exists");
   });
@@ -71,7 +72,7 @@ specify("shared_error:stream", timeout, function (assert) {
 specify("shared_error:callback", timeout, function (assert) {
   db.list("bad params", function (error, response) {
     assert.ok(error, "There must be an error");
-    assert.ok(error.note, "A note is given");
+    assert.ok(error.message, "A note is given");
     assert.equal(error.errid, "bad_params", "Code is right");
     assert.equal(error.scope, "nano", "Scope exists");
   });

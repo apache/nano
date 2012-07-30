@@ -144,9 +144,9 @@ module.exports = exports = nano = function database_module(cfg) {
         }
         catch (error) {
           return errs.handle(errs.merge(error,
-            { "note"  : "couldnt encode: " + (opts && opts.doc) + " as an uri"
-            , "scope" : "nano"
-            , "errid" : "encode_uri"
+            { "message": "couldnt encode: "+(opts && opts.doc)+" as an uri"
+            , "scope"  : "nano"
+            , "errid"  : "encode_uri"
             }), callback);
         }
       }
@@ -184,18 +184,18 @@ module.exports = exports = nano = function database_module(cfg) {
             try { params[key] = JSON.stringify(params[key]); }
             catch (err) {
               return errs.handle(errs.merge(err,
-                { "note"  : "bad params: " + key + " = " + params[key]
-                , "scope" : "nano"
-                , "errid" : "encode_keys"
+                { "message": "bad params: " + key + " = " + params[key]
+                , "scope"  : "nano"
+                , "errid"  : "encode_keys"
                 }), callback);
             }
           }
         });
       } catch (err6) {
         return errs.handle(errs.merge(err6,
-          { "note"  : "params is not an object"
-          , "scope" : "nano"
-          , "errid" : "bad_params"
+          { "messsage": "params is not an object"
+          , "scope"   : "nano"
+          , "errid"   : "bad_params"
           }), callback);
       }
 
@@ -204,9 +204,9 @@ module.exports = exports = nano = function database_module(cfg) {
       }
       catch (err2) {
         return errs.handle(errs.merge(err2,
-           { "note"  : "invalid params: " + params.toString()
-           , "scope" : "nano"
-           , "errid" : "encode_params"
+           { "message": "invalid params: " + params.toString()
+           , "scope"  : "nano"
+           , "errid"  : "encode_params"
            }), callback);
       }
     }
@@ -228,9 +228,9 @@ module.exports = exports = nano = function database_module(cfg) {
           });
         } catch (err3) {
           return errs.handle(errs.merge(err3,
-             { "note"  : "body seems to be invalid json"
-             , "scope" : "nano"
-             , "errid" : "encode_body"
+             { "message": "body seems to be invalid json"
+             , "scope"  : "nano"
+             , "errid"  : "encode_body"
              }), callback);
         }
       } // json data
@@ -250,9 +250,9 @@ module.exports = exports = nano = function database_module(cfg) {
         return request(req);
       } catch (err4) {
         return errs.handle(errs.merge(err4,
-           { "note"  : "request threw when you tried to stream"
-           , "scope" : "request"
-           , "errid" : "stream"
+           { "message": "request threw when you tried to stream"
+           , "scope"  : "request"
+           , "errid"  : "stream"
            }), callback);
       }
     }
@@ -267,9 +267,9 @@ module.exports = exports = nano = function database_module(cfg) {
         if(e) {
           log({err: 'socket', body: b, headers: rh });
           errs.handle(errs.merge(e,
-             { "note"  : "error happened during your connection"
-             , "scope" : "socket"
-             , "errid" : "request"
+             { "message": "error happened in your connection"
+             , "scope"  : "socket"
+             , "errid"  : "request"
              }), callback);
           return stream;
         }
@@ -294,6 +294,7 @@ module.exports = exports = nano = function database_module(cfg) {
              , "request"     : req
              , "headers"     : rh
              , "errid"       : "non_200"
+             , "message"     : parsed.reason || "couch returned "+status_code
              }), callback);
           return stream;
         }
@@ -301,9 +302,9 @@ module.exports = exports = nano = function database_module(cfg) {
       return stream;
     } catch(err5) {
       return errs.merge(err5,
-         { "note"  : "request threw when you tried to create the object"
-         , "scope" : "request"
-         , "errid" : "callback"
+         { "message": "request threw when you tried to create the object"
+         , "scope"  : "request"
+         , "errid"  : "callback"
          });
     }
   }
@@ -479,16 +480,16 @@ module.exports = exports = nano = function database_module(cfg) {
 
     if(!follow) {
       var stream = errs.handle(
-        { "note"  : "follow is only supported on node 0.6+"
-        , "scope" : "follow"
-        , "errid" : "no_soup_for_you"
+        { "message": "follow is only supported on node 0.6+"
+        , "scope"  : "follow"
+        , "errid"  : "no_soup_for_you"
         }, callback);
       // streaming mode will call unexisting follow stream
       stream.follow = function () {
         return errs.handle(
-          { "note"  : "follow is only supported on node 0.6+"
-          , "scope" : "follow"
-          , "errid" : "no_soup_for_you"
+          { "message": "follow is only supported on node 0.6+"
+          , "scope"  : "follow"
+          , "errid"  : "no_soup_for_you"
           }, callback);
       };
       return stream;
@@ -524,9 +525,9 @@ module.exports = exports = nano = function database_module(cfg) {
       }
       else {
         return errs.handle(errs.create(
-          { "note"  : "replication target is invalid"
-          , "scope" : "nano"
-          , "errid" : "replication_target"
+          { "message": "replication target is invalid"
+          , "scope"  : "nano"
+          , "errid"  : "replication_target"
           }), callback);
       }
     }
@@ -537,9 +538,9 @@ module.exports = exports = nano = function database_module(cfg) {
       }
       else {
         return errs.handle(errs.create(
-          { "note"  : "replication source is invalid"
-          , "scope" : "nano"
-          , "errid" : "replication_source"
+          { "message": "replication source is invalid"
+          , "scope"  : "nano"
+          , "errid"  : "replication_source"
           }), callback);
       }
     }
@@ -922,7 +923,7 @@ module.exports = exports = nano = function database_module(cfg) {
       catch(error) {
         throw errs.merge(error,
            { "scope"       : "init"
-           , "note"        : "couldn't read config file " + cfg
+           , "message"     : "couldn't read config file " + cfg
            , "errid"       : "bad_file"
            });
       }
@@ -932,7 +933,7 @@ module.exports = exports = nano = function database_module(cfg) {
   if(!(cfg && cfg.url)) {
     throw errs.create(
         { "scope"       : "init"
-        , "note"        : "no configuration with a valid url was given"
+        , "message"     : "no configuration with a valid url was given"
         , "errid"       : "bad_url"
         });
   }
