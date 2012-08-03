@@ -15,7 +15,14 @@ specify("show_query:setup", timeout, function (assert) {
     assert.equal(err, undefined, "Failed to create database");
     db.insert(
     { "shows": {
-      "singleDoc": function(doc, req) { return { body: { name: doc.name, city: doc.city, format: 'json' }, headers: { 'Content-Type': 'application/json' } }; }
+      "singleDoc": function(doc, req) {
+        if(req.query.format === 'json' || !req.query.format) {
+          return { body: JSON.stringify({ name: doc.name, city: doc.city, format: 'json' }), headers: { 'Content-Type': 'application/json' } };
+        }
+        if(req.query.format === 'html') {
+          return { body: 'Hello Clemens!', headers: { 'Content-Type': 'text/html' } };
+        }
+      }
     }
     }, '_design/people', function (error, response) {
       assert.equal(error, undefined, "Failed to create show function");
@@ -36,11 +43,17 @@ specify("show_query:setup", timeout, function (assert) {
 });
 
 specify("show_query:test", timeout, function (assert) {
-  db.show('people','singleDoc', 'p_clemens', function (error, doc) {
+  db.show('people','singleDoc', 'p_clemens', function (error, doc, rh) {
     assert.equal(error, undefined, "Show function didn't respond");
+    assert.equal(rh['content-type'], 'application/json');
     assert.equal(doc.name,'Clemens');
     assert.equal(doc.city,'Dresden');
     assert.equal(doc.format,'json');
+  });
+  db.show('people','singleDoc', 'p_clemens', { format: 'html' }, function (error, doc, rh) {
+    assert.equal(error, undefined, "Show function didn't respond");
+    assert.equal(rh['content-type'], 'text/html');
+    assert.equal(doc,'Hello Clemens!');
   });
 });
 
