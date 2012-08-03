@@ -6,12 +6,12 @@ var specify  = require('specify')
   , nock     = helpers.nock
   ;
 
-var mock = nock(helpers.couch, "show/query")
-  , db   = nano.use("show_query")
+var mock = nock(helpers.couch, "design/show")
+  , db   = nano.use("design_show")
   ;
 
-specify("show_query:setup", timeout, function (assert) {
-  nano.db.create("show_query", function (err) {
+specify("design_show:setup", timeout, function (assert) {
+  nano.db.create("design_show", function (err) {
     assert.equal(err, undefined, "Failed to create database");
     db.insert(
     { "shows": {
@@ -42,7 +42,7 @@ specify("show_query:setup", timeout, function (assert) {
   });
 });
 
-specify("show_query:test", timeout, function (assert) {
+specify("design_show:test", timeout, function (assert) {
   db.show('people','singleDoc', 'p_clemens', function (error, doc, rh) {
     assert.equal(error, undefined, "Show function didn't respond");
     assert.equal(rh['content-type'], 'application/json');
@@ -57,8 +57,8 @@ specify("show_query:test", timeout, function (assert) {
   });
 });
 
-specify("show_query:teardown", timeout, function (assert) {
-  nano.db.destroy("show_query", function (err) {
+specify("design_show:teardown", timeout, function (assert) {
+  nano.db.destroy("design_show", function (err) {
     assert.equal(err, undefined, "Failed to destroy database");
     assert.ok(mock.isDone(), "Some mocks didn't run");
   });

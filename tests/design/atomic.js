@@ -5,13 +5,13 @@ var specify  = require("specify")
   , nock     = helpers.nock
   ;
 
-var mock = nock(helpers.couch, "doc/atomic")
-  , db   = nano.use("doc_atomic")
+var mock = nock(helpers.couch, "design/atomic")
+  , db   = nano.use("design_atomic")
   , rev
   ;
 
-specify("doc_atomic:setup", timeout, function (assert) {
-  nano.db.create("doc_atomic", function (err) {
+specify("design_atomic:setup", timeout, function (assert) {
+  nano.db.create("design_atomic", function (err) {
     assert.equal(err, undefined, "Failed to create database");
     db.insert(
     { "updates": 
@@ -32,7 +32,7 @@ specify("doc_atomic:setup", timeout, function (assert) {
   });
 });
 
-specify("doc_atomic:test", timeout, function (assert) {
+specify("design_atomic:test", timeout, function (assert) {
   db.atomic("update", "inplace", "foobar", 
   {field: "foo", value: "bar"}, function (error, response) {
     assert.equal(error, undefined, "Failed to update");
@@ -40,8 +40,8 @@ specify("doc_atomic:test", timeout, function (assert) {
   });
 });
 
-specify("doc_atomic:teardown", timeout, function (assert) {
-  nano.db.destroy("doc_atomic", function (err) {
+specify("design_atomic:teardown", timeout, function (assert) {
+  nano.db.destroy("design_atomic", function (err) {
     assert.equal(err, undefined, "Failed to destroy database");
     assert.ok(mock.isDone(), "Some mocks didn't run");
   });

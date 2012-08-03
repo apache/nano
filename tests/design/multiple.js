@@ -6,12 +6,12 @@ var specify  = require('specify')
   , nock     = helpers.nock
   ;
 
-var mock = nock(helpers.couch, "view/multiple")
-  , db   = nano.use("view_multiple")
+var mock = nock(helpers.couch, "design/multiple")
+  , db   = nano.use("design_multiple")
   ;
 
-specify("view_multiple:setup", timeout, function (assert) {
-  nano.db.create("view_multiple", function (err) {
+specify("design_multiple:setup", timeout, function (assert) {
+  nano.db.create("design_multiple", function (err) {
     assert.equal(err, undefined, "Failed to create database");
     db.insert(
     { "views": 
@@ -33,7 +33,7 @@ specify("view_multiple:setup", timeout, function (assert) {
   });
 });
 
-specify("view_multiple:test", timeout, function (assert) {
+specify("design_multiple:test", timeout, function (assert) {
   db.view('alice','by_id', 
   { keys: ['foobar', 'barfoo'], include_docs: true }, function (err, view) {
     assert.equal(err, undefined, "View didn't respond");
@@ -43,8 +43,8 @@ specify("view_multiple:test", timeout, function (assert) {
   });
 });
 
-specify("view_multiple:teardown", timeout, function (assert) {
-  nano.db.destroy("view_multiple", function (err) {
+specify("design_multiple:teardown", timeout, function (assert) {
+  nano.db.destroy("design_multiple", function (err) {
     assert.equal(err, undefined, "Failed to destroy database");
     assert.ok(mock.isDone(), "Some mocks didn't run");
   });
