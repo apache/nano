@@ -3,6 +3,7 @@ var specify  = require('specify')
   , timeout  = helpers.timeout
   , nano     = helpers.nano
   , nock     = helpers.nock
+  , rev
   ;
 
 var mock = nock(helpers.couch, "doc/insert")
@@ -16,7 +17,8 @@ specify("doc_insert:setup", timeout, function (assert) {
 });
 
 specify("doc_insert:simple", timeout, function (assert) {
-  db.insert({"foo": "baz"}, "foobaz", function (error, foo) {   
+  db.insert({"foo": "baz"}, "foobaz", function (error, foo) {
+    rev = foo.rev;
     assert.equal(error, undefined, "Should have stored foo");
     assert.equal(foo.ok, true, "Response should be ok");
     assert.ok(foo.rev, "Response should have rev");
@@ -24,7 +26,8 @@ specify("doc_insert:simple", timeout, function (assert) {
 });
 
 specify("doc_insert:params", timeout, function (assert) {
-    db.insert({"foo": "baz"}, "foobaz", { new_edits: false }, function (error, foo) {   
+  db.insert({"foo": "baz", _rev: rev}, {doc_name:"foobaz", new_edits:false},
+  function (error, foo) {
     assert.equal(error, undefined, "Should have stored foo");
     assert.equal(foo.ok, true, "Response should be ok");
     assert.ok(foo.rev, "Response should have rev");
@@ -33,7 +36,7 @@ specify("doc_insert:params", timeout, function (assert) {
 
 specify("doc_insert:functions", timeout, function (assert) {
   db.insert({fn: function () { return true; },
-  fn2: "function () { return true; }"}, function (error, fns) {   
+  fn2: "function () { return true; }"}, function (error, fns) {
     assert.equal(error, undefined, "Should have stored foo");
     assert.equal(fns.ok, true, "Response should be ok");
     assert.ok(fns.rev, "Response should have rev");

@@ -281,9 +281,9 @@ an object containing the nano configurations, possible keys are:
 
 ## document functions
 
-### db.insert(doc, [docname], [callback])
+### db.insert(doc, [params], [callback])
 
-inserts `doc` in the database with an optional `docname`.  
+inserts `doc` in the database with  optional `params`. if params is a string, its assumed as the intended document name. if params is an object, its passed as query string parameters and `doc_name` is checked for defining the document name.
 
 ``` js
 var alice = nano.use('alice');

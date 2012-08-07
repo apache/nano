@@ -13,8 +13,8 @@
 , { "method"   : "put"
   , "status"   : 201
   , "path"     : "/doc_insert/foobaz?new_edits=false"
-  , "body"     : "{\"foo\":\"baz\"}"
-  , "response" : "{\"ok\":true,\"id\":\"foobaz\",\"rev\":\"1-611488\"}"
+  , "body"     : "{\"foo\":\"baz\",\"_rev\":\"1-611488\"}"
+  , "response" : "{\"ok\":true,\"id\":\"foobaz\",\"rev\":\"2-123456\"}"
   }
 , { "method"   : "post"
   , "status"   : 201
