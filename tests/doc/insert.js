@@ -23,6 +23,14 @@ specify("doc_insert:simple", timeout, function (assert) {
   });
 });
 
+specify("doc_insert:params", timeout, function (assert) {
+    db.insert({"foo": "baz"}, "foobaz", { new_edits: false }, function (error, foo) {   
+    assert.equal(error, undefined, "Should have stored foo");
+    assert.equal(foo.ok, true, "Response should be ok");
+    assert.ok(foo.rev, "Response should have rev");
+  });
+});
+
 specify("doc_insert:functions", timeout, function (assert) {
   db.insert({fn: function () { return true; },
   fn2: "function () { return true; }"}, function (error, fns) {   
