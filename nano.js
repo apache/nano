@@ -561,19 +561,30 @@ module.exports = exports = nano = function database_module(cfg) {
     *
     * @param {doc:object|string} document body
     * @param {doc_name:string:optional} document name
+    * @param {params:string:optional} additions to the querystring
     *
     * @see relax
     */
-    function insert_doc(doc,doc_name,callback) {
+    function insert_doc(doc,doc_name,params,callback) {
       var opts = {db: db_name, body: doc, method: "POST"};
-      if(doc_name) {
-        if(typeof doc_name === "function") {
+      
+      if (!callback) {
+        if (params && typeof params === "function") {
+          callback = params;
+          params = null;
+        } else if (doc_name && typeof doc_name === "function") {
           callback = doc_name;
+          doc_name = null;
         }
-        else {
-          opts.doc = doc_name;
-          opts.method = "PUT";
-        }
+      }
+      
+      if (params) {
+        opts.params = params;
+      }
+      
+      if(doc_name) {
+        opts.doc = doc_name;
+        opts.method = "PUT";
       }
       return relax(opts,callback);
     }
