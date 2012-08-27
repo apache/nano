@@ -509,7 +509,7 @@ reusing a cookie:
 ``` js
 var auth = "some stored cookie"
   , callback = console.log // this would normally be some callback
-  , nano require('nano')(
+  , alice = require('nano')(
     { url : 'http://localhost:5984/alice', cookie: 'AuthSession=' + auth });
   ;
 
