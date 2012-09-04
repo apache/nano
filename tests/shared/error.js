@@ -78,6 +78,14 @@ specify("shared_error:callback", timeout, function (assert) {
   });
 });
 
+specify("shared_error:bad_delete", timeout, function (assert) {
+  nano.db.destroy("say_wat_wat", function (error, response) {
+    assert.ok(error, "There must be an error");
+    assert.ok(error.message, "A note is given");
+    assert.equal(error.description,'missing');
+  });
+});
+
 specify("shared_error:teardown", timeout, function (assert) {
   nano.db.destroy("shared_error", function (err) {
     assert.equal(err, undefined, "Failed to destroy database");

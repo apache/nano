@@ -20,6 +20,11 @@
   , "response" : "{\"ok\": true, \"version\": \"1.1.0\"}"
   }
 , { "method"   : "delete"
+  , "path"     : "/say_wat_wat"
+  , "status"   : 404
+  , "response" : "{\"error\":\"not_found\",\"reason\":\"missing\"}" 
+  }
+, { "method"   : "delete"
   , "path"     : "/shared_error"
   , "response" : "{ \"ok\": true }" 
   }

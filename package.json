@@ -24,6 +24,7 @@
   , "John Lancaster <john.k.lancaster@gmail.com> (http://jlank.com)"
   , "Clemens Stolle (https://github.com/klaemo)"
   , "Jay Beavers <jay.beavers@microsoft.com> (http://jaybeavers.org)"
+  , "Juraj Vitko"
   ]
 , "keywords"        : 
   ["couchdb", "data", "request", "json", "nosql", "micro", "nano", "database"]

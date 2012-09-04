@@ -287,6 +287,9 @@ module.exports = exports = nano = function database_module(cfg) {
         else { // proxy the error directly from couchdb
           log({err: 'couch', body: parsed, headers: rh});
           if (!parsed) { parsed = {}; }
+          if (!parsed.message && (parsed.reason || parsed.error)) {
+            parsed.message = (parsed.reason || parsed.error);
+          }
           errs.handle(errs.merge(errs.create(parsed),
              { "scope"       : "couch"
              , "status_code" : status_code
