@@ -579,6 +579,7 @@ then open `/tmp/rabbit.png` and you will see the rabbit picture.
 * article: [securing a site with couchdb cookie authentication using node.js and nano](http://mahoney.eu/2012/05/23/couchdb-cookie-authentication-nodejs-nano/)
 * article: [adding copy to nano](http://blog.jlank.com/2012/07/04/adding-copy-to-nano/)
 * article: [how to update a document with nano](http://writings.nunojob.com/2012/07/How-To-Update-A-Document-With-Nano-The-CouchDB-Client-for-Node.js.html)
+* article: [thoughts on development using couchdb with node.js](http://tbranyen.com/post/thoughts-on-development-using-couchdb-with-nodejs)
 
 ## roadmap
 
