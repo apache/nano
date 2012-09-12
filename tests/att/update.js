@@ -23,6 +23,7 @@ specify("att_update:test", timeout, function (assert) {
     function(error, hello) {
       assert.equal(error, undefined, "Should store hello");
       assert.equal(hello.ok, true, "Response should be ok");
+      assert.ok(hello.rev, "Should have a revision number");
       db.attachment.insert("new", "att", buffer, "image/bmp", 
       { rev: hello.rev }, function (error, bmp) {
         assert.equal(error, undefined, "Should store the pixel");
