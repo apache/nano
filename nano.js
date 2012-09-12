@@ -286,7 +286,12 @@ module.exports = exports = nano = function database_module(cfg) {
         }
         else { // proxy the error directly from couchdb
           log({err: 'couch', body: parsed, headers: rh});
-          if (!parsed) { parsed = {}; }
+          if (!parsed) {
+            parsed = {};
+          }
+          if (typeof parsed === "string") { // a stacktrace from couch
+            parsed = {message: parsed};
+          }
           if (!parsed.message && (parsed.reason || parsed.error)) {
             parsed.message = (parsed.reason || parsed.error);
           }
