@@ -41,7 +41,7 @@ specify("att_update:metadata", timeout, function (assert) {
       assert.equal(error, undefined, "Should update doc");
       assert.equal(response.ok, true, "Response should be ok");
     });
-  })
+  });
 });
 
 specify("att_update:teardown", timeout, function (assert) {
