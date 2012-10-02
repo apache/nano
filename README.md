@@ -372,7 +372,7 @@ to `true`.
 
 inserts an attachment `attname` to `docname`, in most cases
  `params.rev` is required. refer to the
- [doc](http://wiki.apache.org/couchdb/http_document_api) for more details.
+ [doc](http://wiki.apache.org/couchdb/HTTP_Document_API) for more details.
 
 ``` js
 var fs = require('fs');
