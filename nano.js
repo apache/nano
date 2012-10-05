@@ -50,6 +50,7 @@ module.exports = exports = nano = function database_module(cfg) {
     , db
     , auth
     , port
+    , encode_db_name = encodeURIComponent
     ;
 
  /***************************************************************************
@@ -124,7 +125,7 @@ module.exports = exports = nano = function database_module(cfg) {
     }
 
     if(opts.db) {
-      req.uri = u.resolve(req.uri, opts.db);
+      req.uri = u.resolve(req.uri, encode_db_name(opts.db));
     }
 
     if (opts.headers) {

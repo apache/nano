@@ -1,0 +1,11 @@
+[
+  { "method"   : "put"
+  , "path"     : "/az09_%24()%2B-%2F"
+  , "status"   : 201
+  , "response" : "{ \"ok\": true }" 
+  }
+, { "method"   : "delete"
+  , "path"     : "/az09_%24()%2B-%2F"
+  , "response" : "{ \"ok\": true }" 
+  }
+]

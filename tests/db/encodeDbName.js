@@ -5,9 +5,9 @@ var specify  = require('specify')
   , nock     = helpers.nock
   ;
 
-var mock = nock(helpers.couch, "db/create");
+var mock = nock(helpers.couch, "db/encodeDbName");
 
-var db_name = "db_create";
+var db_name = "az09_$()+-/";
 
 specify("db_create:test", timeout, function (assert) {
   nano.db.create(db_name, function (err) {
