@@ -13,10 +13,19 @@ specify("db_create:test", timeout, function (assert) {
   });
 });
 
+specify("db_create:encoded_name", timeout, function (assert) {
+  nano.db.create("az09_$()+-/", function (err) {
+    assert.equal(err, undefined, "Failed to create database");
+  });
+});
+
 specify("db_create:teardown", timeout, function (assert) {
   nano.db.destroy("db_create", function (err) {
     assert.equal(err, undefined, "Failed to destroy database");
-    assert.ok(mock.isDone(), "Some mocks didn't run");
+    nano.db.destroy("az09_$()+-/", function (err) {
+      assert.equal(err, undefined, "Failed to destroy database");
+      assert.ok(mock.isDone(), "Some mocks didn't run");
+    });
   });
 });
 

@@ -124,7 +124,7 @@ module.exports = exports = nano = function database_module(cfg) {
     }
 
     if(opts.db) {
-      req.uri = u.resolve(req.uri, opts.db);
+      req.uri = u.resolve(req.uri, encodeURIComponent(opts.db));
     }
 
     if (opts.headers) {
