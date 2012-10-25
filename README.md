@@ -438,7 +438,8 @@ alice.attachment.destroy('rabbit', 'rabbit.png',
 ### db.view(designname, viewname, [params], [callback])
 
 calls a view of the specified design with optional query string additions
-`params`.  
+`params`. if you're looking to filter the view results by key(s) pass an array of keys, e.g
+`{ keys: ['key1', 'key2', 'keyN'] }`, as `params`.
 
 ``` js
 alice.view('characters', 'crazy_ones', function(err, body) {
