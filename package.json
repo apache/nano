@@ -26,6 +26,7 @@
   , "Jay Beavers <jay.beavers@microsoft.com> (http://jaybeavers.org)"
   , "Juraj Vitko"
   , "Paul Iannazzo <somethingitalian@gmail.com> (http://pppaul.me)"
+  , "Sebastian Tiedtke <sebastiantiedtke@gmail.com>"
   ]
 , "keywords"        : 
   ["couchdb", "data", "request", "json", "nosql", "micro", "nano", "database"]
