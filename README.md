@@ -363,7 +363,7 @@ alice.list(function(err, body) {
 
 bulk fetch of the database documents, `docnames` are specified as per 
 [couchdb doc](http://wiki.apache.org/couchdb/HTTP_Bulk_Document_API).
-additional query string `params` can be specified, `include_doc` is always set
+additional query string `params` can be specified, `include_docs` is always set
 to `true`.  
 
 ## attachments functions
@@ -634,7 +634,7 @@ licensed under the apache license, version 2.0 (the "license");
 you may not use this file except in compliance with the license.
 you may obtain a copy of the license at
 
-    http://www.apache.org/licenses/license-2.0
+    http://www.apache.org/licenses/LICENSE-2.0.html
 
 unless required by applicable law or agreed to in writing, software
 distributed under the license is distributed on an "as is" basis,
