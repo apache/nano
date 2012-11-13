@@ -123,16 +123,20 @@ module.exports = exports = nano = function database_module(cfg) {
       req.jar = opts.jar;
     }
 
+    // add db to path if it was specified
+    // encode uri component is how its specified by couchdb to encode db name
     if(opts.db) {
       req.uri = u.resolve(req.uri, encodeURIComponent(opts.db));
     }
 
+    // make sure we add our headers to the request
     if (opts.headers) {
       for (var k in opts.headers) {
         req.headers[k] = opts.headers[k];
       }
     }
 
+    // if there is a path append it to the path
     if(opts.path) {
       req.uri += "/" + opts.path;
     }
@@ -140,6 +144,7 @@ module.exports = exports = nano = function database_module(cfg) {
       // not a design document
       if(!/^_design/.test(opts.doc)) {
         try {
+          // docs get encoded with encode uri component too
           req.uri += "/" + encodeURIComponent(opts.doc);
         }
         catch (error) {
@@ -151,26 +156,30 @@ module.exports = exports = nano = function database_module(cfg) {
         }
       }
       else {
-        // design document
+        // design document has no encoding
         req.uri += "/" + opts.doc;
       }
 
+      // add attachment if one was specified
       if(opts.att) {
         req.uri += "/" + opts.att;
       }
     }
 
+    // prevent bugs where people set encoding when piping
     if(opts.encoding !== undefined && callback) {
       req.encoding = opts.encoding;
       delete req.headers["content-type"];
       delete req.headers.accept;
     }
 
+    // override content type
     if(opts.content_type) {
       req.headers["content-type"] = opts.content_type;
       delete req.headers.accept; // undo headers set
     }
 
+    // cookie auth
     if(cfg.cookie) {
       req.headers["X-CouchDB-WWW-Authenticate"] = "Cookie";
       req.headers.cookie = cfg.cookie;
@@ -199,6 +208,7 @@ module.exports = exports = nano = function database_module(cfg) {
           }), callback);
       }
 
+      // add our query string params
       try {
         req.uri += "?" + qs.stringify(params);
       }
@@ -236,12 +246,14 @@ module.exports = exports = nano = function database_module(cfg) {
       } // json data
     }
 
+    // if its a form make sure content type is set apropriately
     if(opts.form) {
       req.headers['content-type'] = 
         'application/x-www-form-urlencoded; charset=utf-8';
       req.body = qs.stringify(opts.form).toString('utf8');
     }
 
+    // log our request
     log(req);
 
     // streaming mode
