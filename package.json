@@ -27,6 +27,7 @@
   , "Juraj Vitko"
   , "Paul Iannazzo <somethingitalian@gmail.com> (http://pppaul.me)"
   , "Sebastian Tiedtke <sebastiantiedtke@gmail.com>"
+  , "Gregory T. Corrigan (https://github.com/corrigang)"
   ]
 , "keywords"        : 
   ["couchdb", "data", "request", "json", "nosql", "micro", "nano", "database"]
