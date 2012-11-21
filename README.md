@@ -119,9 +119,17 @@ Please check [request] for more information on the defaults. They support featur
 
 ### pool size and open sockets
 
-a very important configuration parameter if you have a high traffic website and are using nano is setting up the `pool.size`. by default the node.js http global agent (client) has a certain size of active connections that can run simultaneously, while others are kept in a queue. Pooling can be disabled by setting the `agent` property in `request_defaults` to false.  you can increase the size using `request_defaults` if this is problematic, and refer to the [request] documentation and examples for further clarification.
+a very important configuration parameter if you have a high traffic website and are using nano is setting up the `pool.size`. by default, the node.js http global agent (client) has a certain size of active connections that can run simultaneously, while others are kept in a queue. Pooling can be disabled by setting the `agent` property in `request_defaults` to false, or adjust the global pool size using:
 
-Here's an example using the keep alive agent (installed using `npm install agentkeepalive`), useful to limit your open sockets when accessing CouchDB locally:
+```` js
+
+http.globalAgent.maxSockets = 20;
+
+```
+
+you can also increase the size in your calling context using `request_defaults` if this is problematic.  refer to the [request] documentation and examples for further clarification.
+
+Here's an example explicitly using the keep alive agent (installed using `npm install agentkeepalive`), especially useful to limit your open sockets when doing high-volume access to CouchDB on localhost:
 
 ``` js
 var agentkeepalive = require('agentkeepalive');
