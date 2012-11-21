@@ -1007,18 +1007,29 @@ module.exports = exports = nano = function database_module(cfg) {
   path_array = path.pathname.split('/').filter(function(e) { return e; });
 
   // nano('http://couch.nodejitsu.com/db1')
+  // nano({url: 'http://couch.nodejitsu.com/path', db: 'db1'})
   //   should return a database
   // nano('http://couch.nodejitsu.com')
   //   should return a nano object
-  if(path.pathname && path_array.length > 0) {
+  if (path.pathname && path_array.length > 0) {
+
     auth    = path.auth ? path.auth + '@' : '';
     port    = path.port ? ':' + path.port : '';
-    db      = path_array[0];
-    cfg.url = u.format(
-      {protocol:path.protocol,host: auth + path.hostname + port});
+    db      = cfg.db ? cfg.db : path_array[0];
+
+    var format = {
+      protocol: path.protocol,
+      host: auth + path.hostname + port
+    };
+    if (cfg.db)
+      format.pathname = path.pathname + '/';
+
+    cfg.url = u.format(format);
+
     return document_module(db);
   }
-  else   { return public_functions; }
+  else
+    return public_functions;
 
 };
 
