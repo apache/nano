@@ -109,19 +109,42 @@ to specify further configuration options you can pass an object literal instead:
 // nano parses the url and knows this is a database
 var db = require('nano')(
   { "url"             : "http://localhost:5984/foo"
-  , "request_options" : { "proxy" : "http://someproxy" }
+  , "request_defaults" : { "proxy" : "http://someproxy" }
   , "log"             : function (id, args) { 
       console.log(id, args);
     }
   });
 ```
-please check [request] for more information on the defaults. they support features like cookie jar, proxies, ssl, etc.
+Please check [request] for more information on the defaults. They support features like cookie jar, proxies, ssl, etc. 
 
-### pool size
+### pool size and open sockets
 
-a very important configuration parameter if you have a high traffic website and are using nano is setting up the `pool.size`. by default the node.js http agent (client) has a certain size of active connections that can run simultaneously, while others are kept in a queue. 
+a very important configuration parameter if you have a high traffic website and are using nano is setting up the `pool.size`. by default, the node.js http global agent (client) has a certain size of active connections that can run simultaneously, while others are kept in a queue. Pooling can be disabled by setting the `agent` property in `request_defaults` to false, or adjust the global pool size using:
 
-you can increase the size using `request_options` if this is problematic, and refer to the [request] documentation and examples for further clarification
+```` js
+
+http.globalAgent.maxSockets = 20;
+
+```
+
+you can also increase the size in your calling context using `request_defaults` if this is problematic.  refer to the [request] documentation and examples for further clarification.
+
+Here's an example explicitly using the keep alive agent (installed using `npm install agentkeepalive`), especially useful to limit your open sockets when doing high-volume access to CouchDB on localhost:
+
+``` js
+var agentkeepalive = require('agentkeepalive');
+var myagent = new agentkeepalive( { 
+  maxSockets: 50, 
+  maxKeepAliveRequests: 0,
+  maxKeepAliveTime: 30000
+  });
+
+var db = require('nano')(
+  { "url"             : "http://localhost:5984/foo"
+  , "request_defaults" : { "agent" : myagent }
+  });  
+```
+
 
 ## database functions
 
