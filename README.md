@@ -119,7 +119,29 @@ please check [request] for more information on the defaults. they support featur
 
 ### pool size
 
-a very important configuration parameter if you have a high traffic website and are using nano is setting up the `pool.size`. by default the node.js http agent (client) has a certain size of active connections that can run simultaneously, while others are kept in a queue. 
+a very important configuration parameter if you have a high traffic website and are using nano is setting up the `pool.size`. by default, the node.js http global agent (client) has a certain size of active connections that can run simultaneously, while others are kept in a queue. pooling can be disabled by setting the `agent` property in `request_defaults` to false, or adjust the global pool size using:
+
+``` js
+http.globalAgent.maxSockets = 20;
+```
+
+you can also increase the size in your calling context using `request_defaults` if this is problematic. refer to the [request] documentation and examples for further clarification.
+
+here's an example explicitly using the keep alive agent (installed using `npm install agentkeepalive`), especially useful to limit your open sockets when doing high-volume access to couchdb on localhost:
+
+``` js
+var agentkeepalive = require('agentkeepalive');
+var myagent = new agentkeepalive({
+    maxSockets: 50
+  , maxKeepAliveRequests: 0
+  , maxKeepAliveTime: 30000
+  });
+
+var db = require('nano')(
+  { "url"              : "http://localhost:5984/foo"
+  , "request_defaults" : { "agent" : myagent }
+  });
+```
 
 you can increase the size using `request_options` if this is problematic, and refer to the [request] documentation and examples for further clarification
 
@@ -439,7 +461,7 @@ alice.attachment.destroy('rabbit', 'rabbit.png',
 
 calls a view of the specified design with optional query string additions
 `params`. if you're looking to filter the view results by key(s) pass an array of keys, e.g
-`{ keys: ['key1', 'key2', 'keyN'] }`, as `params`.
+`{ keys: ['key1', 'key2', 'key_n'] }`, as `params`.
 
 ``` js
 alice.view('characters', 'crazy_ones', function(err, body) {
@@ -451,13 +473,13 @@ alice.view('characters', 'crazy_ones', function(err, body) {
 });
 ```
 
-### db.show(designname, showname, docId, [params], [callback])
+### db.show(designname, showname, doc_id, [params], [callback])
 
-calls a show function of the specified design for the document specified by docId with 
+calls a show function of the specified design for the document specified by doc_id with 
 optional query string additions `params`.  
 
 ``` js
-alice.show('characters', 'formatDoc', '3621898430' function(err, doc) {
+alice.show('characters', 'format_doc', '3621898430' function(err, doc) {
   if (!err) {
     console.log(doc);
   }
@@ -501,7 +523,7 @@ nano.auth(username, userpass, function (err, body, headers) {
     cookies[user] = headers['set-cookie'];
   }
 
-  callback(null, "It worked");
+  callback(null, "it worked");
 });
 ```
 
@@ -524,7 +546,7 @@ alice.insert(doc, function (err, body, headers) {
     auth = headers['set-cookie'];
   }
 
-  callback(null, "It worked");
+  callback(null, "it worked");
 });
 ```
 
