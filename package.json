@@ -40,7 +40,7 @@
 , "devDependencies" : 
   { "async"         : "0.1.x"
   , "specify"       : "1.1.x"
-  , "nock"          : "0.13.x"
+  , "nock"          : "0.14.x"
   }
 , "scripts"         : 
   { "test"          : "node node_modules/specify/bin/specify -e NOCK=on"
