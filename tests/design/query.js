@@ -48,6 +48,31 @@ specify("design_query:test", timeout, function (assert) {
   });
 });
 
+specify("design_query:reuse_params", timeout, function (assert) {
+  var opts = {
+    key: ["Derek","San Francisco"]
+  };
+  db.view('people','by_name_and_city', opts, function(error, view) {
+    assert.equal(error, undefined, "View didn't respond");
+    assert.equal(view.rows.length,1);
+    assert.equal(view.rows.length,1);
+    assert.equal(view.rows[0].id,'p_derek');
+    assert.equal(view.rows[0].key[0],'Derek');
+    assert.equal(view.rows[0].key[1],'San Francisco');
+  });
+  db.view('people','by_name_and_city', opts, function(error, view) {
+    assert.equal(error, undefined, "View didn't respond");
+    assert.equal(view.rows.length,1);
+    assert.equal(view.rows.length,1);
+    assert.equal(view.rows[0].id,'p_derek');
+    assert.equal(view.rows[0].key[0],'Derek');
+    assert.equal(view.rows[0].key[1],'San Francisco');
+  });
+  assert.ok(Array.isArray(opts.key));
+  assert.equal(opts.key[0],'Derek');
+  assert.equal(opts.key[1],'San Francisco');
+});
+
 specify("design_query:teardown", timeout, function (assert) {
   nano.db.destroy("design_query", function (err) {
     assert.equal(err, undefined, "Failed to destroy database");
