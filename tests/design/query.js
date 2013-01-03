@@ -49,9 +49,7 @@ specify("design_query:test", timeout, function (assert) {
 });
 
 specify("design_query:reuse_params", timeout, function (assert) {
-  var opts = {
-    key: ["Derek","San Francisco"]
-  };
+  var opts = { key: ["Derek","San Francisco"] };
   db.view('people','by_name_and_city', opts, function(error, view) {
     assert.equal(error, undefined, "View didn't respond");
     assert.equal(view.rows.length,1);
