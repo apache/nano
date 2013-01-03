@@ -31,6 +31,12 @@
 , { "path"     : "/design_query/_design/people/_view/by_name_and_city?key=%5B%22Derek%22%2C%22San%20Francisco%22%5D"
   , "response" : "{\"total_rows\":3,\"offset\":0,\"rows\":[\r\n{\"id\":\"p_derek\",\"key\":[\"Derek\",\"San Francisco\"],\"value\":\"p_derek\"}\r\n]}\n"
   }
+, { "path"     : "/design_query/_design/people/_view/by_name_and_city?key=%5B%22Derek%22%2C%22San%20Francisco%22%5D"
+  , "response" : "{\"total_rows\":3,\"offset\":0,\"rows\":[\r\n{\"id\":\"p_derek\",\"key\":[\"Derek\",\"San Francisco\"],\"value\":\"p_derek\"}\r\n]}\n"
+  }
+, { "path"     : "/design_query/_design/people/_view/by_name_and_city?key=%5B%22Derek%22%2C%22San%20Francisco%22%5D"
+  , "response" : "{\"total_rows\":3,\"offset\":0,\"rows\":[\r\n{\"id\":\"p_derek\",\"key\":[\"Derek\",\"San Francisco\"],\"value\":\"p_derek\"}\r\n]}\n"
+  }
 , { "method"   : "delete"
   , "path"     : "/design_query"
   , "status"   : 200
