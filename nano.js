@@ -18,6 +18,7 @@ var request     = require('request').defaults({ jar: false })
   , fs          = require('fs')
   , qs          = require('querystring')
   , u           = require('url')
+  , util        = require('util')
   , errs        = require('errs')
   , follow
   , nano
@@ -105,7 +106,7 @@ module.exports = exports = nano = function database_module(cfg) {
     }
 
     var log     = logging()
-      , params  = opts.params
+      , params  = util._extend({}, opts.params)
       , headers = { "content-type": "application/json"
                   , "accept"      : "application/json"
                   }
@@ -186,14 +187,14 @@ module.exports = exports = nano = function database_module(cfg) {
     }
 
     // these need to be encoded
-    if(!isEmpty(params)) {
+    if(!isEmpty(opts.params)) {
       try {
         ['startkey', 'endkey', 'key', 'keys'].forEach(function (key) {
-          if (key in params) {
-            try { params[key] = JSON.stringify(params[key]); }
+          if (key in opts.params) {
+            try { params[key] = JSON.stringify(opts.params[key]); }
             catch (err) {
               return errs.handle(errs.merge(err,
-                { "message": "bad params: " + key + " = " + params[key]
+                { "message": "bad params: " + key + " = " + opts.params[key]
                 , "scope"  : "nano"
                 , "errid"  : "encode_keys"
                 }), callback);
