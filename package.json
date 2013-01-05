@@ -37,6 +37,7 @@
   { "request"       : "2.12.x"
   , "follow"        : "0.8.x"
   , "errs"          : "0.2.x"
+  , "extend"        : "1.1.x"
   }
 , "devDependencies" : 
   { "async"         : "0.1.x"

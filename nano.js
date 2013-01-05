@@ -18,7 +18,7 @@ var request     = require('request').defaults({ jar: false })
   , fs          = require('fs')
   , qs          = require('querystring')
   , u           = require('url')
-  , util        = require('util')
+  , extend      = require('extend')
   , errs        = require('errs')
   , follow
   , nano
@@ -106,7 +106,7 @@ module.exports = exports = nano = function database_module(cfg) {
     }
 
     var log     = logging()
-      , params  = util._extend({}, opts.params)
+      , params  = extend({}, opts.params)
       , headers = { "content-type": "application/json"
                   , "accept"      : "application/json"
                   }
