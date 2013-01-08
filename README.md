@@ -16,6 +16,46 @@ minimalistic couchdb driver for node.js
 1. install [npm][1]
 2. `npm install nano`
 
+## table of contents
+
+- [getting started](#getting-started)
+- [tutorials & screencasts](#tutorials--screencasts)
+- [configuration](#configuration)
+- [database functions](#database-functions)
+	- [nano.db.create(name, [callback])](#nanodbcreatename-callback)
+	- [nano.db.get(name, [callback])](#nanodbgetname-callback)
+	- [nano.db.destroy(name, [callback])](#nanodbdestroyname-callback)
+	- [nano.db.list([callback])](#nanodblistcallback)
+	- [nano.db.compact(name, [designname], [callback])](#nanodbcompactname-designname-callback)
+	- [nano.db.replicate(source, target, [opts], [callback])](#nanodbreplicatesource-target-opts-callback)
+	- [nano.db.changes(name, [params], [callback])](#nanodbchangesname-params-callback)
+	- [nano.db.follow(name, [params], [callback])](#nanodbfollowname-params-callback)
+	- [nano.use(name)](#nanousename)
+	- [nano.request(opts, [callback])](#nanorequestopts-callback)
+	- [nano.config](#nanoconfig)
+- [document functions](#document-functions)
+	- [db.insert(doc, [params], [callback])](#dbinsertdoc-params-callback)
+	- [db.destroy(docname, rev, [callback])](#dbdestroydocname-rev-callback)
+	- [db.get(docname, [params], [callback])](#dbgetdocname-params-callback)
+	- [db.head(docname, [callback])](#dbheaddocname-callback)
+	- [db.copy(src_doc, dest_doc, opts, [callback])](#dbcopysrc_doc-dest_doc-opts-callback)
+	- [db.bulk(docs, [params], [callback])](#dbbulkdocs-params-callback)
+	- [db.list([params], [callback])](#dblistparams-callback)
+	- [db.fetch(docnames, [params], [callback])](#dbfetchdocnames-params-callback)
+- [attachments functions](#attachments-functions)
+	- [db.attachment.insert(docname, attname, att, contenttype, [params], [callback])](#dbattachmentinsertdocname-attname-att-contenttype-params-callback)
+	- [db.attachment.get(docname, attname, [params], [callback])](#dbattachmentgetdocname-attname-params-callback)
+	- [db.attachment.destroy(docname, attname, rev, [callback])](#dbattachmentdestroydocname-attname-rev-callback)
+- [views and design functions](#views-and-design-functions)
+	- [db.view(designname, viewname, [params], [callback])](#dbviewdesignname-viewname-params-callback)
+	- [db.show(designname, showname, doc_id, [params], [callback])](#dbshowdesignname-showname-doc_id-params-callback)
+	- [db.atomic(designname, updatename, docname, [body], [callback])](#dbatomicdesignname-updatename-docname-body-callback)
+- [using cookie authentication](#using-cookie-authentication)
+- [advanced features](#advanced-features)
+	- [extending nano](#extending-nano)
+	- [pipes](#pipes)
+- [tests](#tests)
+
 ## getting started
 
 to use `nano` you need to connect it to your couchdb install, to do that:
