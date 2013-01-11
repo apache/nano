@@ -308,6 +308,8 @@ module.exports = exports = nano = function database_module(cfg) {
           if (!parsed.message && (parsed.reason || parsed.error)) {
             parsed.message = (parsed.reason || parsed.error);
           }
+          // fix cloudant issues where they give an erlang stacktrace as js
+          delete parsed.stack;
           errs.handle(errs.merge(errs.create(parsed),
              { "scope"       : "couch"
              , "status_code" : status_code
