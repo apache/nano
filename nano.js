@@ -167,6 +167,11 @@ module.exports = exports = nano = function database_module(cfg) {
       }
     }
 
+    // if there is a querystring append it after the path
+    if(opts.qs) {
+      req.uri += "?" + qs.stringify(opts.qs);
+    }
+
     // prevent bugs where people set encoding when piping
     if(opts.encoding !== undefined && callback) {
       req.encoding = opts.encoding;
