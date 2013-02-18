@@ -519,7 +519,7 @@ calls a show function of the specified design for the document specified by doc_
 optional query string additions `params`.  
 
 ``` js
-alice.show('characters', 'format_doc', '3621898430' function(err, doc) {
+alice.show('characters', 'format_doc', '3621898430', function(err, doc) {
   if (!err) {
     console.log(doc);
   }
