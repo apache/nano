@@ -18,19 +18,13 @@ var request     = require('request').defaults({ jar: false })
   , fs          = require('fs')
   , qs          = require('querystring')
   , u           = require('url')
-  , extend      = require('extend')
   , errs        = require('errs')
+  , _           = require('underscore')
   , follow
   , nano
   ;
 
 try { follow = require('follow'); } catch (err) {}
-
-function isEmpty(object) {
-  for(var property in object) {
-    if(object.hasOwnProperty(property)) return false; }
-  return true;
-}
 
 /*
  * nano is a library that helps you building requests to couchdb
@@ -106,7 +100,7 @@ module.exports = exports = nano = function database_module(cfg) {
     }
 
     var log     = logging()
-      , params  = extend({}, opts.params)
+      , params  = _.extend({}, opts.params)
       , headers = { "content-type": "application/json"
                   , "accept"      : "application/json"
                   }
@@ -187,7 +181,7 @@ module.exports = exports = nano = function database_module(cfg) {
     }
 
     // these need to be encoded
-    if(!isEmpty(opts.params)) {
+    if(!_.isEmpty(opts.params)) {
       try {
         ['startkey', 'endkey', 'key', 'keys'].forEach(function (key) {
           if (key in opts.params) {
