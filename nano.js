@@ -766,6 +766,24 @@ module.exports = exports = nano = function database_module(cfg) {
     }
 
     /*
+    * calls a spatial view
+    *
+    * @param {design_name:string} design document name
+    * @param {spatial_name:string} spatial view to call
+    *
+    * @see relax
+    */
+    function view_spatial(design_name, view_name, params, callback) {
+      if(typeof params === "function") {
+        callback = params;
+        params   = {};
+      }
+      var view_path = '_design/' + design_name + '/_spatial/'  + view_name;
+      return relax({db: db_name, path: view_path
+                    , method: "GET", params: params},callback);
+    }
+
+    /*
     * calls a show function
     *
     * @param {design_name:string} design document name
@@ -931,6 +949,8 @@ module.exports = exports = nano = function database_module(cfg) {
       };
 
     public_functions.view         = view_docs;
+    public_functions.spatial      = view_spatial;
+
     public_functions.view.compact = function(design_name,cb) {
       return compact_db(db_name,design_name,cb);
     };
