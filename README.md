@@ -540,6 +540,18 @@ db.atomic("update", "inplace", "foobar",
 });
 ```
 
+### db.search(designname, searchname, [params], [callback])
+
+calls a view of the specified design with optional query string additions `params`.  
+
+``` js
+alice.search('characters', 'crazy_ones', { q: 'cat' }function(err, doc) {
+  if (!err) {
+    console.log(doc);
+  }
+});
+```
+
 check out the tests for a fully functioning example.
 
 ## using cookie authentication
