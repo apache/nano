@@ -50,6 +50,7 @@ minimalistic couchdb driver for node.js
 	- [db.view(designname, viewname, [params], [callback])](#dbviewdesignname-viewname-params-callback)
 	- [db.show(designname, showname, doc_id, [params], [callback])](#dbshowdesignname-showname-doc_id-params-callback)
 	- [db.atomic(designname, updatename, docname, [body], [callback])](#dbatomicdesignname-updatename-docname-body-callback)
+	- [db.search(designname, viewname, [params], [callback])](#dbsearchdesignname-searchname-params-callback)
 - [using cookie authentication](#using-cookie-authentication)
 - [advanced features](#advanced-features)
 	- [extending nano](#extending-nano)
