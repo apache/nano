@@ -546,7 +546,7 @@ db.atomic("update", "inplace", "foobar",
 calls a view of the specified design with optional query string additions `params`.  
 
 ``` js
-alice.search('characters', 'crazy_ones', { q: 'cat' }function(err, doc) {
+alice.search('characters', 'crazy_ones', { q: 'cat' }, function(err, doc) {
   if (!err) {
     console.log(doc);
   }
