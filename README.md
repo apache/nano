@@ -544,7 +544,7 @@ check out the tests for a fully functioning example.
 
 ## using cookie authentication
 
-nano supports making requests using couchdb's [cookie authentication](http://guide.couchdb.org/editions/1/en/security.html#cookies) functionality. there's a [step-by-step guide here](http://mahoney.eu/2012/05/23/couchdb-cookie-authentication-nodejs-nano/), but essentially you just:
+nano supports making requests using couchdb's [cookie authentication](http://guide.couchdb.org/editions/1/en/security.html#cookies) functionality. there's a [step-by-step guide here](https://clickity.io/blog/2012/5/23/couchdb-cookie-authentication-nodejs-nano/), but essentially you just:
 
 ``` js
 var nano     = require('nano')('http://localhost:5984')
@@ -638,7 +638,7 @@ then open `/tmp/rabbit.png` and you will see the rabbit picture.
 * article: [getting started with node.js and couchdb](http://writings.nunojob.com/2011/09/getting-started-with-nodejs-and-couchdb.html)
 * article: [document update handler support](http://jackhq.tumblr.com/post/16035106690/nano-v1-2-x-document-update-handler-support-v1-2-x)
 * article: [nano 3](http://writings.nunojob.com/2012/05/Nano-3.html)
-* article: [securing a site with couchdb cookie authentication using node.js and nano](http://mahoney.eu/2012/05/23/couchdb-cookie-authentication-nodejs-nano/)
+* article: [securing a site with couchdb cookie authentication using node.js and nano](https://clickity.io/blog/2012/5/23/couchdb-cookie-authentication-nodejs-nano/)
 * article: [adding copy to nano](http://blog.jlank.com/2012/07/04/adding-copy-to-nano/)
 * article: [how to update a document with nano](http://writings.nunojob.com/2012/07/How-To-Update-A-Document-With-Nano-The-CouchDB-Client-for-Node.js.html)
 * article: [thoughts on development using couchdb with node.js](http://tbranyen.com/post/thoughts-on-development-using-couchdb-with-nodejs)
