@@ -35,7 +35,7 @@
   ["couchdb", "data", "request", "json", "nosql", "micro", "nano", "database"]
 , "dependencies"    : 
   { "request"       : "2.16.x"
-  , "follow"        : "0.8.x"
+  , "follow"        : "0.9.x"
   , "errs"          : "0.2.x"
   , "underscore"    : "1.4.x"
   }
