@@ -50,6 +50,7 @@ minimalistic couchdb driver for node.js
 	- [db.view(designname, viewname, [params], [callback])](#dbviewdesignname-viewname-params-callback)
 	- [db.show(designname, showname, doc_id, [params], [callback])](#dbshowdesignname-showname-doc_id-params-callback)
 	- [db.atomic(designname, updatename, docname, [body], [callback])](#dbatomicdesignname-updatename-docname-body-callback)
+	- [db.search(designname, viewname, [params], [callback])](#dbsearchdesignname-searchname-params-callback)
 - [using cookie authentication](#using-cookie-authentication)
 - [advanced features](#advanced-features)
 	- [extending nano](#extending-nano)
@@ -537,6 +538,18 @@ db.atomic("update", "inplace", "foobar",
 {field: "foo", value: "bar"}, function (error, response) {
   assert.equal(error, undefined, "failed to update");
   assert.equal(response.foo, "bar", "update worked");
+});
+```
+
+### db.search(designname, searchname, [params], [callback])
+
+calls a view of the specified design with optional query string additions `params`.  
+
+``` js
+alice.search('characters', 'crazy_ones', { q: 'cat' }, function(err, doc) {
+  if (!err) {
+    console.log(doc);
+  }
 });
 ```
 

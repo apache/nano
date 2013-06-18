@@ -784,6 +784,26 @@ module.exports = exports = nano = function database_module(cfg) {
     }
 
     /*
+    * calls a search view
+    *
+    * @param {design_name:string} design document name
+    * @param {search_name:string} search view to call
+    * @param {search_query:object}
+    *
+    * @see relax
+    */
+    function view_search(design_name, search_name, params, callback) {
+      if(typeof params === "function") {
+        callback = params;
+        params   = {};
+      }
+      var view_path = '_design/' + design_name + '/_search/' + search_name;
+      return relax({db: db_name, path: view_path
+                    , method: "GET", params: params},callback);
+    }
+
+
+    /*
     * calls a show function
     *
     * @param {design_name:string} design document name
@@ -950,6 +970,7 @@ module.exports = exports = nano = function database_module(cfg) {
 
     public_functions.view         = view_docs;
     public_functions.spatial      = view_spatial;
+    public_functions.search       = view_search;
 
     public_functions.view.compact = function(design_name,cb) {
       return compact_db(db_name,design_name,cb);
