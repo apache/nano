@@ -788,6 +788,7 @@ module.exports = exports = nano = function database_module(cfg) {
     *
     * @param {design_name:string} design document name
     * @param {search_name:string} search view to call
+    * @param {search_query:object}
     *
     * @see relax
     */
