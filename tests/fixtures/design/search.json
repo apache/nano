@@ -1,0 +1,38 @@
+[
+  { "method"   : "put"
+  , "path"     : "/design_search"
+  , "status"   : 201
+  , "response" : "{ \"ok\": true }"
+  }
+, { "method"   : "put"
+  , "path"     : "/design_search/_design/people/_search"
+  , "body"     : "*"
+  , "status"   : 201
+  , "response" : "{\"ok\":true,\"id\":\"_design/people/_search\",\"rev\":\"1-14e6bc\"}"
+  }
+, { "method"   : "put"
+  , "status"   : 201
+  , "path"     : "/design_search/p_clemens"
+  , "body"     : "{\"name\":\"Clemens\",\"city\":\"Dresden\"}"
+  , "response" : "{\"ok\":true,\"id\":\"p_clemens\",\"rev\":\"1-4c6114\"}"
+  }
+, { "method"   : "put"
+  , "status"   : 201
+  , "path"     : "/design_search/p_randall"
+  , "body"     : "{\"name\":\"Randall\",\"city\":\"San Francisco\"}"
+  , "response" : "{\"ok\":true,\"id\":\"p_randall\",\"rev\":\"1-4c6114\"}"
+  }
+, { "method"   : "put"
+  , "status"   : 201
+  , "path"     : "/design_search/p_nuno"
+  , "body"     : "{\"name\":\"Nuno\",\"city\":\"New York\"}"
+  , "response" : "{\"ok\":true,\"id\":\"p_nuno\",\"rev\":\"1-4c6114\"}"
+  }
+, { "method"   : "delete"
+  , "path"     : "/design_search"
+  , "status"   : 200
+  , "response" : "{ \"ok\": true }"
+  }
+]
+
+
