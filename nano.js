@@ -917,13 +917,13 @@ module.exports = exports = nano = function database_module(cfg) {
     * calls a list with a given view
     *
     * @param {design_name:string} design document name
-    * @param {list_name:string} list to call
     * @param {view_name:string} view to call
+    * @param {list_name:string} list to call
     * @param {params:object:optional} additions to the querystring
     *
     * @see relax
     */
-    function view_docs_with_list(design_name,list_name,view_name,params,callback) {
+    function view_docs_with_list(design_name,view_name,list_name,params,callback) {
       if(typeof params === "function") {
         callback = params;
         params   = {};
