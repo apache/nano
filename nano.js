@@ -913,6 +913,34 @@ module.exports = exports = nano = function database_module(cfg) {
                   , doc: doc_name, params: {rev: rev}},callback);
     }
 
+   /*
+    * calls a list with a given view
+    *
+    * @param {design_name:string} design document name
+    * @param {list_name:string} list to call
+    * @param {view_name:string} view to call
+    * @param {params:object:optional} additions to the querystring
+    *
+    * @see relax
+    */
+    function view_docs_with_list(design_name,list_name,view_name,params,callback) {
+      if(typeof params === "function") {
+        callback = params;
+        params   = {};
+      }
+      var show_path = '_design/' + design_name + '/_list/' + list_name + '/' + view_name;
+      if (params.keys) {
+        var body = {keys: params.keys};
+        delete params.keys;
+        return relax({db: db_name, path: show_path
+                     , method: "POST", params: params, body: body}, callback);
+      }
+      else {
+        return relax({db: db_name, path: show_path
+                     , method: "GET", params: params},callback);
+      }
+    }
+
     // db level exports
     public_functions =
       { info              : function(cb) { return get_db(db_name,cb); }
@@ -948,8 +976,9 @@ module.exports = exports = nano = function database_module(cfg) {
       , updateWithHandler : update_with_handler_doc          // alias
       };
 
-    public_functions.view         = view_docs;
-    public_functions.spatial      = view_spatial;
+    public_functions.view           = view_docs;
+    public_functions.view_with_list = view_docs_with_list;
+    public_functions.spatial        = view_spatial;
 
     public_functions.view.compact = function(design_name,cb) {
       return compact_db(db_name,design_name,cb);
