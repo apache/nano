@@ -928,15 +928,15 @@ module.exports = exports = nano = function database_module(cfg) {
         callback = params;
         params   = {};
       }
-      var show_path = '_design/' + design_name + '/_list/' + list_name + '/' + view_name;
+      var list_path = '_design/' + design_name + '/_list/' + list_name + '/' + view_name;
       if (params.keys) {
         var body = {keys: params.keys};
         delete params.keys;
-        return relax({db: db_name, path: show_path
+        return relax({db: db_name, path: list_path
                      , method: "POST", params: params, body: body}, callback);
       }
       else {
-        return relax({db: db_name, path: show_path
+        return relax({db: db_name, path: list_path
                      , method: "GET", params: params},callback);
       }
     }
