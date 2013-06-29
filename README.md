@@ -513,6 +513,18 @@ alice.view('characters', 'crazy_ones', function(err, body) {
 });
 ```
 
+### db.view_with_list(designname, viewname, listname, [params], [callback])
+
+calls a list function feeded by the given view of the specified design document.
+
+``` js
+alice.view_with_list('characters', 'crazy_ones', 'my_list', function(err, body) {
+  if (!err) {
+    console.log(body);
+  }
+});
+```
+
 ### db.show(designname, showname, doc_id, [params], [callback])
 
 calls a show function of the specified design for the document specified by doc_id with 
