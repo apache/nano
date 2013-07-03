@@ -2,7 +2,7 @@
 , "description"     : "minimalistic couchdb driver for node.js"
 , "homepage"        : "http://github.com/dscape/nano"
 , "repository"      : "git://github.com/dscape/nano"
-, "version"         : "3.4.0"
+, "version"         : "3.5.0"
 , "author"          : "Nuno Job <nunojobpinto@gmail.com> (http://nunojob.com)"
 , "contributors"    :
   [ "Thiago Arrais <thiago.arrais@gmail.com> (http://thiagoarrais.com)"
@@ -31,6 +31,7 @@
   , "Etienne Folio (https://github.com/Ornthalas)"
   , "John Chesley (http://chesl.es)"
   , "Damon Oehlman <damon@fluxant.com>"
+  , "Patrick Paul-Hus (https://github.com/hydrozen)"
   ]
 , "keywords"        : 
   ["couchdb", "data", "request", "json", "nosql", "micro", "nano", "database"]
