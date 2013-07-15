@@ -14,19 +14,16 @@ specify("design_search:setup", timeout, function (assert) {
   nano.db.create("design_search", function (err) {
     assert.equal(err, undefined, "Failed to create database");
     db.insert(
-    { "search": {
-      "singleDoc": function(doc, req) {
-        if(req.query.format === 'json' || !req.query.format) {
-          return { body: JSON.stringify({ name: doc.name, city: doc.city, format: 'json' }), headers: { 'Content-Type': 'application/json' } };
-        }
+    { "views":
+      { "by_name_and_city":
+        { "map": function(doc) { emit([doc.name, doc.city], doc._id); } }
       }
-    }
-    }, '_design/people/_search', function (error, response) {
-      assert.equal(error, undefined, "Failed to create search function");
+    }, '_design/people', function (error, response) {
+      assert.equal(error, undefined, "Failed to create views");
       assert.equal(response.ok, true, "Response should be ok");
       async.parallel(
         [ function(cb) { db.insert(
-            { name: "Clemens", city: "Dresden" }, "p_clemens", cb); }
+            { name: "Derek", city: "San Francisco" }, "p_derek", cb); }
         , function(cb) { db.insert(
             { name: "Randall", city: "San Francisco" }, "p_randall", cb); }
         , function(cb) { db.insert(
@@ -40,13 +37,38 @@ specify("design_search:setup", timeout, function (assert) {
 });
 
 specify("design_search:test", timeout, function (assert) {
-  db.search('people','singleDoc', { q: 'p_clemens'}, function (error, doc, rh) {
-    assert.equal(error, undefined, "Search function didn't respond");
-    assert.equal(rh['content-type'], 'application/json');
-    assert.equal(doc.name,'Clemens');
-    assert.equal(doc.city,'Dresden');
-    assert.equal(doc.format,'json');
+  db.view('people','by_name_and_city',
+  {key: ["Derek","San Francisco"]}, function (error, view) {
+    assert.equal(error, undefined, "View didn't respond");
+    assert.equal(view.rows.length,1);
+    assert.equal(view.rows.length,1);
+    assert.equal(view.rows[0].id,'p_derek');
+    assert.equal(view.rows[0].key[0],'Derek');
+    assert.equal(view.rows[0].key[1],'San Francisco');
   });
+});
+
+specify("design_search:reuse_params", timeout, function (assert) {
+  var opts = { key: ["Derek","San Francisco"] };
+  db.view('people','by_name_and_city', opts, function(error, view) {
+    assert.equal(error, undefined, "View didn't respond");
+    assert.equal(view.rows.length,1);
+    assert.equal(view.rows.length,1);
+    assert.equal(view.rows[0].id,'p_derek');
+    assert.equal(view.rows[0].key[0],'Derek');
+    assert.equal(view.rows[0].key[1],'San Francisco');
+  });
+  db.view('people','by_name_and_city', opts, function(error, view) {
+    assert.equal(error, undefined, "View didn't respond");
+    assert.equal(view.rows.length,1);
+    assert.equal(view.rows.length,1);
+    assert.equal(view.rows[0].id,'p_derek');
+    assert.equal(view.rows[0].key[0],'Derek');
+    assert.equal(view.rows[0].key[1],'San Francisco');
+  });
+  assert.ok(Array.isArray(opts.key));
+  assert.equal(opts.key[0],'Derek');
+  assert.equal(opts.key[1],'San Francisco');
 });
 
 specify("design_search:teardown", timeout, function (assert) {
