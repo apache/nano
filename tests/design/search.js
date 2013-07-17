@@ -18,7 +18,7 @@ specify("design_search:setup", timeout, function (assert) {
       { "by_name_and_city":
         { "map": function(doc) { emit([doc.name, doc.city], doc._id); } }
       }
-    }, '_design/people', function (error, response) {
+    }, '_design/people/_search', function (error, response) {
       assert.equal(error, undefined, "Failed to create views");
       assert.equal(response.ok, true, "Response should be ok");
       async.parallel(
@@ -37,7 +37,7 @@ specify("design_search:setup", timeout, function (assert) {
 });
 
 specify("design_search:test", timeout, function (assert) {
-  db.view('people','by_name_and_city',
+  db.search('people','by_name_and_city',
   {key: ["Derek","San Francisco"]}, function (error, view) {
     assert.equal(error, undefined, "View didn't respond");
     assert.equal(view.rows.length,1);
@@ -50,7 +50,7 @@ specify("design_search:test", timeout, function (assert) {
 
 specify("design_search:reuse_params", timeout, function (assert) {
   var opts = { key: ["Derek","San Francisco"] };
-  db.view('people','by_name_and_city', opts, function(error, view) {
+  db.search('people','by_name_and_city', opts, function(error, view) {
     assert.equal(error, undefined, "View didn't respond");
     assert.equal(view.rows.length,1);
     assert.equal(view.rows.length,1);
@@ -58,7 +58,7 @@ specify("design_search:reuse_params", timeout, function (assert) {
     assert.equal(view.rows[0].key[0],'Derek');
     assert.equal(view.rows[0].key[1],'San Francisco');
   });
-  db.view('people','by_name_and_city', opts, function(error, view) {
+  db.search('people','by_name_and_city', opts, function(error, view) {
     assert.equal(error, undefined, "View didn't respond");
     assert.equal(view.rows.length,1);
     assert.equal(view.rows.length,1);
