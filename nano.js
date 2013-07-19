@@ -493,7 +493,7 @@ module.exports = exports = nano = function database_module(cfg) {
 
     // case only db name is given
     params     = params || {};
-    params.db  = u.resolve(cfg.url, db_name);
+    params.db  = u.resolve(cfg.url, encodeURIComponent(db_name));
 
     if(!follow) {
       var stream = errs.handle(
@@ -538,7 +538,7 @@ module.exports = exports = nano = function database_module(cfg) {
     if(typeof target === "object") {
       var target_cfg = target.config || {};
       if(target_cfg.url && target_cfg.db) {
-        target = u.resolve(target_cfg.url, target_cfg.db);
+        target = u.resolve(target_cfg.url, encodeURIComponent(target_cfg.db));
       }
       else {
         return errs.handle(errs.create(
@@ -551,7 +551,7 @@ module.exports = exports = nano = function database_module(cfg) {
     if(typeof source === "object") {
       var source_cfg = source.config || {};
       if(source_cfg.url && source_cfg.db) {
-        source = u.resolve(source_cfg.url, source_cfg.db);
+        source = u.resolve(source_cfg.url, encodeURIComponent(source_cfg.db));
       }
       else {
         return errs.handle(errs.create(
