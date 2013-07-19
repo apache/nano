@@ -6,6 +6,13 @@ var specify  = require('specify')
   , nock     = helpers.nock
   ;
 
+if(!process.env.NOCK) {
+  specify("design_search:skip_unmocked", timeout, function (assert) {
+    assert.ok(true, 'these tests only run against mocks');
+  });
+  return specify.run(process.argv.slice(2));
+}
+
 var mock = nock(helpers.couch, "design/search")
   , db   = nano.use("design_search")
   ;
