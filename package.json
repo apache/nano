@@ -2,7 +2,7 @@
 , "description"     : "minimalistic couchdb driver for node.js"
 , "homepage"        : "http://github.com/dscape/nano"
 , "repository"      : "git://github.com/dscape/nano"
-, "version"         : "4.0.0"
+, "version"         : "4.1.0"
 , "author"          : "Nuno Job <nunojobpinto@gmail.com> (http://nunojob.com)"
 , "contributors"    :
   [ "Thiago Arrais <thiago.arrais@gmail.com> (http://thiagoarrais.com)"
@@ -32,23 +32,24 @@
   , "John Chesley (http://chesl.es)"
   , "Damon Oehlman <damon@fluxant.com>"
   , "Patrick Paul-Hus (https://github.com/hydrozen)"
+  , "Sven Lito <me@svenlito.com> (http://svenlito.com)"
   ]
-, "keywords"        : 
+, "keywords"        :
   ["couchdb", "data", "request", "json", "nosql", "micro", "nano", "database"]
-, "dependencies"    : 
+, "dependencies"    :
   { "request"       : "~2.21.0"
   , "follow"        : "~0.9.0"
   , "errs"          : "~0.2.4"
   , "underscore"    : "~1.4.4"
   }
-, "devDependencies" : 
+, "devDependencies" :
   { "async"         : "~0.2.9"
   , "specify"       : "~1.1.2"
   , "nock"          : "~0.18.2"
   }
-, "scripts"         : 
+, "scripts"         :
   { "test"          : "node node_modules/specify/bin/specify -e NOCK=on"
-  , "compact"       : 
+  , "compact"       :
     "node node_modules/specify/bin/specify -e NOCK=on -r compact"
   , "nock_off"      : "node node_modules/specify/bin/specify"
   }
