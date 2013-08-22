@@ -606,7 +606,7 @@ alice.insert(doc, function (err, body, headers) {
     return callback(err);
   }
 
-  // change the cookie if couchdb tells us too
+  // change the cookie if couchdb tells us to
   if (headers && headers['set-cookie']) {
     auth = headers['set-cookie'];
   }
