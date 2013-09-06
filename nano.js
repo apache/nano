@@ -753,7 +753,7 @@ module.exports = exports = nano = function database_module(cfg) {
         params   = {};
       }
       var view_path = '_design/' + design_name + '/_view/'  + view_name;
-      if (params.keys) {
+      if (params && params.keys) {
         var body = {keys: params.keys};
         delete params.keys;
         return relax({db: db_name, path: view_path
@@ -948,7 +948,7 @@ module.exports = exports = nano = function database_module(cfg) {
         params   = {};
       }
       var list_path = '_design/' + design_name + '/_list/' + list_name + '/' + view_name;
-      if (params.keys) {
+      if (params && params.keys) {
         var body = {keys: params.keys};
         delete params.keys;
         return relax({db: db_name, path: list_path
