@@ -15,6 +15,12 @@
   , "response" : "{ \"ok\": true, \"id\": \"new\" }"
   , "status"   : 201
   }
+, { "method"   : "put"
+  , "path"     : "/att_destroy/new/att2"
+  , "body"     : "\"Hello World!\""
+  , "status"   : 201
+  , "response" : "{\"ok\": true, \"id\": \"new\", \"rev\": \"1-921bd51\" }"
+  }
 , { "method"   : "delete"
   , "path"     : "/att_destroy"
   , "status"   : 200
