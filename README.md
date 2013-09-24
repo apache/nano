@@ -361,7 +361,7 @@ alice.insert({ crazy: true }, 'rabbit', function(err, body) {
 removes revision `rev` of `docname` from couchdb.
 
 ``` js
-alice.destroy('alice', '3-66c01cdf99e84c83a9b3fe65b88db8c0', function(err, body) {
+alice.destroy('rabbit', '3-66c01cdf99e84c83a9b3fe65b88db8c0', function(err, body) {
   if (!err)
     console.log(body);
 });
