@@ -928,6 +928,13 @@ module.exports = exports = nano = function database_module(cfg) {
     * @see relax
     */
     function destroy_att(doc_name,att_name,rev,callback) {
+      if(typeof att_name !== 'string' && att_name !== '') {
+        return errs.handle(errs.create(
+          { "message": "att_name is not a string"
+            , "scope"  : "nano"
+            , "errid"   : "bad_params"
+          }), callback);
+      }
       return relax({ db: db_name, att: att_name, method: "DELETE"
                   , doc: doc_name, params: {rev: rev}},callback);
     }

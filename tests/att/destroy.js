@@ -29,6 +29,19 @@ specify("att_destroy:test", timeout, function (assert) {
   });
 });
 
+specify("att_destroy:att_name_missing", timeout, function (assert) {
+  db.attachment.insert("new", "att2", "Hello World!", "text/plain",
+  function (error, att) {
+    assert.equal(error, undefined, "Should store the attachment");
+    assert.equal(att.ok, true, "Response should be ok");
+    assert.ok(att.rev, "Should have a revision number");
+    db.attachment.destroy("new", false, att.rev, function(error, response) {
+      assert.equal(error.errid, "bad_params", "Should throw error because att_name is not a string");
+      assert.equal(response, undefined, "No response should be given");
+    });
+  });
+});
+
 specify("att_destroy:teardown", timeout, function (assert) {
   nano.db.destroy("att_destroy", function (err) {
     assert.equal(err, undefined, "Failed to destroy database");
