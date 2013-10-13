@@ -36,7 +36,7 @@ try { follow = require('follow'); } catch (err) {}
  * dinosaurs spaceships!
  *
  */
-module.exports = exports = nano = function database_module(cfg) {
+module.exports = exports = nano = function database_module(cfg, meta) {
   var public_functions = {}
     , request_opts     = {}
     , logging
@@ -1000,6 +1000,8 @@ module.exports = exports = nano = function database_module(cfg) {
       , show              : show_doc
       , atomic            : update_with_handler_doc
       , updateWithHandler : update_with_handler_doc          // alias
+      , url               : meta.url
+      , server            : meta.server
       };
 
     public_functions.view           = view_docs;
@@ -1099,7 +1101,7 @@ module.exports = exports = nano = function database_module(cfg) {
 
     cfg.url = u.format(format);
 
-    return document_module(db, {url: format});
+    return document_module(db, {url: format, server: public_functions});
   }
   else
     return public_functions;
