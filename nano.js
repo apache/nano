@@ -1099,7 +1099,7 @@ module.exports = exports = nano = function database_module(cfg) {
 
     cfg.url = u.format(format);
 
-    return document_module(db);
+    return document_module(db, {url: format});
   }
   else
     return public_functions;
