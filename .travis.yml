@@ -7,3 +7,6 @@ node_js:
   - "0.8"
   - "0.10"
   - "0.11"
+services:
+  - couchdb
+script: "npm test && npm run nock_off"
