@@ -1,4 +1,5 @@
 # nano
+[![Build Status](https://travis-ci.org/dscape/nano.png)](https://travis-ci.org/dscape/nano)
 
 minimalistic couchdb driver for node.js
 
