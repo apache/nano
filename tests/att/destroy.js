@@ -30,7 +30,7 @@ specify("att_destroy:test", timeout, function (assert) {
 });
 
 specify("att_destroy:att_name_missing", timeout, function (assert) {
-  db.attachment.insert("new", "att2", "Hello World!", "text/plain",
+  db.attachment.insert("new2", "att2", "Hello World!", "text/plain",
   function (error, att) {
     assert.equal(error, undefined, "Should store the attachment");
     assert.equal(att.ok, true, "Response should be ok");
