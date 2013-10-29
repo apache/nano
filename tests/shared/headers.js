@@ -26,7 +26,6 @@ specify("shared_headers:test", timeout, function (assert) {
     nano.request({
       db: "shared_headers",
       doc: "new",
-      att: "att",
       headers: { "If-None-Match": JSON.stringify(hello.rev) }
     },
     function (error, helloWorld, rh) {

@@ -10,7 +10,7 @@
   , "status"   : 201
   , "response" : "{\"ok\":true,\"id\":\"new\",\"rev\":\"1-5142a2\"}"
   }
-, { "path"       : "/shared_headers/new/att"
+, { "path"       : "/shared_headers/new"
   , "status"     : 304
   , "response"   : ""
   , "reqheaders" : {
