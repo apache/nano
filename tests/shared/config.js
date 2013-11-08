@@ -4,6 +4,7 @@ var specify  = require('specify')
   , nano     = helpers.nano
   , Nano     = helpers.Nano
   , nock     = helpers.nock
+  , couch    = helpers.couch
   ;
 
 var mock = nock(helpers.couch, "shared/config");
@@ -33,6 +34,29 @@ specify("shared_config:url_parsing", timeout, function (assert) {
     "Port failed");
   assert.equal(
     Nano(base_url+'/a').config.url, base_url, "Simple db failed");
+});
+
+specify("shared_config:default_headers", timeout, function (assert) {
+  var nanoWithDefaultHeaders = Nano(
+  { url: couch
+  , default_headers:
+    { 'x-custom-header': 'custom'
+    , 'x-second-header': 'second'
+    }
+  });
+
+  var req = nanoWithDefaultHeaders.db.list(function(err) {
+    assert.equal(err, undefined, 'Error when using custom headers');
+  });
+
+  assert.equal(
+    req.headers['x-custom-header']
+  , 'custom'
+  , 'Custom headers "x-second-header" not honored');
+  assert.equal(
+    req.headers['x-second-header']
+  , 'second'
+  , 'Custom headers "x-second-header" not honored');
 });
 
 specify.run(process.argv.slice(2));

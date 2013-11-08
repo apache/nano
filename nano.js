@@ -131,6 +131,12 @@ module.exports = exports = nano = function database_module(cfg) {
       }
     }
 
+    if (cfg.default_headers) {
+      for (var k in cfg.default_headers) {
+        req.headers[k] = cfg.default_headers[k];
+      }
+    }
+
     // if there is a path append it to the path
     if(opts.path) {
       req.uri += "/" + opts.path;
