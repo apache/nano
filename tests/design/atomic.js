@@ -40,6 +40,18 @@ specify("design_atomic:test", timeout, function (assert) {
   });
 });
 
+specify("design_atomic:slashes_in_name", timeout, function (assert) {
+  db.insert({"wat": "wat"}, "wat/wat", function (error, foo) {
+    assert.equal(error, undefined, "Should have stored wat");
+    assert.equal(foo.ok, true, "Response should be ok");
+    db.atomic("update", "inplace", "wat/wat",
+      {field: "wat", value: "dawg"}, function (error, response) {
+      assert.equal(error, undefined, "Failed to update");
+      assert.equal(response.wat, "dawg", "Update worked");
+    });
+  });
+});
+
 specify("design_atomic:teardown", timeout, function (assert) {
   nano.db.destroy("design_atomic", function (err) {
     assert.equal(err, undefined, "Failed to destroy database");

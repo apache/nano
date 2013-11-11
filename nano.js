@@ -833,7 +833,7 @@ module.exports = exports = nano = function database_module(cfg) {
        body     = {};
      }
      var update_path = '_design/' + design_name + '/_update/' +
-       update_name + '/' + doc_name;
+       update_name + '/' + encodeURIComponent(doc_name);
      return relax(
        { db: db_name, path: update_path, method: "PUT"
        , body: body }, callback);
