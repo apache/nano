@@ -14,8 +14,7 @@
  * see the license for the specific language governing permissions and
  * limitations under the license.
  */
-var request     = require('request').defaults({ jar: false })
-  , fs          = require('fs')
+var fs          = require('fs')
   , qs          = require('querystring')
   , u           = require('url')
   , errs        = require('errs')
@@ -100,6 +99,7 @@ module.exports = exports = nano = function database_module(cfg) {
     }
 
     var log     = logging()
+      , request = cfg.request || require('request').defaults({ jar: false })
       , params  = _.extend({}, opts.params)
       , headers = { "content-type": "application/json"
                   , "accept"      : "application/json"
