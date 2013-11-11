@@ -1,6 +1,6 @@
 /* minimal couch in node
  *
- * copyright 2013 nuno job <nunojob.com> (oO)--',--
+ * copyright 2021 nuno job <nunojob.com> (oO)--',--
  *
  * licensed under the apache license, version 2.0 (the "license");
  * you may not use this file except in compliance with the license.
@@ -113,7 +113,6 @@ module.exports = exports = nano = function database_module(cfg) {
       ;
 
     // cookie jar support
-    // check github.com/mikeal/request for docs
     if (opts.jar) {
       req.jar = opts.jar;
     }
@@ -125,17 +124,7 @@ module.exports = exports = nano = function database_module(cfg) {
     }
 
     // make sure we add our headers to the request
-    if (opts.headers) {
-      for (var k in opts.headers) {
-        req.headers[k] = opts.headers[k];
-      }
-    }
-
-    if (cfg.default_headers) {
-      for (var k in cfg.default_headers) {
-        req.headers[k] = cfg.default_headers[k];
-      }
-    }
+    req.headers = _.extend(req.headers, opts.headers, cfg.default_headers);
 
     // if there is a path append it to the path
     if(opts.path) {
@@ -249,7 +238,7 @@ module.exports = exports = nano = function database_module(cfg) {
 
     // if its a form make sure content type is set apropriately
     if(opts.form) {
-      req.headers['content-type'] = 
+      req.headers['content-type'] =
         'application/x-www-form-urlencoded; charset=utf-8';
       req.body = qs.stringify(opts.form).toString('utf8');
     }
@@ -340,15 +329,15 @@ module.exports = exports = nano = function database_module(cfg) {
    *
    * e.g.
    * nano.auth(username, password, function (err, body, headers) {
-   *   if (err) { 
+   *   if (err) {
    *     return console.log("oh noes!")
    *   }
-   * 
+   *
    *   if (headers && headers['set-cookie']) {
    *     console.log("cookie monster likes " + headers['set-cookie']);
    *   }
    * });
-   * 
+   *
    * @param {username:string} username
    * @param {password:string} password
    *
@@ -689,12 +678,12 @@ module.exports = exports = nano = function database_module(cfg) {
       }
       var params =
         { db: db_name, doc: doc_src, method: "COPY"
-        , headers: { "Destination": doc_dest } 
+        , headers: { "Destination": doc_dest }
         };
       if(opts.overwrite) {
         return head_doc(doc_dest, function (e,b,h) {
           if (typeof h.etag === "string") {
-            params.headers.Destination += "?rev=" + 
+            params.headers.Destination += "?rev=" +
               h.etag.substring(1, h.etag.length - 1);
           }
           return relax(params, callback);
@@ -727,7 +716,7 @@ module.exports = exports = nano = function database_module(cfg) {
     * [1]: http://wiki.apache.org/couchdb/HTTP_Bulk_Document_API
     *
     * @param {doc_names:object} document keys as per the couchdb api[1]
-    * @param {params:object} additions to the querystring, note 
+    * @param {params:object} additions to the querystring, note
     * that include_docs is always set to true
     *
     * @see get_doc

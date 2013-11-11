@@ -36,6 +36,7 @@
   , "Gerrit Renker"
   , "Andreas Lappe <nd@off-pist.de>"
   , "Aram Kocharyan <akarmenia@gmail.com>"
+  , "Jan Krems @jkrems"
   ]
 , "keywords"        :
   ["couchdb", "data", "request", "json", "nosql", "micro", "nano", "database"]

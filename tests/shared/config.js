@@ -30,7 +30,7 @@ specify("shared_config:url_parsing", timeout, function (assert) {
     Nano('http://a:b@someurl.com:5984').config.url,
     'http://a:b@someurl.com:5984', "Auth failed");
   assert.equal(
-    Nano(base_url+':5984/a').config.url, base_url+':5984', 
+    Nano(base_url+':5984/a').config.url, base_url+':5984',
     "Port failed");
   assert.equal(
     Nano(base_url+'/a').config.url, base_url, "Simple db failed");
