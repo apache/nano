@@ -1,62 +1,72 @@
-{ "name"            : "nano"
-, "description"     : "minimalistic couchdb driver for node.js"
-, "homepage"        : "http://github.com/dscape/nano"
-, "repository"      : "git://github.com/dscape/nano"
-, "version"         : "4.1.4"
-, "author"          : "Nuno Job <nunojobpinto@gmail.com> (http://nunojob.com)"
-, "contributors"    :
-  [ "Thiago Arrais <thiago.arrais@gmail.com> (http://thiagoarrais.com)"
-  , "Derek Perez <derek@derekperez.com> (http://blog.derekperez.com)"
-  , "Patrick Heneise (http://patrickheneise.com)"
-  , "Artur Konarski (http://tarantoga.com)"
-  , "Pedro Teixeira <pedro.teixeira@gmail.com> (http://metaduck.com)"
-  , "Tom Wilson <tom@jackhq.com> (http://jackhq.tumblr.com)"
-  , "Dale Harvey <dale@arandomurl.com> (http://arandomurl.com)"
-  , "Jan Lehnardt <jan@apache.org> (http://jan.prima.de/plok/)"
-  , "InTheFiveByFive"
-  , "Stéphane Alnet <stephane@shimaore.net> (http://blog.shimaore.net)"
-  , "Cliffano Subagio (http://blog.cliffano.com)"
-  , "Mark Hahn (http://hahnca.com)"
-  , "Francesco Ceccon <francesco@ceccon.me> (http://francesco-cek.com/)"
-  , "Oliver Leics (http://oleics.github.com)"
-  , "Jonathan Mahoney (http://mahoney.eu)"
-  , "Dominique Sandoz <dominique.sandoz@gmail.com>"
-  , "John Lancaster <john.k.lancaster@gmail.com> (http://jlank.com)"
-  , "Clemens Stolle (https://github.com/klaemo)"
-  , "Jay Beavers <jay.beavers@microsoft.com> (http://jaybeavers.org)"
-  , "Juraj Vitko"
-  , "Paul Iannazzo <somethingitalian@gmail.com> (http://pppaul.me)"
-  , "Sebastian Tiedtke <sebastiantiedtke@gmail.com>"
-  , "Gregory T. Corrigan (https://github.com/corrigang)"
-  , "Etienne Folio (https://github.com/Ornthalas)"
-  , "John Chesley (http://chesl.es)"
-  , "Damon Oehlman <damon@fluxant.com>"
-  , "Patrick Paul-Hus (https://github.com/hydrozen)"
-  , "Sven Lito <me@svenlito.com> (http://svenlito.com)"
-  , "Gerrit Renker"
-  , "Andreas Lappe <nd@off-pist.de>"
-  , "Aram Kocharyan <akarmenia@gmail.com>"
-  , "Jan Krems @jkrems"
-  ]
-, "keywords"        :
-  ["couchdb", "data", "request", "json", "nosql", "micro", "nano", "database"]
-, "dependencies"    :
-  { "request"       : "~2.27.0"
-  , "follow"        : "~0.9.0"
-  , "errs"          : "~0.2.4"
-  , "underscore"    : "~1.5.1"
+{
+  "name": "nano",
+  "description": "minimalistic couchdb driver for node.js",
+  "homepage": "http://github.com/dscape/nano",
+  "repository": "git://github.com/dscape/nano",
+  "version": "4.2.0",
+  "author": "Nuno Job <nunojobpinto@gmail.com> (http://nunojob.com)",
+  "contributors": [
+    "Thiago Arrais <thiago.arrais@gmail.com> (http://thiagoarrais.com)",
+    "Derek Perez <derek@derekperez.com> (http://blog.derekperez.com)",
+    "Patrick Heneise (http://patrickheneise.com)",
+    "Artur Konarski (http://tarantoga.com)",
+    "Pedro Teixeira <pedro.teixeira@gmail.com> (http://metaduck.com)",
+    "Tom Wilson <tom@jackhq.com> (http://jackhq.tumblr.com)",
+    "Dale Harvey <dale@arandomurl.com> (http://arandomurl.com)",
+    "Jan Lehnardt <jan@apache.org> (http://jan.prima.de/plok/)",
+    "InTheFiveByFive",
+    "Stéphane Alnet <stephane@shimaore.net> (http://blog.shimaore.net)",
+    "Cliffano Subagio (http://blog.cliffano.com)",
+    "Mark Hahn (http://hahnca.com)",
+    "Francesco Ceccon <francesco@ceccon.me> (http://francesco-cek.com/)",
+    "Oliver Leics (http://oleics.github.com)",
+    "Jonathan Mahoney (http://mahoney.eu)",
+    "Dominique Sandoz <dominique.sandoz@gmail.com>",
+    "John Lancaster <john.k.lancaster@gmail.com> (http://jlank.com)",
+    "Clemens Stolle (https://github.com/klaemo)",
+    "Jay Beavers <jay.beavers@microsoft.com> (http://jaybeavers.org)",
+    "Juraj Vitko",
+    "Paul Iannazzo <somethingitalian@gmail.com> (http://pppaul.me)",
+    "Sebastian Tiedtke <sebastiantiedtke@gmail.com>",
+    "Gregory T. Corrigan (https://github.com/corrigang)",
+    "Etienne Folio (https://github.com/Ornthalas)",
+    "John Chesley (http://chesl.es)",
+    "Damon Oehlman <damon@fluxant.com>",
+    "Patrick Paul-Hus (https://github.com/hydrozen)",
+    "Sven Lito <me@svenlito.com> (http://svenlito.com)",
+    "Gerrit Renker",
+    "Andreas Lappe <nd@off-pist.de>",
+    "Aram Kocharyan <akarmenia@gmail.com>",
+    "Jan Krems @jkrems"
+  ],
+  "keywords": [
+    "couchdb",
+    "data",
+    "request",
+    "json",
+    "nosql",
+    "micro",
+    "nano",
+    "database"
+  ],
+  "dependencies": {
+    "request": "~2.27.0",
+    "follow": "~0.10.1",
+    "errs": "~0.2.4",
+    "underscore": "~1.5.1"
+  },
+  "devDependencies": {
+    "async": "~0.2.9",
+    "specify": "~1.2.0",
+    "nock": "~0.18.2"
+  },
+  "scripts": {
+    "test": "node node_modules/specify/bin/specify -e NOCK=on",
+    "compact": "node node_modules/specify/bin/specify -e NOCK=on -r compact",
+    "nock_off": "node node_modules/specify/bin/specify"
+  },
+  "main": "./nano.js",
+  "engines": {
+    "node": ">=0.3.6"
   }
-, "devDependencies" :
-  { "async"         : "~0.2.9"
-  , "specify"       : "~1.1.2"
-  , "nock"          : "~0.18.2"
-  }
-, "scripts"         :
-  { "test"          : "node node_modules/specify/bin/specify -e NOCK=on"
-  , "compact"       :
-    "node node_modules/specify/bin/specify -e NOCK=on -r compact"
-  , "nock_off"      : "node node_modules/specify/bin/specify"
-  }
-, "main"            : "./nano.js"
-, "engines"         : { "node": ">=0.3.6" }
 }
