@@ -2,18 +2,21 @@
  *
  * copyright 2021 nuno job <nunojob.com> (oO)--',--
  *
- * licensed under the apache license, version 2.0 (the "license");
+ * licensed under the apache license, version 2.0 (the 'license');
  * you may not use this file except in compliance with the license.
  * you may obtain a copy of the license at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * unless required by applicable law or agreed to in writing, software
- * distributed under the license is distributed on an "as is" basis,
+ * distributed under the license is distributed on an 'as is' basis,
  * without warranties or conditions of any kind, either express or implied.
  * see the license for the specific language governing permissions and
  * limitations under the license.
  */
+/* jshint node:true */
+'use strict';
+
 var fs          = require('fs')
   , qs          = require('querystring')
   , u           = require('url')
@@ -37,7 +40,6 @@ try { follow = require('follow'); } catch (err) {}
  */
 module.exports = exports = nano = function database_module(cfg) {
   var public_functions = {}
-    , request_opts     = {}
     , logging
     , path
     , path_array
@@ -56,10 +58,10 @@ module.exports = exports = nano = function database_module(cfg) {
   * this function assumes familiarity with the couchdb api
   *
   * e.g.
-  * nano.request( { db: "alice"
-  *               , doc: "rabbit"
-  *               , method: "GET"
-  *               , params: { rev: "1-967a00dff5e02add41819138abb3284d"}
+  * nano.request( { db: 'alice'
+  *               , doc: 'rabbit'
+  *               , method: 'GET'
+  *               , params: { rev: '1-967a00dff5e02add41819138abb3284d'}
   *               },
   *   function (_,b) { console.log(b) });
   *
@@ -67,9 +69,9 @@ module.exports = exports = nano = function database_module(cfg) {
   * @error {couch:*} an error proxied from couchdb
   *
   * @param {opts:object|string} request options;
-  *          e.g. {db: "test", method: "GET"}
+  *          e.g. {db: 'test', method: 'GET'}
   *        {opts.db:string} database name
-  *        {opts.method:string:optional} http method, defaults to "GET"
+  *        {opts.method:string:optional} http method, defaults to 'GET'
   *        {opts.path:string:optional} a full path, override `doc` and `att`
   *        {opts.doc:string:optional} document name
   *        {opts.att:string:optional} attachment name
@@ -82,9 +84,9 @@ module.exports = exports = nano = function database_module(cfg) {
   */
   function relax(opts,callback) {
     // most simple case is no opts, which returns the root
-    if(typeof opts === "function") {
+    if(typeof opts === 'function') {
       callback = opts;
-      opts     = {path: ""};
+      opts     = {path: ''};
     }
 
     // string is the same as a simple get request to that path
@@ -94,17 +96,17 @@ module.exports = exports = nano = function database_module(cfg) {
 
     // no opts, meaning stream root
     if(!opts) {
-      opts     = {path: ""};
+      opts     = {path: ''};
       callback = null;
     }
 
     var log     = logging()
-      , request = cfg.request || require('request').defaults({ jar: false })
+      , request = cfg.request || require('request').defaults(cfg.request_defaults)
       , params  = _.extend({}, opts.params)
-      , headers = { "content-type": "application/json"
-                  , "accept"      : "application/json"
+      , headers = { 'content-type': 'application/json'
+                  , 'accept'      : 'application/json'
                   }
-      , req     = { method  : (opts.method || "GET")
+      , req     = { method  : (opts.method || 'GET')
                   , headers : headers
                   , uri     : cfg.url }
       , status_code
@@ -128,50 +130,50 @@ module.exports = exports = nano = function database_module(cfg) {
 
     // if there is a path append it to the path
     if(opts.path) {
-      req.uri += "/" + opts.path;
+      req.uri += '/' + opts.path;
     }
     else if(opts.doc)  {
       // not a design document
       if(!/^_design/.test(opts.doc)) {
         try {
           // docs get encoded with encode uri component too
-          req.uri += "/" + encodeURIComponent(opts.doc);
+          req.uri += '/' + encodeURIComponent(opts.doc);
         }
         catch (error) {
           return errs.handle(errs.merge(error,
-            { "message": "couldnt encode: "+(opts && opts.doc)+" as an uri"
-            , "scope"  : "nano"
-            , "errid"  : "encode_uri"
+            { 'message': 'couldnt encode: '+(opts && opts.doc)+' as an uri'
+            , 'scope'  : 'nano'
+            , 'errid'  : 'encode_uri'
             }), callback);
         }
       }
       else {
         // design document has no encoding
-        req.uri += "/" + opts.doc;
+        req.uri += '/' + opts.doc;
       }
 
       // add attachment if one was specified
       if(opts.att) {
-        req.uri += "/" + opts.att;
+        req.uri += '/' + opts.att;
       }
     }
 
     // prevent bugs where people set encoding when piping
     if(opts.encoding !== undefined && callback) {
       req.encoding = opts.encoding;
-      delete req.headers["content-type"];
+      delete req.headers['content-type'];
       delete req.headers.accept;
     }
 
     // override content type
     if(opts.content_type) {
-      req.headers["content-type"] = opts.content_type;
+      req.headers['content-type'] = opts.content_type;
       delete req.headers.accept; // undo headers set
     }
 
     // cookie auth
     if(cfg.cookie) {
-      req.headers["X-CouchDB-WWW-Authenticate"] = "Cookie";
+      req.headers['X-CouchDB-WWW-Authenticate'] = 'Cookie';
       req.headers.cookie = cfg.cookie;
     }
 
@@ -183,30 +185,30 @@ module.exports = exports = nano = function database_module(cfg) {
             try { params[key] = JSON.stringify(opts.params[key]); }
             catch (err) {
               return errs.handle(errs.merge(err,
-                { "message": "bad params: " + key + " = " + opts.params[key]
-                , "scope"  : "nano"
-                , "errid"  : "encode_keys"
+                { 'message': 'bad params: ' + key + ' = ' + opts.params[key]
+                , 'scope'  : 'nano'
+                , 'errid'  : 'encode_keys'
                 }), callback);
             }
           }
         });
       } catch (err6) {
         return errs.handle(errs.merge(err6,
-          { "messsage": "params is not an object"
-          , "scope"   : "nano"
-          , "errid"   : "bad_params"
+          { 'messsage': 'params is not an object'
+          , 'scope'   : 'nano'
+          , 'errid'   : 'bad_params'
           }), callback);
       }
 
       // add our query string params
       try {
-        req.uri += "?" + qs.stringify(params);
+        req.uri += '?' + qs.stringify(params);
       }
       catch (err2) {
         return errs.handle(errs.merge(err2,
-           { "message": "invalid params: " + params.toString()
-           , "scope"  : "nano"
-           , "errid"  : "encode_params"
+           { 'message': 'invalid params: ' + params.toString()
+           , 'scope'  : 'nano'
+           , 'errid'  : 'encode_params'
            }), callback);
       }
     }
@@ -228,9 +230,9 @@ module.exports = exports = nano = function database_module(cfg) {
           });
         } catch (err3) {
           return errs.handle(errs.merge(err3,
-             { "message": "body seems to be invalid json"
-             , "scope"  : "nano"
-             , "errid"  : "encode_body"
+             { 'message': 'body seems to be invalid json'
+             , 'scope'  : 'nano'
+             , 'errid'  : 'encode_body'
              }), callback);
         }
       } // json data
@@ -252,9 +254,9 @@ module.exports = exports = nano = function database_module(cfg) {
         return request(req);
       } catch (err4) {
         return errs.handle(errs.merge(err4,
-           { "message": "request threw when you tried to stream"
-           , "scope"  : "request"
-           , "errid"  : "stream"
+           { 'message': 'request threw when you tried to stream'
+           , 'scope'  : 'request'
+           , 'errid'  : 'stream'
            }), callback);
       }
     }
@@ -269,9 +271,9 @@ module.exports = exports = nano = function database_module(cfg) {
         if(e) {
           log({err: 'socket', body: b, headers: rh });
           errs.handle(errs.merge(e,
-             { "message": "error happened in your connection"
-             , "scope"  : "socket"
-             , "errid"  : "request"
+             { 'message': 'error happened in your connection'
+             , 'scope'  : 'socket'
+             , 'errid'  : 'request'
              }), callback);
           return stream;
         }
@@ -291,7 +293,7 @@ module.exports = exports = nano = function database_module(cfg) {
           if (!parsed) {
             parsed = {};
           }
-          if (typeof parsed === "string") { // a stacktrace from couch
+          if (typeof parsed === 'string') { // a stacktrace from couch
             parsed = {message: parsed};
           }
           if (!parsed.message && (parsed.reason || parsed.error)) {
@@ -300,13 +302,13 @@ module.exports = exports = nano = function database_module(cfg) {
           // fix cloudant issues where they give an erlang stacktrace as js
           delete parsed.stack;
           errs.handle(errs.merge(errs.create(parsed),
-             { "scope"       : "couch"
-             , "status_code" : status_code
-             , "status-code" : status_code
-             , "request"     : req
-             , "headers"     : rh
-             , "errid"       : "non_200"
-             , "message"     : parsed.reason || "couch returned "+status_code
+             { 'scope'       : 'couch'
+             , 'status_code' : status_code
+             , 'status-code' : status_code
+             , 'request'     : req
+             , 'headers'     : rh
+             , 'errid'       : 'non_200'
+             , 'message'     : parsed.reason || 'couch returned '+status_code
              }), callback);
           return stream;
         }
@@ -314,9 +316,9 @@ module.exports = exports = nano = function database_module(cfg) {
       return stream;
     } catch(err5) {
       return errs.merge(err5,
-         { "message": "request threw when you tried to create the object"
-         , "scope"  : "request"
-         , "errid"  : "callback"
+         { 'message': 'request threw when you tried to create the object'
+         , 'scope'  : 'request'
+         , 'errid'  : 'callback'
          });
     }
   }
@@ -330,11 +332,11 @@ module.exports = exports = nano = function database_module(cfg) {
    * e.g.
    * nano.auth(username, password, function (err, body, headers) {
    *   if (err) {
-   *     return console.log("oh noes!")
+   *     return console.log('oh noes!')
    *   }
    *
    *   if (headers && headers['set-cookie']) {
-   *     console.log("cookie monster likes " + headers['set-cookie']);
+   *     console.log('cookie monster likes ' + headers['set-cookie']);
    *   }
    * });
    *
@@ -345,10 +347,10 @@ module.exports = exports = nano = function database_module(cfg) {
    */
   function auth_server(username, password, callback) {
     return relax(
-      { method       : "POST"
-      , db           : "_session"
-      , form         : { "name" : username, "password" : password }
-      , content_type : "application/x-www-form-urlencoded; charset=utf-8"
+      { method       : 'POST'
+      , db           : '_session'
+      , form         : { 'name' : username, 'password' : password }
+      , content_type : 'application/x-www-form-urlencoded; charset=utf-8'
       }, callback);
   }
 
@@ -362,7 +364,7 @@ module.exports = exports = nano = function database_module(cfg) {
   * e.g. function recursive_retries_create_db(tried,callback) {
   *        nano.db.create(db_name, function (e,b) {
   *          if(tried.tried === tried.max_retries) {
-  *            callback("Retries work");
+  *            callback('Retries work');
   *            return;
   *          }
   *          else {
@@ -377,7 +379,7 @@ module.exports = exports = nano = function database_module(cfg) {
   * @see relax
   */
   function create_db(db_name, callback) {
-    return relax({db: db_name, method: "PUT"},callback);
+    return relax({db: db_name, method: 'PUT'},callback);
   }
 
  /*
@@ -392,7 +394,7 @@ module.exports = exports = nano = function database_module(cfg) {
   * @see relax
   */
   function destroy_db(db_name, callback) {
-    return relax({db: db_name, method: "DELETE"},callback);
+    return relax({db: db_name, method: 'DELETE'},callback);
   }
 
  /*
@@ -407,7 +409,7 @@ module.exports = exports = nano = function database_module(cfg) {
   * @see relax
   */
   function get_db(db_name, callback) {
-    return relax({db: db_name, method: "GET"},callback);
+    return relax({db: db_name, method: 'GET'},callback);
   }
 
  /*
@@ -420,7 +422,7 @@ module.exports = exports = nano = function database_module(cfg) {
   * @see relax
   */
   function list_dbs(callback) {
-    return relax({db: "_all_dbs", method: "GET"},callback);
+    return relax({db: '_all_dbs', method: 'GET'},callback);
   }
 
  /*
@@ -434,13 +436,13 @@ module.exports = exports = nano = function database_module(cfg) {
   * @see relax
   */
   function compact_db(db_name, design_name, callback) {
-    if(typeof design_name === "function") {
+    if(typeof design_name === 'function') {
       callback = design_name;
       design_name = null;
     }
     return relax(
-      { db: db_name, doc: "_compact", att: design_name
-      , method: "POST" }, callback);
+      { db: db_name, doc: '_compact', att: design_name
+      , method: 'POST' }, callback);
   }
 
  /*
@@ -456,19 +458,19 @@ module.exports = exports = nano = function database_module(cfg) {
   * @see relax
   */
   function changes_db(db_name, params, callback) {
-    if(typeof params === "function") {
+    if(typeof params === 'function') {
       callback = params;
       params   = {};
     }
     return relax(
-      { db: db_name, path: "_changes", params: params
-      , method: "GET" }, callback);
+      { db: db_name, path: '_changes', params: params
+      , method: 'GET' }, callback);
   }
 
   /*
    * couchdb database follow support
    *
-   * e.g. var feed = nano.db.follow(db_name, {since: "now"});
+   * e.g. var feed = nano.db.follow(db_name, {since: 'now'});
    *      feed.on('change', function (change) { console.log(change); });
    *      feed.follow();
    *
@@ -481,7 +483,7 @@ module.exports = exports = nano = function database_module(cfg) {
    * @see relax
    */
   function follow_db(db_name, params, callback) {
-    if(typeof params === "function") {
+    if(typeof params === 'function') {
       callback = params;
       params   = {};
     }
@@ -492,22 +494,22 @@ module.exports = exports = nano = function database_module(cfg) {
 
     if(!follow) {
       var stream = errs.handle(
-        { "message": "follow is only supported on node 0.6+"
-        , "scope"  : "follow"
-        , "errid"  : "no_soup_for_you"
+        { 'message': 'follow is only supported on node 0.6+'
+        , 'scope'  : 'follow'
+        , 'errid'  : 'no_soup_for_you'
         }, callback);
       // streaming mode will call unexisting follow stream
       stream.follow = function () {
         return errs.handle(
-          { "message": "follow is only supported on node 0.6+"
-          , "scope"  : "follow"
-          , "errid"  : "no_soup_for_you"
+          { 'message': 'follow is only supported on node 0.6+'
+          , 'scope'  : 'follow'
+          , 'errid'  : 'no_soup_for_you'
           }, callback);
       };
       return stream;
     }
 
-    if(typeof callback === "function") {
+    if(typeof callback === 'function') {
       return follow(params, callback);
     } else {
       return new follow.Feed(params);
@@ -526,39 +528,39 @@ module.exports = exports = nano = function database_module(cfg) {
   * @see relax
   */
   function replicate_db(source, target, opts, callback) {
-    if(typeof opts === "function") {
+    if(typeof opts === 'function') {
       callback  = opts;
       opts      = {};
     }
-    if(typeof target === "object") {
+    if(typeof target === 'object') {
       var target_cfg = target.config || {};
       if(target_cfg.url && target_cfg.db) {
         target = u.resolve(target_cfg.url, encodeURIComponent(target_cfg.db));
       }
       else {
         return errs.handle(errs.create(
-          { "message": "replication target is invalid"
-          , "scope"  : "nano"
-          , "errid"  : "replication_target"
+          { 'message': 'replication target is invalid'
+          , 'scope'  : 'nano'
+          , 'errid'  : 'replication_target'
           }), callback);
       }
     }
-    if(typeof source === "object") {
+    if(typeof source === 'object') {
       var source_cfg = source.config || {};
       if(source_cfg.url && source_cfg.db) {
         source = u.resolve(source_cfg.url, encodeURIComponent(source_cfg.db));
       }
       else {
         return errs.handle(errs.create(
-          { "message": "replication source is invalid"
-          , "scope"  : "nano"
-          , "errid"  : "replication_source"
+          { 'message': 'replication source is invalid'
+          , 'scope'  : 'nano'
+          , 'errid'  : 'replication_source'
           }), callback);
       }
     }
     opts.source = source;
     opts.target = target;
-    return relax({db: "_replicate", body: opts, method: "POST"}, callback);
+    return relax({db: '_replicate', body: opts, method: 'POST'}, callback);
   }
 
  /****************************************************************************
@@ -578,21 +580,21 @@ module.exports = exports = nano = function database_module(cfg) {
     * @see relax
     */
     function insert_doc(doc,params,callback) {
-      var opts = {db: db_name, body: doc, method: "POST"};
+      var opts = {db: db_name, body: doc, method: 'POST'};
 
-      if(typeof params === "function") {
+      if(typeof params === 'function') {
         callback = params;
         params   = {};
       }
 
-      if(typeof params === "string") {
+      if(typeof params === 'string') {
         params   = {doc_name: params};
       }
 
       if (params) {
         if(params.doc_name) {
           opts.doc    = params.doc_name;
-          opts.method = "PUT";
+          opts.method = 'PUT';
           delete params.doc_name;
         }
         opts.params = params;
@@ -611,14 +613,14 @@ module.exports = exports = nano = function database_module(cfg) {
     */
     function destroy_doc(doc_name,rev,callback) {
       return relax(
-        { db: db_name, doc: doc_name, method: "DELETE"
+        { db: db_name, doc: doc_name, method: 'DELETE'
         , params: {rev: rev} }, callback);
     }
 
    /*
     * get a document from a couchdb database
     *
-    * e.g. db2.get("foo", {revs_info: true}, function (e,b,h) {
+    * e.g. db2.get('foo', {revs_info: true}, function (e,b,h) {
     *        console.log(e,b,h);
     *        return;
     *      });
@@ -629,19 +631,19 @@ module.exports = exports = nano = function database_module(cfg) {
     * @see relax
     */
     function get_doc(doc_name,params,callback) {
-      if(typeof params === "function") {
+      if(typeof params === 'function') {
         callback = params;
         params   = {};
       }
       return relax(
-        { db: db_name, doc: doc_name, method: "GET"
+        { db: db_name, doc: doc_name, method: 'GET'
         , params: params }, callback);
     }
 
    /*
     * get the head of a document from a couchdb database
     *
-    * e.g. db2.head("foo", function (e,b,h) {
+    * e.g. db2.head('foo', function (e,b,h) {
     *        console.log(e,b,h);
     *        return;
     *      });
@@ -652,7 +654,7 @@ module.exports = exports = nano = function database_module(cfg) {
     */
     function head_doc(doc_name,callback) {
       return relax(
-        { db: db_name, doc: doc_name, method: "HEAD"
+        { db: db_name, doc: doc_name, method: 'HEAD'
         , params: {} }, callback);
     }
 
@@ -660,7 +662,7 @@ module.exports = exports = nano = function database_module(cfg) {
     * copy a document to a new document, or overwrite an existing document
     * [1]: http://wiki.apache.org/couchdb/HTTP_Document_API#COPY
     *
-    * e.g. db2.copy("source", "target", { overwrite: true }, function(e,b,h) {
+    * e.g. db2.copy('source', 'target', { overwrite: true }, function(e,b,h) {
     *        console.log(e,b,h);
     *        return;
     *      });
@@ -672,18 +674,18 @@ module.exports = exports = nano = function database_module(cfg) {
     * @see relax
     */
     function copy_doc(doc_src, doc_dest, opts, callback) {
-      if(typeof opts === "function") {
+      if(typeof opts === 'function') {
         callback = opts;
         opts     = {};
       }
       var params =
-        { db: db_name, doc: doc_src, method: "COPY"
-        , headers: { "Destination": doc_dest }
+        { db: db_name, doc: doc_src, method: 'COPY'
+        , headers: { 'Destination': doc_dest }
         };
       if(opts.overwrite) {
         return head_doc(doc_dest, function (e,b,h) {
-          if (typeof h.etag === "string") {
-            params.headers.Destination += "?rev=" +
+          if (typeof h.etag === 'string') {
+            params.headers.Destination += '?rev=' +
               h.etag.substring(1, h.etag.length - 1);
           }
           return relax(params, callback);
@@ -702,12 +704,12 @@ module.exports = exports = nano = function database_module(cfg) {
     * @see relax
     */
     function list_docs(params,callback) {
-      if(typeof params === "function") {
+      if(typeof params === 'function') {
         callback = params;
         params   = {};
       }
       return relax(
-        { db: db_name, path: "_all_docs", method: "GET"
+        { db: db_name, path: '_all_docs', method: 'GET'
         , params: params }, callback);
     }
 
@@ -723,13 +725,13 @@ module.exports = exports = nano = function database_module(cfg) {
     * @see relax
     */
     function fetch_docs(doc_names,params,callback) {
-      if(typeof params === "function") {
+      if(typeof params === 'function') {
         callback = params;
         params   = {};
       }
       params.include_docs = true;
       return relax(
-        { db: db_name, path: "_all_docs", method: "POST"
+        { db: db_name, path: '_all_docs', method: 'POST'
         , params: params, body: doc_names }, callback);
     }
 
@@ -743,7 +745,7 @@ module.exports = exports = nano = function database_module(cfg) {
     * @see relax
     */
     function view_docs(design_name,view_name,params,callback) {
-      if(typeof params === "function") {
+      if(typeof params === 'function') {
         callback = params;
         params   = {};
       }
@@ -752,11 +754,11 @@ module.exports = exports = nano = function database_module(cfg) {
         var body = {keys: params.keys};
         delete params.keys;
         return relax({db: db_name, path: view_path
-                     , method: "POST", params: params, body: body}, callback);
+                     , method: 'POST', params: params, body: body}, callback);
       }
       else {
         return relax({db: db_name, path: view_path
-                     , method: "GET", params: params},callback);
+                     , method: 'GET', params: params},callback);
       }
     }
 
@@ -769,13 +771,13 @@ module.exports = exports = nano = function database_module(cfg) {
     * @see relax
     */
     function view_spatial(design_name, view_name, params, callback) {
-      if(typeof params === "function") {
+      if(typeof params === 'function') {
         callback = params;
         params   = {};
       }
       var view_path = '_design/' + design_name + '/_spatial/'  + view_name;
       return relax({db: db_name, path: view_path
-                    , method: "GET", params: params},callback);
+                    , method: 'GET', params: params},callback);
     }
 
     /*
@@ -788,13 +790,13 @@ module.exports = exports = nano = function database_module(cfg) {
     * @see relax
     */
     function view_search(design_name, search_name, params, callback) {
-      if(typeof params === "function") {
+      if(typeof params === 'function') {
         callback = params;
         params   = {};
       }
       var view_path = '_design/' + design_name + '/_search/' + search_name;
       return relax({db: db_name, path: view_path
-                    , method: "GET", params: params},callback);
+                    , method: 'GET', params: params},callback);
     }
 
     /*
@@ -808,13 +810,13 @@ module.exports = exports = nano = function database_module(cfg) {
     * @see relax
     */
     function show_doc(design_name,show_fn_name,docId,params,callback) {
-      if(typeof params === "function") {
+      if(typeof params === 'function') {
         callback = params;
         params   = {};
       }
       var show_fn_path = '_design/' + design_name + '/_show/'  + show_fn_name + '/' + docId;
       return relax({db: db_name, path: show_fn_path
-                   , method: "GET", params: params},callback);
+                   , method: 'GET', params: params},callback);
     }
 
    /*
@@ -828,14 +830,14 @@ module.exports = exports = nano = function database_module(cfg) {
     */
    function update_with_handler_doc(design_name, update_name,
      doc_name, body, callback) {
-     if(typeof body === "function") {
+     if(typeof body === 'function') {
        callback = body;
        body     = {};
      }
      var update_path = '_design/' + design_name + '/_update/' +
        update_name + '/' + encodeURIComponent(doc_name);
      return relax(
-       { db: db_name, path: update_path, method: "PUT"
+       { db: db_name, path: update_path, method: 'PUT'
        , body: body }, callback);
    }
 
@@ -850,13 +852,13 @@ module.exports = exports = nano = function database_module(cfg) {
     * @see relax
     */
     function bulk_docs(docs,params,callback) {
-     if(typeof params === "function") {
+     if(typeof params === 'function') {
        callback = params;
        params = {};
      }
      return relax(
-       { db: db_name, path: "_bulk_docs", body: docs
-       , method: "POST", params: params}, callback);
+       { db: db_name, path: '_bulk_docs', body: docs
+       , method: 'POST', params: params}, callback);
     }
 
    /**************************************************************************
@@ -867,7 +869,7 @@ module.exports = exports = nano = function database_module(cfg) {
     * [2]: http://wiki.apache.org/couchdb/HTTP_Document_API
     *
     * e.g.
-    * db.attachment.insert("new", "att", buffer, "image/bmp", {rev: b.rev},
+    * db.attachment.insert('new', 'att', buffer, 'image/bmp', {rev: b.rev},
     *   function(_,response) {
     *     console.log(response);
     * });
@@ -885,12 +887,12 @@ module.exports = exports = nano = function database_module(cfg) {
     * @see relax
     */
     function insert_att(doc_name,att_name,att,content_type,params,callback) {
-      if(typeof params === "function") {
+      if(typeof params === 'function') {
         callback = params;
         params   = {};
       }
       return relax(
-        { db: db_name, att: att_name, method: "PUT"
+        { db: db_name, att: att_name, method: 'PUT'
         , content_type: content_type, doc: doc_name, params: params
         , body: att}, callback);
     }
@@ -905,11 +907,11 @@ module.exports = exports = nano = function database_module(cfg) {
     * @see relax
     */
     function get_att(doc_name,att_name,params,callback) {
-      if(typeof params === "function") {
+      if(typeof params === 'function') {
         callback = params;
         params   = {};
       }
-      return relax({ db: db_name, att: att_name, method: "GET", doc: doc_name
+      return relax({ db: db_name, att: att_name, method: 'GET', doc: doc_name
                    , params: params, encoding: null},callback);
     }
 
@@ -925,12 +927,12 @@ module.exports = exports = nano = function database_module(cfg) {
     function destroy_att(doc_name,att_name,rev,callback) {
       if(typeof att_name !== 'string' && att_name !== '') {
         return errs.handle(errs.create(
-          { "message": "att_name is not a string"
-            , "scope"  : "nano"
-            , "errid"   : "bad_params"
+          { 'message': 'att_name is not a string'
+            , 'scope'  : 'nano'
+            , 'errid'   : 'bad_params'
           }), callback);
       }
-      return relax({ db: db_name, att: att_name, method: "DELETE"
+      return relax({ db: db_name, att: att_name, method: 'DELETE'
                   , doc: doc_name, params: {rev: rev}},callback);
     }
 
@@ -945,7 +947,7 @@ module.exports = exports = nano = function database_module(cfg) {
     * @see relax
     */
     function view_docs_with_list(design_name,view_name,list_name,params,callback) {
-      if(typeof params === "function") {
+      if(typeof params === 'function') {
         callback = params;
         params   = {};
       }
@@ -954,11 +956,11 @@ module.exports = exports = nano = function database_module(cfg) {
         var body = {keys: params.keys};
         delete params.keys;
         return relax({db: db_name, path: list_path
-                     , method: "POST", params: params, body: body}, callback);
+                     , method: 'POST', params: params, body: body}, callback);
       }
       else {
         return relax({db: db_name, path: list_path
-                     , method: "GET", params: params},callback);
+                     , method: 'GET', params: params},callback);
       }
     }
 
@@ -1032,7 +1034,7 @@ module.exports = exports = nano = function database_module(cfg) {
     };
 
   // handle different type of configs
-  if(typeof cfg === "string") {
+  if(typeof cfg === 'string') {
     // just an url
     if(/^https?:/.test(cfg)) { cfg = {url: cfg}; } // url
     else {
@@ -1042,9 +1044,9 @@ module.exports = exports = nano = function database_module(cfg) {
       }
       catch(error) {
         throw errs.merge(error,
-           { "scope"       : "init"
-           , "message"     : "couldn't read config file " + cfg
-           , "errid"       : "bad_file"
+           { 'scope'       : 'init'
+           , 'message'     : 'couldn\'t read config file ' + cfg
+           , 'errid'       : 'bad_file'
            });
       }
     }
@@ -1052,21 +1054,16 @@ module.exports = exports = nano = function database_module(cfg) {
 
   if(!(cfg && cfg.url)) {
     throw errs.create(
-        { "scope"       : "init"
-        , "message"     : "no configuration with a valid url was given"
-        , "errid"       : "bad_url"
+        { 'scope'       : 'init'
+        , 'message'     : 'no configuration with a valid url was given'
+        , 'errid'       : 'bad_url'
         });
   }
 
   // alias so config is public in nano once set
   public_functions.config = cfg;
 
-  // configuration for request
-  // please send pull requests if you want to use a option
-  // in request that is not exposed
-  if(cfg.request_defaults) {
-    request = require('request').defaults(cfg.request_defaults);
-  }
+  cfg.request_defaults = cfg.request_defaults || { jar: false };
 
   // assuming a cfg.log inside cfg
   logging    = require('./logger')(cfg);
@@ -1114,5 +1111,5 @@ module.exports = exports = nano = function database_module(cfg) {
 
 // nano level exports
 nano.version = JSON.parse(
-  fs.readFileSync(__dirname + "/package.json")).version;
+  fs.readFileSync(__dirname + '/package.json')).version;
 nano.path    = __dirname;

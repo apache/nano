@@ -3,7 +3,7 @@
   "description": "minimalistic couchdb driver for node.js",
   "homepage": "http://github.com/dscape/nano",
   "repository": "git://github.com/dscape/nano",
-  "version": "4.2.0",
+  "version": "4.2.1",
   "author": "Nuno Job <nunojobpinto@gmail.com> (http://nunojob.com)",
   "contributors": [
     "Thiago Arrais <thiago.arrais@gmail.com> (http://thiagoarrais.com)",
@@ -37,7 +37,8 @@
     "Gerrit Renker",
     "Andreas Lappe <nd@off-pist.de>",
     "Aram Kocharyan <akarmenia@gmail.com>",
-    "Jan Krems @jkrems"
+    "Jan Krems @jkrems",
+    "Owen Evans <owen@bgeek.net> (http://www.bgeek.net)"
   ],
   "keywords": [
     "couchdb",
@@ -67,6 +68,6 @@
   },
   "main": "./nano.js",
   "engines": {
-    "node": ">=0.3.6"
+    "node": ">=0.6.0"
   }
 }
