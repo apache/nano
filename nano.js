@@ -15,6 +15,8 @@
  * limitations under the license.
  */
 /* jshint node:true */
+/* jshint laxcomma:true */
+
 'use strict';
 
 var fs          = require('fs')
