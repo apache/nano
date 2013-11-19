@@ -9,7 +9,7 @@ minimalistic couchdb driver for node.js
   couchdb
 * **pipes** - proxy requests from couchdb directly to your end user
 * **errors** - errors are proxied directly from couchdb: if you know couchdb 
-  you already know `nano`
+  you already know `nano`.
 
 
 ## installation
