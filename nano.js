@@ -734,7 +734,7 @@ module.exports = exports = nano = function database_module(cfg) {
       params.include_docs = true;
       return relax(
         { db: db_name, path: '_all_docs', method: 'POST'
-        , params: params, body: doc_names }, callback);
+        , params: params, body: { keys: doc_names } }, callback);
     }
 
    /*
