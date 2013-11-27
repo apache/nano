@@ -25,7 +25,7 @@ specify("doc_fetch:setup", timeout, function (assert) {
 });
 
 specify("doc_fetch:one_key", timeout, function (assert) {
-  db.fetch({keys:["foobar"]}, function (error, docs) {
+  db.fetch(["foobar"], function (error, docs) {
     assert.equal(error, undefined, 'No errors');
     assert.equal(docs.rows.length, 1, 'One row');
     assert.equal(docs.total_rows, 3, 'Out of 3');
@@ -33,7 +33,7 @@ specify("doc_fetch:one_key", timeout, function (assert) {
 });
 
 specify("doc_fetch:multiple_keys", timeout, function (assert) {
-  db.fetch({keys:["foobar", "barfoo"]}, function (error, docs) {
+  db.fetch(["foobar", "barfoo"], function (error, docs) {
     assert.equal(error, undefined, 'No errors');
     assert.equal(docs.rows.length, 2, 'Two rows');
     assert.equal(docs.total_rows, 3, 'Out of 3');
