@@ -686,7 +686,7 @@ module.exports = exports = nano = function database_module(cfg) {
         };
       if(opts.overwrite) {
         return head_doc(doc_dest, function (e,b,h) {
-          if (typeof h.etag === 'string') {
+          if (h && typeof h.etag === 'string') {
             params.headers.Destination += '?rev=' +
               h.etag.substring(1, h.etag.length - 1);
           }
