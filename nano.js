@@ -689,7 +689,7 @@ module.exports = exports = nano = function database_module(cfg) {
           if (e) {
             return callback(e);
           }
-          if (typeof h.etag === 'string') {
+          if (h && typeof h.etag === 'string') {
             params.headers.Destination += '?rev=' +
               h.etag.substring(1, h.etag.length - 1);
           }
