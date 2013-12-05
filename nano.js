@@ -686,7 +686,7 @@ module.exports = exports = nano = function database_module(cfg) {
         };
       if(opts.overwrite) {
         return head_doc(doc_dest, function (e,b,h) {
-          if (e) {
+          if (e && e.status_code !== 404) {
             return callback(e);
           }
           if (h && typeof h.etag === 'string') {
