@@ -43,6 +43,9 @@ minimalistic couchdb driver for node.js
 	- [db.bulk(docs, [params], [callback])](#dbbulkdocs-params-callback)
 	- [db.list([params], [callback])](#dblistparams-callback)
 	- [db.fetch(docnames, [params], [callback])](#dbfetchdocnames-params-callback)
+- [multipart functions](#multipart-functions)
+	- [db.multipart.insert(doc, attachments, [params], [callback])](#dbmultipartinsertdoc-attachments-params-callback)
+	- [db.multipart.get(docname, [params], [callback])](#dbmultipartgetdocname-params-callback)
 - [attachments functions](#attachments-functions)
 	- [db.attachment.insert(docname, attname, att, contenttype, [params], [callback])](#dbattachmentinsertdocname-attname-att-contenttype-params-callback)
 	- [db.attachment.get(docname, attname, [params], [callback])](#dbattachmentgetdocname-attname-params-callback)
@@ -320,6 +323,7 @@ makes a request to couchdb, the available `opts` are:
 * `opts.headers` – additional http headers, overrides existing ones
 * `opts.body` – the document or attachment body
 * `opts.encoding` – the encoding for attachments
+* `opts.multipart` – array of objects for multipart request
 
 ### nano.relax(opts, [callback])
 
@@ -429,6 +433,41 @@ bulk fetch of the database documents, `docnames` are specified as per
 [couchdb doc](http://wiki.apache.org/couchdb/HTTP_Bulk_Document_API).
 additional query string `params` can be specified, `include_docs` is always set
 to `true`.  
+
+## multipart functions
+
+### db.multipart.insert(doc, attachments, [params], [callback])
+
+inserts a `doc` together with `attachments` and optional `params`. if params is a string, its assumed as the intended document name. if params is an object, its passed as query string parameters and `doc_name` is checked for defining the document name.
+ refer to the [doc](http://wiki.apache.org/couchdb/HTTP_Document_API#Multiple_Attachments) for more details.
+ `attachments` must be an array of objects with `name`, `data` and `content_type` properties.
+
+``` js
+var fs = require('fs');
+
+fs.readFile('rabbit.png', function(err, data) {
+  if (!err) {
+    alice.multipart.insert({ foo: 'bar' }, [{name: 'rabbit.png', data: data, content_type: 'image/png'}], 'mydoc', function(err, body) {
+        if (!err)
+          console.log(body);
+    });
+  }
+});
+```
+
+### db.multipart.get(docname, [params], [callback])
+
+get `docname` together with its attachments via `multipart/related` request with optional query string additions
+`params`. refer to the
+ [doc](http://wiki.apache.org/couchdb/HTTP_Document_API#Getting_Attachments_With_a_Document) for more details.
+ the multipart response body is a `Buffer`.
+
+``` js
+alice.multipart.get('rabbit', function(err, buffer) {
+  if (!err)
+    console.log(buffer.toString());
+});
+```
 
 ## attachments functions
 

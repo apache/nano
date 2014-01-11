@@ -1,0 +1,18 @@
+[
+  { "method"   : "put"
+  , "path"     : "/multipart_insert"
+  , "status"   : 201
+  , "response" : "{ \"ok\": true }" 
+  }
+, { "method"   : "put"
+  , "path"     : "/multipart_insert/foobaz"
+  , "body"     : "*"
+  , "status"   : 201
+  , "response" : "{\"ok\": true, \"id\": \"foobaz\", \"rev\": \"1-921bd51\" }"
+  }
+, { "method"   : "delete"
+  , "path"     : "/multipart_insert"
+  , "status"   : 200
+  , "response" : "{ \"ok\": true }" 
+  }
+]

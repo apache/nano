@@ -127,6 +127,11 @@ module.exports = exports = nano = function database_module(cfg) {
       req.uri = u.resolve(req.uri, encodeURIComponent(opts.db));
     }
 
+    // add multiparts
+    if(opts.multipart) {
+      req.multipart = opts.multipart;
+    }
+
     // make sure we add our headers to the request
     req.headers = _.extend(req.headers, opts.headers, cfg.default_headers);
 
@@ -261,6 +266,10 @@ module.exports = exports = nano = function database_module(cfg) {
            , 'errid'  : 'stream'
            }), callback);
       }
+    }
+
+    if (req.headers['content-type'] === 'multipart/related' && req.method === 'GET') {
+      req.encoding = null;
     }
 
     try {
@@ -867,6 +876,86 @@ module.exports = exports = nano = function database_module(cfg) {
     }
 
    /**************************************************************************
+    * multipart                                                              *
+    *************************************************************************/
+   /*
+    * inserting a document with attachments
+    * [2]: http://wiki.apache.org/couchdb/HTTP_Document_API#Multiple_Attachments
+    *
+    * e.g.
+    * db.multipart.insert('new', 'att', buffer, 'image/bmp', {rev: b.rev},
+    *   function(_,response) {
+    *     console.log(response);
+    * });
+    *
+    * don't forget that params.rev is required in most cases. only exception
+    * is when creating a new document with a new attachment. consult [2] for
+    * details
+    *
+    * @param {doc:object|string} document body
+    * @param {attachments:array} attachments
+    * @param {doc_name:string:optional} document name
+    * @param {params:string:optional} additions to the querystring
+    *
+    * @see relax
+    */
+    function insert_multipart(doc,attachments,params,callback) {
+      if(typeof params === 'function') {
+        callback = params;
+        params   = {};
+      }
+
+      if(typeof params === 'string') {
+        params   = {doc_name: params};
+      }
+      var doc_name = params.doc_name;
+      delete params.doc_name;
+
+      var stubs = attachments.reduce(function(memo, att) {
+        memo[att.name] = {
+          follows: true,
+          length: att.data.length,
+          content_type: att.content_type
+        };
+
+        return memo;
+      }, {});
+      var multipart = [
+        {
+          'content-type': 'application/json',
+          body: JSON.stringify(_.extend({}, doc, { _attachments: stubs }))
+        }
+      ];
+      attachments.forEach(function(att) {
+        multipart.push({
+          body: att.data
+        });
+      });
+      return relax(
+        { db: db_name, method: 'PUT'
+        , content_type: 'multipart/related', doc: doc_name, params: params
+        , multipart: multipart}, callback);
+    }
+
+   /*
+    * get a document with attachments
+    *
+    * @param {doc_name:string} document name
+    * @param {params:object:optional} additions to the querystring
+    *
+    * @see relax
+    */
+    function get_multipart(doc_name,params,callback) {
+      if(typeof params === 'function') {
+        callback = params;
+        params   = {};
+      }
+      params.attachments = true;
+      return relax({ db: db_name, method: 'GET', doc: doc_name
+        , content_type: 'multipart/related', params: params},callback);
+    }
+
+   /**************************************************************************
     * attachment                                                             *
     *************************************************************************/
    /*
@@ -994,6 +1083,10 @@ module.exports = exports = nano = function database_module(cfg) {
       , list              : list_docs
       , fetch             : fetch_docs
       , config            : {url: cfg.url, db: db_name}
+      , multipart         :
+        { insert          : insert_multipart
+        , get             : get_multipart
+        }
       , attachment        :
         { insert          : insert_att
         , get             : get_att
