@@ -366,6 +366,32 @@ module.exports = exports = nano = function database_module(cfg) {
   }
 
  /***************************************************************************
+  * session                                                                 *
+  ***************************************************************************/
+  /*
+   * gets the current session if there us one
+   *
+   * e.g.
+   * nano.session(function (err, session) {
+   *   if (err) {
+   *     return console.log('oh noes!')
+   *   }
+   *
+   *   console.log('user is %s and has these roles: %j',
+   *     session.userCtx.user, session.userCtx.roles);
+   *
+   * });
+   *
+   * @see relax
+   */
+  function session(callback) {
+    return relax(
+      { method       : 'GET'
+      , db           : '_session'
+      }, callback);
+  }
+
+ /***************************************************************************
   * db                                                                      *
   ***************************************************************************/
  /*
@@ -1074,6 +1100,7 @@ module.exports = exports = nano = function database_module(cfg) {
             return follow_db(db_name,params,cb);
         }
       , auth              : auth_server                      // alias
+      , session           : session
       , insert            : insert_doc
       , get               : get_doc
       , head              : head_doc
@@ -1129,6 +1156,7 @@ module.exports = exports = nano = function database_module(cfg) {
     , relax       : relax                  // alias
     , dinosaur    : relax                  // alias
     , auth        : auth_server
+    , session     : session
     };
 
   // handle different type of configs

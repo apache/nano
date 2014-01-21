@@ -5,10 +5,10 @@ minimalistic couchdb driver for node.js
 
 `nano` features:
 
-* **minimalistic** - there is only a minimum of abstraction between you and 
+* **minimalistic** - there is only a minimum of abstraction between you and
   couchdb
 * **pipes** - proxy requests from couchdb directly to your end user
-* **errors** - errors are proxied directly from couchdb: if you know couchdb 
+* **errors** - errors are proxied directly from couchdb: if you know couchdb
   you already know `nano`.
 
 
@@ -81,12 +81,12 @@ and to use it:
 var alice = nano.db.use('alice');
 ```
 
-in this examples we didn't specify a `callback` function, the absence of a 
+in this examples we didn't specify a `callback` function, the absence of a
 callback means _"do this, ignore what happens"_.
 in `nano` the callback function receives always three arguments:
 
 * `err` - the error, if any
-* `body` - the http _response body_ from couchdb, if no error. 
+* `body` - the http _response body_ from couchdb, if no error.
   json parsed body, binary for non json responses
 * `header` - the http _response header_ from couchdb, if no error
 
@@ -155,12 +155,12 @@ to specify further configuration options you can pass an object literal instead:
 var db = require('nano')(
   { "url"             : "http://localhost:5984/foo"
   , "request_defaults" : { "proxy" : "http://someproxy" }
-  , "log"             : function (id, args) { 
+  , "log"             : function (id, args) {
       console.log(id, args);
     }
   });
 ```
-Please check [request] for more information on the defaults. They support features like cookie jar, proxies, ssl, etc. 
+Please check [request] for more information on the defaults. They support features like cookie jar, proxies, ssl, etc.
 
 ### pool size and open sockets
 
@@ -252,7 +252,7 @@ replication.
 ``` js
 nano.db.replicate('alice', 'http://admin:password@otherhost.com:5984/alice',
                   { create_target:true }, function(err, body) {
-    if (!err) 
+    if (!err)
       console.log(body);
 });
 ```
@@ -410,12 +410,12 @@ alice.copy('rabbit', 'rabbit2', { overwrite: true }, function(err, _, headers) {
 
 ### db.bulk(docs, [params], [callback])
 
-bulk operations(update/delete/insert) on the database, refer to the 
+bulk operations(update/delete/insert) on the database, refer to the
 [couchdb doc](http://wiki.apache.org/couchdb/HTTP_Bulk_Document_API).
 
 ### db.list([params], [callback])
 
-list all the docs in the database with optional query string additions `params`.  
+list all the docs in the database with optional query string additions `params`.
 
 ``` js
 alice.list(function(err, body) {
@@ -429,10 +429,10 @@ alice.list(function(err, body) {
 
 ### db.fetch(docnames, [params], [callback])
 
-bulk fetch of the database documents, `docnames` are specified as per 
+bulk fetch of the database documents, `docnames` are specified as per
 [couchdb doc](http://wiki.apache.org/couchdb/HTTP_Bulk_Document_API).
 additional query string `params` can be specified, `include_docs` is always set
-to `true`.  
+to `true`.
 
 ## multipart functions
 
@@ -504,7 +504,7 @@ fs.createReadStream('rabbit.png').pipe(
 ### db.attachment.get(docname, attname, [params], [callback])
 
 get `docname`'s attachment `attname` with optional query string additions
-`params`.  
+`params`.
 
 ``` js
 var fs = require('fs');
@@ -568,8 +568,8 @@ alice.view_with_list('characters', 'crazy_ones', 'my_list', function(err, body) 
 
 ### db.show(designname, showname, doc_id, [params], [callback])
 
-calls a show function of the specified design for the document specified by doc_id with 
-optional query string additions `params`.  
+calls a show function of the specified design for the document specified by doc_id with
+optional query string additions `params`.
 
 ``` js
 alice.show('characters', 'format_doc', '3621898430', function(err, doc) {
@@ -586,7 +586,7 @@ for possible query paramaters and more information on show functions.
 calls the design's update function with the specified doc in input.
 
 ``` js
-db.atomic("update", "inplace", "foobar", 
+db.atomic("update", "inplace", "foobar",
 {field: "foo", value: "bar"}, function (error, response) {
   assert.equal(error, undefined, "failed to update");
   assert.equal(response.foo, "bar", "update worked");
@@ -595,7 +595,7 @@ db.atomic("update", "inplace", "foobar",
 
 ### db.search(designname, searchname, [params], [callback])
 
-calls a view of the specified design with optional query string additions `params`.  
+calls a view of the specified design with optional query string additions `params`.
 
 ``` js
 alice.search('characters', 'crazy_ones', { q: 'cat' }, function(err, doc) {
@@ -620,7 +620,7 @@ var nano     = require('nano')('http://localhost:5984')
   ;
 
 nano.auth(username, userpass, function (err, body, headers) {
-  if (err) { 
+  if (err) {
     return callback(err);
   }
 
@@ -655,6 +655,22 @@ alice.insert(doc, function (err, body, headers) {
 });
 ```
 
+getting current session:
+
+```javascript
+var nano = require('nano')({url: 'http://localhost:5984', cookie: 'AuthSession=' + auth});
+
+nano.session(function(err, session) {
+  if (err) {
+    return console.log('oh noes!')
+  }
+
+  console.log('user is %s and has these roles: %j',
+    session.userCtx.user, session.userCtx.roles);
+});
+```
+
+
 ## advanced features
 
 ### extending nano
@@ -682,7 +698,7 @@ getrabbitrev('4-2e6cdc4c7e26b745c2881a24e0eeece2', function(err, body) {
 ```
 ### pipes
 
-you can pipe in nano like in any other stream.  
+you can pipe in nano like in any other stream.
 for example if our `rabbit` document has an attachment with name `picture.png`
 (with a picture of our white rabbit, of course!) you can pipe it to a `writable
 stream`
