@@ -24,10 +24,10 @@ specify("shared_cookie:setup", timeout, function (assert) {
     }, function (err, response, headers) {
       assert.equal(err, undefined, "Failed to create admin user");
       // authenticate
-      nano.auth(helpers.username, helpers.password, 
+      nano.auth(helpers.username, helpers.password,
       function (err, response, headers) {
         assert.equal(err, undefined, "Should have logged in successfully");
-        assert.ok(headers['set-cookie'], 
+        assert.ok(headers['set-cookie'],
           "Response should have a set-cookie header");
         cookie = headers['set-cookie'];
       });
@@ -43,6 +43,14 @@ specify("shared_cookie:test", timeout, function (assert) {
     assert.equal(error, undefined, "Should have stored value");
     assert.equal(response.ok, true, "Response should be ok");
     assert.ok(response.rev, "Response should have rev");
+  });
+});
+
+specify("shared_cookie:get_session", timeout, function (assert) {
+  var server = Nano({ url : helpers.couch, cookie: cookie });
+  server.session(function(error, session) {
+    assert.equal(error, undefined, "Should have gotten the session");
+    assert.equal(session.userCtx.name, helpers.username);
   });
 });
 
