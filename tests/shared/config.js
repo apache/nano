@@ -59,4 +59,14 @@ specify("shared_config:default_headers", timeout, function (assert) {
   , 'Custom headers "x-second-header" not honored');
 });
 
+specify("shared_config:clone", timeout, function (assert) {
+  var config = {
+    url: 'http://someurl.com'
+  };
+
+  assert.equal(Nano(config).config.url, config.url, "Simple URL failed");
+  assert.ok(Nano(config).config.request_defaults, "request_defaults not set");
+  assert.ok(!config.request_defaults, "request_defaults set on original object");
+});
+
 specify.run(process.argv.slice(2));

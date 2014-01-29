@@ -1159,6 +1159,11 @@ module.exports = exports = nano = function database_module(cfg) {
     , session     : session
     };
 
+  // clone if cfg object
+  if(typeof cfg === 'object') {
+    cfg = _.clone(cfg);
+  }
+
   // handle different type of configs
   if(typeof cfg === 'string') {
     // just an url
