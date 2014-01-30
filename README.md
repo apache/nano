@@ -609,7 +609,7 @@ check out the tests for a fully functioning example.
 
 ## using cookie authentication
 
-nano supports making requests using couchdb's [cookie authentication](http://guide.couchdb.org/editions/1/en/security.html#cookies) functionality. there's a [step-by-step guide here](https://clickity.io/blog/2012/5/23/couchdb-cookie-authentication-nodejs-nano/), but essentially you just:
+nano supports making requests using couchdb's [cookie authentication](http://guide.couchdb.org/editions/1/en/security.html#cookies) functionality. there's a [step-by-step guide here](http://codetwizzle.com/articles/couchdb-cookie-authentication-nodejs-nano/), but essentially you just:
 
 ``` js
 var nano     = require('nano')('http://localhost:5984')
