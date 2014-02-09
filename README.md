@@ -599,9 +599,8 @@ An example update handler follows:
 ``` js
 "updates": {
   "in-place" : "function(doc, req) {
-      var body  = JSON.parse(req.body);
-      var field = body.field;
-      var value = body.value;
+      var field = req.form.field;
+      var value = req.form.value;
       var message = 'set '+field+' to '+value;
       doc[field] = value;
       return [doc, message];
