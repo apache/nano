@@ -1,6 +1,8 @@
 # nano
 [![Build Status](https://travis-ci.org/dscape/nano.png)](https://travis-ci.org/dscape/nano)
 
+[![Gitter chat](https://badges.gitter.im/dscape/nano.png)](https://gitter.im/dscape/nano)
+
 minimalistic couchdb driver for node.js
 
 `nano` features:
@@ -759,6 +761,7 @@ where `list_doc_params` is the test name.
 * bugs: <http://github.com/dscape/nano/issues>
 * build: [![build status](https://secure.travis-ci.org/dscape/nano.png)](http://travis-ci.org/dscape/nano)
 * deps: [![deps status](https://david-dm.org/dscape/nano.png)](https://david-dm.org/dscape/nano)
+* support: <https://gitter.im/dscape/nano>
 
 `(oo)--',-` in [caos][3]
 
