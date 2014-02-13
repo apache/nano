@@ -593,6 +593,20 @@ db.atomic("update", "inplace", "foobar",
 });
 ```
 
+Note that the data is sent in the body of the request.  
+An example update handler follows:
+
+``` js
+"updates": {
+  "in-place" : "function(doc, req) {
+      var field = req.form.field;
+      var value = req.form.value;
+      var message = 'set '+field+' to '+value;
+      doc[field] = value;
+      return [doc, message];
+  }"
+```
+
 ### db.search(designname, searchname, [params], [callback])
 
 calls a view of the specified design with optional query string additions `params`.
