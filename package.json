@@ -53,7 +53,7 @@
     "database"
   ],
   "dependencies": {
-    "request": "~2.27.0",
+    "request": "~2.33.0",
     "follow": "~0.10.1",
     "errs": "~0.2.4",
     "underscore": "~1.5.1"
