@@ -129,8 +129,8 @@ you can also see your document in [futon](http://localhost:5984/_utils).
 configuring nano to use your database server is as simple as:
 
 ``` js
-var server = require('nano')('http://localhost:5984')
-  , db     = server.use('foo')
+var nano   = require('nano')('http://localhost:5984')
+  , db     = nano.use('foo')
   ;
 ```
 
