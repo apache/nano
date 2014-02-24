@@ -776,6 +776,27 @@ module.exports = exports = nano = function database_module(cfg) {
     }
 
    /*
+    * bulk fetch functionality for doc revisions
+    * [1]: http://wiki.apache.org/couchdb/HTTP_Bulk_Document_API
+    * same as fetch_docs but without include_docs set to true
+    *
+    * @param {doc_names:object} document keys as per the couchdb api[1]
+    * @param {params:object} additions to the querystring
+    *
+    * @see get_doc
+    * @see relax
+    */
+    function fetch_revs(doc_names,params,callback) {
+      if(typeof params === 'function') {
+        callback = params;
+        params   = {};
+      }
+      return relax(
+        { db: db_name, path: '_all_docs', method: 'POST'
+        , params: params, body: doc_names }, callback);
+    }
+    
+   /*
     * calls a view
     *
     * @param {design_name:string} design document name
@@ -1109,6 +1130,7 @@ module.exports = exports = nano = function database_module(cfg) {
       , bulk              : bulk_docs
       , list              : list_docs
       , fetch             : fetch_docs
+      , fetch_revs        : fetch_revs
       , config            : {url: cfg.url, db: db_name}
       , multipart         :
         { insert          : insert_multipart

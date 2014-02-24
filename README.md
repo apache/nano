@@ -43,6 +43,7 @@ minimalistic couchdb driver for node.js
 	- [db.bulk(docs, [params], [callback])](#dbbulkdocs-params-callback)
 	- [db.list([params], [callback])](#dblistparams-callback)
 	- [db.fetch(docnames, [params], [callback])](#dbfetchdocnames-params-callback)
+  - [db.fetch_revs(docnames, [params], [callback])](#dbfetch_revsdocnames-params-callback)
 - [multipart functions](#multipart-functions)
 	- [db.multipart.insert(doc, attachments, [params], [callback])](#dbmultipartinsertdoc-attachments-params-callback)
 	- [db.multipart.get(docname, [params], [callback])](#dbmultipartgetdocname-params-callback)
@@ -434,6 +435,13 @@ bulk fetch of the database documents, `docnames` are specified as per
 additional query string `params` can be specified, `include_docs` is always set
 to `true`.
 
+### db.fetch_revs(docnames, [params], [callback])
+
+bulk fetch of the revisions of the database documents, `docnames` are specified as per
+[couchdb doc](http://wiki.apache.org/couchdb/HTTP_Bulk_Document_API).
+additional query string `params` can be specified, this is the same method as fetch but
+ `include_docs` is not automatically set to `true`.
+
 ## multipart functions
 
 ### db.multipart.insert(doc, attachments, [params], [callback])
@@ -593,7 +601,7 @@ db.atomic("update", "inplace", "foobar",
 });
 ```
 
-Note that the data is sent in the body of the request.  
+Note that the data is sent in the body of the request.
 An example update handler follows:
 
 ``` js
