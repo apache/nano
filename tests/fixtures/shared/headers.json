@@ -6,7 +6,7 @@
   }
 , { "method"   : "put"
   , "path"     : "/shared_headers/new/att"
-  , "body"     : "\"Hello\""
+  , "body"     : "Hello"
   , "status"   : 201
   , "response" : "{\"ok\":true,\"id\":\"new\",\"rev\":\"1-5142a2\"}"
   }

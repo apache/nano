@@ -221,7 +221,7 @@ module.exports = exports = nano = function database_module(cfg) {
     }
 
     if(opts.body) {
-      if (Buffer.isBuffer(opts.body)) {
+      if (Buffer.isBuffer(opts.body) || opts.dont_stringify) {
         req.body = opts.body; // raw data
       }
       else {
@@ -292,7 +292,11 @@ module.exports = exports = nano = function database_module(cfg) {
         delete rh.server;
         delete rh['content-length'];
 
-        try { parsed = JSON.parse(b); } catch (err) { parsed = b; }
+        if (opts.dont_parse) {
+          parsed = b;
+        } else {
+          try { parsed = JSON.parse(b); } catch (err) { parsed = b; }
+        }
 
         if (status_code >= 200 && status_code < 400) {
           log({err: null, body: parsed, headers: rh});
@@ -1014,7 +1018,7 @@ module.exports = exports = nano = function database_module(cfg) {
       return relax(
         { db: db_name, att: att_name, method: 'PUT'
         , content_type: content_type, doc: doc_name, params: params
-        , body: att}, callback);
+        , body: att, dont_stringify: true}, callback);
     }
 
    /*
@@ -1032,7 +1036,7 @@ module.exports = exports = nano = function database_module(cfg) {
         params   = {};
       }
       return relax({ db: db_name, att: att_name, method: 'GET', doc: doc_name
-                   , params: params, encoding: null},callback);
+                   , params: params, encoding: null, dont_parse: true},callback);
     }
 
    /*

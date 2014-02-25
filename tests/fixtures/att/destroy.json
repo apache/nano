@@ -6,7 +6,7 @@
   }
 , { "method"   : "put"
   , "path"     : "/att_destroy/new/att"
-  , "body"     : "\"Hello World!\""
+  , "body"     : "Hello World!"
   , "status"   : 201
   , "response" : "{\"ok\": true, \"id\": \"new\", \"rev\": \"1-921bd51\" }"
   }
@@ -17,7 +17,7 @@
   }
 , { "method"   : "put"
   , "path"     : "/att_destroy/new2/att2"
-  , "body"     : "\"Hello World!\""
+  , "body"     : "Hello World!"
   , "status"   : 201
   , "response" : "{\"ok\": true, \"id\": \"new\", \"rev\": \"1-921bd51\" }"
   }
