@@ -5,14 +5,24 @@
   , "response" : "{ \"ok\": true }" 
   }
 , { "method"   : "put"
-  , "path"     : "/att_get/new/att"
-  , "body"     : "\"Hello\""
+  , "path"     : "/att_get/new_string/att"
+  , "body"     : "Hello"
   , "status"   : 201
-  , "response" : "{\"ok\":true,\"id\":\"new\",\"rev\":\"1-5142a2\"}"
+  , "response" : "{\"ok\":true,\"id\":\"new_string\",\"rev\":\"1-5142a2\"}"
   }
-, { "path"     : "/att_get/new/att"
+, { "path"     : "/att_get/new_string/att"
   , "status"   : 200
-  , "response" : "\"Hello\""
+  , "response" : "Hello"
+  }
+, { "method"   : "put"
+  , "path"     : "/att_get/new_binary/att"
+  , "base64"   : "MTIz"
+  , "status"   : 201
+  , "response" : "{\"ok\":true,\"id\":\"new_binary\",\"rev\":\"1-5142ff\"}"
+  }
+, { "path"     : "/att_get/new_binary/att"
+  , "status"   : 200
+  , "buffer"   : "MTIz"
   }
 , { "method"   : "delete"
   , "path"     : "/att_get"

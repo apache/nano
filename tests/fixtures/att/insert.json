@@ -6,7 +6,7 @@
   }
 , { "method"   : "put"
   , "path"     : "/att_insert/new/att"
-  , "body"     : "\"Hello World!\""
+  , "body"     : "Hello World!"
   , "status"   : 201
   , "response" : "{\"ok\": true, \"id\": \"new\", \"rev\": \"1-921bd51\" }"
   }
