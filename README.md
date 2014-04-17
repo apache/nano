@@ -1,5 +1,5 @@
 # nano
-[![Build Status](https://travis-ci.org/dscape/nano.png)](https://travis-ci.org/dscape/nano) [![Gitter chat](https://badges.gitter.im/dscape/nano.png)](https://gitter.im/dscape/nano)
+[![Build Status](https://travis-ci.org/dscape/nano.svg)](https://travis-ci.org/dscape/nano) [![Gitter chat](https://badges.gitter.im/dscape/nano.png)](https://gitter.im/dscape/nano)
 
 minimalistic couchdb driver for node.js
 
