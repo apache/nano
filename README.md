@@ -35,7 +35,7 @@ minimalistic couchdb driver for node.js
 	- [nano.request(opts, [callback])](#nanorequestopts-callback)
 	- [nano.config](#nanoconfig)
 - [document functions](#document-functions)
-	- [db.insert(doc, [params], [callback])](#dbinsertdoc-params-callback)
+	- [db.insert([params], doc, [callback])](#dbinsertdoc-params-callback)
 	- [db.destroy(docname, rev, [callback])](#dbdestroydocname-rev-callback)
 	- [db.get(docname, [params], [callback])](#dbgetdocname-params-callback)
 	- [db.head(docname, [callback])](#dbheaddocname-callback)
@@ -350,7 +350,7 @@ an object containing the nano configurations, possible keys are:
 
 ## document functions
 
-### db.insert(doc, [params], [callback])
+### db.insert([params], doc, [callback])
 
 inserts `doc` in the database with  optional `params`. if params is a string, its assumed as the intended document name. if params is an object, its passed as query string parameters and `doc_name` is checked for defining the document name.
 
