@@ -36,6 +36,13 @@ specify("shared_config:url_parsing", timeout, function (assert) {
     Nano(base_url+'/a').config.url, base_url, "Simple db failed");
 });
 
+specify("shared_config:url_resolving", timeout, function (assert) {
+    var dbName = "a";
+    var confUrl = Nano('http://a%40%3F%2F%20%23%26:b%40%3F%2F%20%23%26@someurl.com:5984/' + dbName).config.url;
+    var resolvedUrl = require("url").resolve(confUrl, encodeURIComponent(dbName));
+    assert.equal(confUrl + "/" + dbName, resolvedUrl, "Url must remain correct after require(\"url\").resolve");
+});
+
 specify("shared_config:default_headers", timeout, function (assert) {
   var nanoWithDefaultHeaders = Nano(
   { url: couch

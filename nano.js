@@ -1235,7 +1235,15 @@ module.exports = exports = nano = function database_module(cfg) {
   //   should return a nano object
   if (path.pathname && path_array.length > 0) {
 
-    auth    = path.auth ? path.auth + '@' : '';
+    auth = '';
+    if(path.auth) {
+        var parts = path.auth.split(':');
+        for(var i=0; i<parts.length; i++)
+            parts[i] = encodeURIComponent(parts[i]);
+
+        auth = parts.join(':') + '@';
+    }
+
     port    = path.port ? ':' + path.port : '';
     db      = cfg.db ? cfg.db : path_array[0];
 
