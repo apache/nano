@@ -1,5 +1,5 @@
 # nano
-[![Build Status](http://img.shields.io/travis/dscape/nano.svg?style=flat)](https://travis-ci.org/dscape/nano) ![NPM Downloads](http://img.shields.io/npm/dm/nano.svg?style=flat) ![NPM Version](http://img.shields.io/npm/v/nano.svg?style=flat) [![Gitter chat](https://badges.gitter.im/dscape/nano.png)](https://gitter.im/dscape/nano)
+[![Build Status](http://img.shields.io/travis/dscape/nano.svg?style=flat)](https://travis-ci.org/dscape/nano) ![NPM Downloads](http://img.shields.io/npm/dm/nano.svg?style=flat) ![NPM Version](http://img.shields.io/npm/v/nano.svg?style=flat) [![Gitter chat](http://img.shields.io/badge/gitter-dscape%2Fnano-1dce73.svg?style=flat)](https://gitter.im/dscape/nano)
 
 minimalistic couchdb driver for node.js
 
