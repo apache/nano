@@ -12,7 +12,7 @@ var mock = nock(helpers.couch, "db/compact")
 specify("db_compact:setup", timeout, function (assert) {
   nano.db.create("db_compact", function (err) {
     assert.equal(err, undefined, "Failed to create database");
-    db.insert({"foo": "baz"}, "foobaz", function (error, foo) {   
+    db.insert({"foo": "baz"}, "foobaz", function (error, foo) {
       assert.equal(error, undefined, "Should have stored foo");
       assert.equal(foo.ok, true, "Response should be ok");
       db.destroy("foobaz", foo.rev, function (error, response) {
@@ -31,7 +31,6 @@ specify("db_compact:test", timeout, function (assert) {
        assert.equal(info.doc_count, 0, "Document count is not 3");
        assert.equal(info.doc_del_count, 1, "No deleted documents");
        assert.equal(info.update_seq, 2, "seq is two");
-       assert.equal(info.compact_running, true, "Compaction is running");
      });
    });
 });
