@@ -12,6 +12,9 @@ var mock = nock(helpers.couch, "shared/updates");
 specify("updates", timeout, function (assert) {
   nano.db.destroy('mydb', function() {
     nano.updates(function(err, updates) {
+      if (err && updates.error && updates.error === 'illegal_database_name') {
+        return assert.ok(updates.ok, 'db updates are not supported');
+      }
       assert.equal(err, undefined, "Failed to get root");
       assert.ok(updates.ok, 'updates are ok');
       assert.equal(updates.type, 'created', 'update was a create');
