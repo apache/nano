@@ -396,6 +396,33 @@ module.exports = exports = nano = function database_module(cfg) {
   }
 
  /***************************************************************************
+  * updates                                                                 *
+  ***************************************************************************/
+  /*
+   * gets the db updates
+   *
+   * e.g. nano.updates({feed: 'continuous', timeout: 10000}, function (e,r,h) {
+   *        console.log(r);
+   *      });
+   *
+   *
+   * @param {params:object:optional} options to the db updates feed
+   *
+   * @see relax
+   */
+  function updates(params, callback) {
+    if(typeof params === 'function') {
+      callback  = params;
+      params    = {};
+    }
+    return relax(
+      { method       : 'GET'
+      , db           : '_db_updates'
+      , params       : params
+      }, callback);
+  }
+
+ /***************************************************************************
   * db                                                                      *
   ***************************************************************************/
  /*
@@ -1183,6 +1210,7 @@ module.exports = exports = nano = function database_module(cfg) {
     , dinosaur    : relax                  // alias
     , auth        : auth_server
     , session     : session
+    , updates     : updates
     };
 
   // clone if cfg object
