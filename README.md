@@ -34,7 +34,7 @@ minimalistic couchdb driver for node.js
 	- [nano.use(name)](#nanousename)
 	- [nano.request(opts, [callback])](#nanorequestopts-callback)
 	- [nano.config](#nanoconfig)
-	- [nano.updates([params], [callback])](#nanoupdates-params-callback)
+	- [nano.updates([params], [callback])](#nanoupdatesparams-callback)
 - [document functions](#document-functions)
 	- [db.insert(doc, [params], [callback])](#dbinsertdoc-params-callback)
 	- [db.destroy(docname, rev, [callback])](#dbdestroydocname-rev-callback)
