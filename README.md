@@ -356,14 +356,10 @@ listen to db updates, the available `params` are:
   
 * `params.feed` – Type of feed. Can be one of
  * `longpoll`: Closes the connection after the first event.
-  * `continuous`: Send a line of JSON per event. Keeps the socket open until
-  * timeout.
-   * `eventsource`: Like, continuous, but sends the events in EventSource
-   * format.
-   * `params.timeout` – Number of seconds until CouchDB closes the connection.
-   * Default is 60.
-   * `params.heartbeat` – Whether CouchDB will send a newline character (\n) on
-   * timeout. Default is true.
+ * `continuous`: Send a line of JSON per event. Keeps the socket open until timeout.
+ * `eventsource`: Like, continuous, but sends the events in EventSource format.
+* `params.timeout` – Number of seconds until CouchDB closes the connection. Default is 60.
+* `params.heartbeat` – Whether CouchDB will send a newline character (\n) on timeout. Default is true.
 
 
 ## document functions
