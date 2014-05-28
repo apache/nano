@@ -35,6 +35,7 @@ minimalistic couchdb driver for node.js
 	- [nano.request(opts, [callback])](#nanorequestopts-callback)
 	- [nano.config](#nanoconfig)
 	- [nano.updates([params], [callback])](#nanoupdatesparams-callback)
+	- [nano.follow_updates([params], [callback])](#nanodbfollow_updatesparams-callback)
 - [document functions](#document-functions)
 	- [db.insert(doc, [params], [callback])](#dbinsertdoc-params-callback)
 	- [db.destroy(docname, rev, [callback])](#dbdestroydocname-rev-callback)
@@ -361,6 +362,23 @@ listen to db updates, the available `params` are:
 * `params.timeout` – Number of seconds until CouchDB closes the connection. Default is 60.
 * `params.heartbeat` – Whether CouchDB will send a newline character (\n) on timeout. Default is true.
 
+
+### `nano.follow_updates([params], [callback])`
+
+uses [follow](https://github.com/iriscouch/follow) to create a solid
+[`_db_updates`](http://docs.couchdb.org/en/latest/api/server/common.html?highlight=db_updates#get--_db_updates) feed.
+please consult follow documentation for more information as this is a very complete api on it's own
+
+```js
+var feed = nano.follow_updates({since: "now"});
+feed.on('change', function (change) {
+  console.log("change: ", change);
+});
+feed.follow();
+process.nextTick(function () {
+  nano.db.create('alice');
+});
+```
 
 ## document functions
 
