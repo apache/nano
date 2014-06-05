@@ -1,0 +1,20 @@
+[
+  { "method"   : "put"
+  , "path"     : "/shared_follow_updates"
+  , "status"   : 201
+  , "response" : "{ \"ok\": true }" 
+  }
+, { "method"   : "put"
+  , "path"     : "/mydb"
+  , "status"   : 201
+  , "response" : "{ \"ok\": true }" 
+  }
+, { "method"   : "delete"
+  , "path"     : "/mydb"
+  , "response" : "{ \"ok\": true }" 
+  }
+, { "method"   : "delete"
+  , "path"     : "/shared_follow_updates"
+  , "response" : "{ \"ok\": true }" 
+  }
+]

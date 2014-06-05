@@ -422,6 +422,25 @@ module.exports = exports = nano = function database_module(cfg) {
       }, callback);
   }
 
+  /*
+   * couchdb db updates follow support
+   *
+   * e.g. var feed = nano.follow();
+   *      feed.on('change', function (change) { console.log(change); });
+   *      feed.follow();
+   *
+   * @param {params:object:optional} additions to the querystring
+   *   check the follow documentation for the full api
+   *   https://github.com/iriscouch/follow
+   *
+   *
+   * @see relax
+   */
+  function follow_updates(params, callback) {
+    return follow_db('_db_updates', params, callback);
+  }
+
+
  /***************************************************************************
   * db                                                                      *
   ***************************************************************************/
@@ -1191,26 +1210,27 @@ module.exports = exports = nano = function database_module(cfg) {
 
   // server level exports
   public_functions =
-    { db          :
-      { create    : create_db
-      , get       : get_db
-      , destroy   : destroy_db
-      , list      : list_dbs
-      , use       : document_module   // alias
-      , scope     : document_module   // alias
-      , compact   : compact_db
-      , replicate : replicate_db
-      , changes   : changes_db
-      , follow    : follow_db
+    { db             :
+      { create       : create_db
+      , get          : get_db
+      , destroy      : destroy_db
+      , list         : list_dbs
+      , use          : document_module   // alias
+      , scope        : document_module   // alias
+      , compact      : compact_db
+      , replicate    : replicate_db
+      , changes      : changes_db
+      , follow       : follow_db
       }
-    , use         : document_module
-    , scope       : document_module        // alias
-    , request     : relax
-    , relax       : relax                  // alias
-    , dinosaur    : relax                  // alias
-    , auth        : auth_server
-    , session     : session
-    , updates     : updates
+    , use            : document_module
+    , scope          : document_module   // alias
+    , request        : relax
+    , relax          : relax             // alias
+    , dinosaur       : relax             // alias
+    , auth           : auth_server
+    , session        : session
+    , updates        : updates
+    , follow_updates : follow_updates
     };
 
   // clone if cfg object
