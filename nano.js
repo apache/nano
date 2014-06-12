@@ -1008,19 +1008,18 @@ module.exports = exports = nano = function database_module(cfg) {
       var doc_name = params.doc_name;
       delete params.doc_name;
 
-      var stubs = attachments.reduce(function(memo, att) {
-        memo[att.name] = {
+      doc = _.extend({ _attachments: {} }, doc);
+      attachments.forEach(function(att) {
+        doc._attachments[att.name] = {
           follows: true,
           length: att.data.length,
           content_type: att.content_type
         };
-
-        return memo;
-      }, {});
+      });
       var multipart = [
         {
           'content-type': 'application/json',
-          body: JSON.stringify(_.extend({}, doc, { _attachments: stubs }))
+          body: JSON.stringify(doc)
         }
       ];
       attachments.forEach(function(att) {
