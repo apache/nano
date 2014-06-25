@@ -767,7 +767,7 @@ alice.attachment.get('rabbit', 'picture.png').pipe(fs.createWriteStream('/tmp/ra
 then open `/tmp/rabbit.png` and you will see the rabbit picture.
 
 
-## tutorials & screencasts
+## tutorials, examples in the wild & screencasts
 
 * article: [nano - a minimalistic couchdb client for nodejs](http://writings.nunojob.com/2011/08/nano-minimalistic-couchdb-client-for-nodejs.html)
 * article: [getting started with node.js and couchdb](http://writings.nunojob.com/2011/09/getting-started-with-nodejs-and-couchdb.html)
@@ -777,6 +777,7 @@ then open `/tmp/rabbit.png` and you will see the rabbit picture.
 * article: [adding copy to nano](http://blog.jlank.com/2012/07/04/adding-copy-to-nano/)
 * article: [how to update a document with nano](http://writings.nunojob.com/2012/07/How-To-Update-A-Document-With-Nano-The-CouchDB-Client-for-Node.js.html)
 * article: [thoughts on development using couchdb with node.js](http://tbranyen.com/post/thoughts-on-development-using-couchdb-with-nodejs)
+* example in the wild: [nanoblog](https://github.com/grabbeh/nanoblog)
 
 ## roadmap
 
