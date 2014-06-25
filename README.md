@@ -20,7 +20,7 @@ minimalistic couchdb driver for node.js
 ## table of contents
 
 - [getting started](#getting-started)
-- [tutorials & screencasts](#tutorials--screencasts)
+- [tutorials & screencasts](#tutorials-examples-in-the-wild--screencasts)
 - [configuration](#configuration)
 - [database functions](#database-functions)
 	- [nano.db.create(name, [callback])](#nanodbcreatename-callback)
