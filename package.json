@@ -54,7 +54,7 @@
     "database"
   ],
   "dependencies": {
-    "request": "~2.33.0",
+    "request": "~2.40.0",
     "follow": "~0.11.2",
     "errs": "~0.2.4",
     "underscore": "~1.5.1"
