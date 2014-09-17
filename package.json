@@ -54,10 +54,10 @@
     "database"
   ],
   "dependencies": {
-    "request": "^2.42.0",
+    "request": "~2.42.0",
     "follow": "~0.11.2",
-    "errs": "^0.3.0",
-    "underscore": "^1.7.0"
+    "errs": "~0.3.0",
+    "underscore": "~1.7.0"
   },
   "devDependencies": {
     "async": "~0.2.9",
