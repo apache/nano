@@ -3,7 +3,6 @@ var specify  = require('specify')
   , timeout  = helpers.timeout
   , nano     = helpers.nano
   , nock     = helpers.nock
-  , rev
   ;
 
 var mock = nock(helpers.couch, "multipart/insert")
@@ -23,10 +22,28 @@ specify("multipart_insert:test", timeout, function (assert) {
     content_type: 'text/plain'
   };
   db.multipart.insert({"foo": "baz"}, [att], "foobaz", function (error, foo) {
-    rev = foo.rev;
     assert.equal(error, undefined, "Should have stored foo and attachment");
     assert.equal(foo.ok, true, "Response should be ok");
     assert.ok(foo.rev, "Response should have rev");
+  });
+});
+
+specify("multipart_insert:test_with_present_attachment", timeout, function (assert) {
+  var att = {
+    name: 'two',
+    data: 'Hello World!',
+    content_type: 'text/plain'
+  };
+
+  db.attachment.insert("mydoc", "one", "Hello World!", "text/plain", function () {
+    db.get("mydoc", function(_, doc) {
+      db.multipart.insert(doc, [att], "mydoc", function () {
+        db.get("mydoc", function(error, two) {
+          assert.equal(error, undefined, "Should get the doc");
+          assert.equal(Object.keys(two._attachments).length, 2, "Both attachments should be present");
+        });
+      });
+    });
   });
 });
 
