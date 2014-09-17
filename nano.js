@@ -1284,7 +1284,7 @@ module.exports = exports = nano = function database_module(cfg) {
 
     auth    = path.auth ? path.auth + '@' : '';
     port    = path.port ? ':' + path.port : '';
-    db      = cfg.db ? cfg.db : path_array[0];
+    db      = cfg.db ? cfg.db : decodeURIComponent(path_array[0]);
 
     var format = {
       protocol: path.protocol,

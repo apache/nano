@@ -9,12 +9,21 @@
   , "status"   : 201
   , "response" : "{ \"ok\": true }" 
   }
+, { "method"   : "put"
+  , "path"     : "/with%2Fslash"
+  , "status"   : 201
+  , "response" : "{ \"ok\": true }" 
+  }
 , { "method"   : "delete"
   , "path"     : "/db_create"
   , "response" : "{ \"ok\": true }" 
   }
 , { "method"   : "delete"
   , "path"     : "/az09_%24()%2B-%2F"
+  , "response" : "{ \"ok\": true }" 
+  }
+, { "method"   : "delete"
+  , "path"     : "/with%2Fslash"
   , "response" : "{ \"ok\": true }" 
   }
 ]
