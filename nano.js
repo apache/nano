@@ -1282,14 +1282,16 @@ module.exports = exports = nano = function database_module(cfg) {
   //   should return a nano object
   if (path.pathname && path_array.length > 0) {
 
-    auth    = path.auth ? path.auth + '@' : '';
+    auth    = path.auth ? path.auth : '';
     port    = path.port ? ':' + path.port : '';
     db      = cfg.db ? cfg.db : decodeURIComponent(path_array[0]);
 
     var format = {
       protocol: path.protocol,
-      host: auth + path.hostname + port
+      host: path.hostname + port
     };
+    if(auth)
+      format.auth = auth;
     if (cfg.db)
       format.pathname = path.pathname + '/';
 
