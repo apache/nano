@@ -1012,7 +1012,7 @@ module.exports = exports = nano = function database_module(cfg) {
       attachments.forEach(function(att) {
         doc._attachments[att.name] = {
           follows: true,
-          length: att.data.length,
+          length: Buffer.byteLength(att.data),
           content_type: att.content_type
         };
       });

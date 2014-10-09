@@ -28,6 +28,19 @@ specify("multipart_insert:test", timeout, function (assert) {
   });
 });
 
+specify("multipart_insert:test_with_attachment_containing_unicode_characters", timeout, function (assert) {
+  var att = {
+    name: 'att',
+    data: 'काचं शक्नोम्यत्तुम् । नोपहिनस्ति माम् ॥',
+    content_type: 'text/plain'
+  };
+  db.multipart.insert({"foo": "bar"}, [att], "foobar", function (error, foo) {
+    assert.equal(error, undefined, "Should have stored foo and attachment");
+    assert.equal(foo.ok, true, "Response should be ok");
+    assert.ok(foo.rev, "Response should have rev");
+  });
+});
+
 specify("multipart_insert:test_with_present_attachment", timeout, function (assert) {
   var att = {
     name: 'two',
