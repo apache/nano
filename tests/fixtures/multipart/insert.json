@@ -11,6 +11,12 @@
   , "response" : "{\"ok\": true, \"id\": \"foobaz\", \"rev\": \"1-921bd51\" }"
   }
 , { "method"   : "put"
+  , "path"     : "/multipart_insert/foobar"
+  , "body"     : "*"
+  , "status"   : 201
+  , "response" : "{\"ok\": true, \"id\": \"foobar\", \"rev\": \"1-921bd51\" }"
+  }
+, { "method"   : "put"
   , "path"     : "/multipart_insert/mydoc/one"
   , "body"     : "Hello World!"
   , "status"   : 201
