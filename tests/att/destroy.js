@@ -1,52 +1,32 @@
-var specify  = require('specify')
-  , helpers  = require('../helpers')
-  , timeout  = helpers.timeout
-  , nano     = helpers.nano
-  , nock     = helpers.nock
-  ;
+'use strict';
 
-var mock = nock(helpers.couch, "att/destroy")
-  , db   = nano.use("att_destroy")
-  ;
+var helpers = require('../helpers');
+var harness = helpers.harness();
+var it = harness.it;
 
-specify("att_destroy:setup", timeout, function (assert) {
-  nano.db.create("att_destroy", function (err) {
-    assert.equal(err, undefined, "Failed to create database");
-  });
-});
-
-specify("att_destroy:test", timeout, function (assert) {
-  db.attachment.insert("new", "att", "Hello World!", "text/plain",
-  function (error, att) {
-    assert.equal(error, undefined, "Should store the attachment");
-    assert.equal(att.ok, true, "Response should be ok");
-    assert.ok(att.rev, "Should have a revision number");
-    db.attachment.destroy("new", "att", att.rev, function(error, response) {
-      assert.equal(error, undefined, "Should delete the attachment");
-      assert.equal(response.ok, true, "Response should be ok");
-      assert.equal(response.id, "new", "Id should be new");
+it('should be able to insert a new plain text attachment', function(assert) {
+  var locals = this;
+  locals.db.attachment.insert('new',
+  'att', 'Hello World!', 'text/plain', function(error, att) {
+    assert.equal(error, null, 'store the attachment');
+    assert.equal(att.ok, true, 'response ok');
+    assert.ok(att.rev, 'have a revision number');
+    locals.db.attachment.destroy('new', 'att',
+    att.rev, function(error, response) {
+      assert.equal(error, null, 'delete the attachment');
+      assert.equal(response.ok, true, 'response ok');
+      assert.equal(response.id, 'new', '`id` should be `new`');
+      assert.end();
     });
   });
 });
 
-specify("att_destroy:att_name_missing", timeout, function (assert) {
-  db.attachment.insert("new2", "att2", "Hello World!", "text/plain",
-  function (error, att) {
-    assert.equal(error, undefined, "Should store the attachment");
-    assert.equal(att.ok, true, "Response should be ok");
-    assert.ok(att.rev, "Should have a revision number");
-    db.attachment.destroy("new", false, att.rev, function(error, response) {
-      assert.equal(error.errid, "bad_params", "Should throw error because att_name is not a string");
-      assert.equal(response, undefined, "No response should be given");
-    });
+it('should fail destroying with a bad filename', function(assert) {
+  var locals = this;
+  locals.db.attachment.destroy('new', false, true, function(error, response) {
+    assert.equal(error.errid, 'bad_params',
+      '`att_name` should be a string');
+    assert.equal(response, undefined, 'no response should be given');
+    assert.end();
   });
 });
-
-specify("att_destroy:teardown", timeout, function (assert) {
-  nano.db.destroy("att_destroy", function (err) {
-    assert.equal(err, undefined, "Failed to destroy database");
-    assert.ok(mock.isDone(), "Some mocks didn't run");
-  });
-});
-
-specify.run(process.argv.slice(2));

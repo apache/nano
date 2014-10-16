@@ -1,48 +1,11 @@
 {
   "name": "nano",
   "description": "minimalistic couchdb driver for node.js",
-  "license": "Apache 2.0",
+  "license": "apache 2.0",
   "homepage": "http://github.com/dscape/nano",
   "repository": "git://github.com/dscape/nano",
-  "version": "5.12.1",
+  "version": "6.0.0",
   "author": "Nuno Job <nunojobpinto@gmail.com> (http://nunojob.com)",
-  "contributors": [
-    "Thiago Arrais <thiago.arrais@gmail.com> (http://thiagoarrais.com)",
-    "Derek Perez <derek@derekperez.com> (http://blog.derekperez.com)",
-    "Patrick Heneise (http://patrickheneise.com)",
-    "Artur Konarski (http://tarantoga.com)",
-    "Pedro Teixeira <pedro.teixeira@gmail.com> (http://metaduck.com)",
-    "Tom Wilson <tom@jackhq.com> (http://jackhq.tumblr.com)",
-    "Dale Harvey <dale@arandomurl.com> (http://arandomurl.com)",
-    "Jan Lehnardt <jan@apache.org> (http://jan.prima.de/plok/)",
-    "InTheFiveByFive",
-    "Stéphane Alnet <stephane@shimaore.net> (http://blog.shimaore.net)",
-    "Cliffano Subagio (http://blog.cliffano.com)",
-    "Mark Hahn (http://hahnca.com)",
-    "Francesco Ceccon <francesco@ceccon.me> (http://francesco-cek.com/)",
-    "Oliver Leics (http://oleics.github.com)",
-    "Jonathan Mahoney (http://mahoney.eu)",
-    "Dominique Sandoz <dominique.sandoz@gmail.com>",
-    "John Lancaster <john.k.lancaster@gmail.com> (http://jlank.com)",
-    "Clemens Stolle (https://github.com/klaemo)",
-    "Jay Beavers <jay.beavers@microsoft.com> (http://jaybeavers.org)",
-    "Juraj Vitko",
-    "Paul Iannazzo <somethingitalian@gmail.com> (http://pppaul.me)",
-    "Sebastian Tiedtke <sebastiantiedtke@gmail.com>",
-    "Gregory T. Corrigan (https://github.com/corrigang)",
-    "Etienne Folio (https://github.com/Ornthalas)",
-    "John Chesley (http://chesl.es)",
-    "Damon Oehlman <damon@fluxant.com>",
-    "Patrick Paul-Hus (https://github.com/hydrozen)",
-    "Sven Lito <me@svenlito.com> (http://svenlito.com)",
-    "Gerrit Renker",
-    "Andreas Lappe <nd@off-pist.de>",
-    "Aram Kocharyan <akarmenia@gmail.com>",
-    "Jan Krems @jkrems",
-    "Owen Evans <owen@bgeek.net> (http://www.bgeek.net)",
-    "Johannes J. Schmidt <schmidt@netzmerk.com> (http://die-tf.de)",
-    "Alex Schenkman <alex@schenkman.info>"
-  ],
   "keywords": [
     "couchdb",
     "data",
@@ -54,23 +17,36 @@
     "database"
   ],
   "dependencies": {
-    "request": "~2.42.0",
-    "follow": "~0.11.2",
-    "errs": "~0.3.0",
-    "underscore": "~1.7.0"
+    "request": "^2.45.0",
+    "follow": "^0.11.2",
+    "errs": "^0.3.0",
+    "underscore": "^1.7.0",
+    "debug": "^2.0.0"
   },
   "devDependencies": {
-    "async": "~0.2.9",
-    "specify": "~1.2.0",
-    "nock": "~0.18.2"
+    "async": "^0.9.0",
+    "tape": "^3.0.0",
+    "istanbul": "^0.3.2",
+    "jshint": "^2.5.6",
+    "jscs": "^1.7.0",
+    "nock": "^0.48.0",
+    "endswith": "^0.0.0",
+    "tape-it": "^0.0.1"
   },
   "scripts": {
-    "test": "node node_modules/specify/bin/specify -e NOCK=on",
-    "compact": "node node_modules/specify/bin/specify -e NOCK=on -r compact",
-    "nock_off": "node node_modules/specify/bin/specify"
+    "test": "DEBUG=* NOCK_OFF=true istanbul cover tape tests/att/*.js",
+    "jshint": "jshint tests/att/*.js",
+    "codestyle": "jscs -p google tests/att/*.js",
+    "checkcoverage": "istanbul check-coverage --statements 100 --functions 100 --lines 100 --branches 100"
   },
   "main": "./nano.js",
   "engines": {
-    "node": ">=0.6.0"
-  }
+    "node": ">=0.8.0"
+  },
+  "pre-commit": [
+    "jshint",
+    "codestyle",
+    "test",
+    "checkcoverage"
+  ]
 }

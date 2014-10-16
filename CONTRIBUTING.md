@@ -17,4 +17,9 @@ npm run nock_off
 
 check this [blogpost](http://writings.nunojob.com/2012/05/Mock-HTTP-Integration-Testing-in-Node.js-using-Nock-and-Specify.html) to learn more about how to write your own tests
 
+change this
+add NOCK_OFF
+add DEBUG
+base from message-queue
+
 [2]: http://github.com/dscape/nano/issues

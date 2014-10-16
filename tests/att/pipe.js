@@ -1,62 +1,46 @@
-var fs       = require('fs')
-  , path     = require('path') 
-  , specify  = require('specify')
-  , helpers  = require('../helpers')
-  , timeout  = helpers.timeout
-  , nano     = helpers.nano
-  , nock     = helpers.nock
-  , pixel    = helpers.pixel
-  ;
+'use strict';
 
-var mock = nock(helpers.couch, "att/pipe")
-  , db   = nano.use("att_pipe")
-  ;
+var fs = require('fs');
+var path = require('path');
+var helpers = require('../helpers');
+var harness = helpers.harness();
+var it = harness.it;
+var pixel = helpers.pixel;
 
-specify("att_pipe:setup", timeout, function (assert) {
-  nano.db.create("att_pipe", function (err) {
-    assert.equal(err, undefined, "Failed to create database");
+it('should be able to pipe to a writeStream', function(assert) {
+  var locals = this;
+  var buffer = new Buffer(pixel, 'base64');
+  var filename = path.join(__dirname, '.temp.bmp');
+  var ws = fs.createWriteStream(filename);
+
+  ws.on('close', function() {
+    assert.equal(fs.readFileSync(filename).toString('base64'), pixel);
+    fs.unlinkSync(filename);
+    assert.end();
+  });
+
+  locals.db.attachment.insert('new', 'att', buffer, 'image/bmp',
+  function(error, bmp) {
+    assert.equal(error, null, 'Should store the pixel');
+    locals.db.attachment.get('new', 'att', {rev: bmp.rev}).pipe(ws);
   });
 });
 
-specify("att_pipe:write", timeout, function (assert) {
-  var buffer   = new Buffer(pixel, 'base64')
-    , filename = path.join(__dirname, '.temp.bmp')
-    , ws       = fs.createWriteStream(filename)
-    ;
-    ws.on('close', function () {
-      assert.equal(fs.readFileSync(filename).toString('base64'), pixel);
-      fs.unlinkSync(filename);
-    });
-    db.attachment.insert("new", "att", buffer, "image/bmp", 
-    function (error, bmp) {
-      assert.equal(error, undefined, "Should store the pixel");
-      db.attachment.get("new", "att", {rev: bmp.rev}).pipe(ws);
-    });
-});
+it('should be able to pipe from a readStream', function(assert) {
+  var locals = this;
+  var logo = path.join(__dirname, '..', 'fixtures', 'logo.png');
+  var rs = fs.createReadStream(logo);
+  var is = locals.db.attachment.insert('nodejs', 'logo.png', null, 'image/png');
 
-specify("att_pipe:read", timeout, function (assert) {
-  var logo = __dirname + "/../fixtures/logo.png"
-    , rs   = fs.createReadStream(logo)
-    , is   = db.attachment.insert("nodejs", "logo.png", null, "image/png")
-    ;
-
-  is.on('end', function () {
-    db.attachment.get("nodejs", "logo.png", function (err, buffer) {
-      assert.equal(err, undefined, "Should get the logo");
+  is.on('end', function() {
+    locals.db.attachment.get('nodejs', 'logo.png', function(err, buffer) {
+      assert.equal(err, null, 'should get the logo');
       assert.equal(
         fs.readFileSync(logo).toString('base64'), buffer.toString('base64'),
-        "Data should remain unchanged");
+        'logo should remain unchanged');
+      assert.end();
     });
   });
 
   rs.pipe(is);
 });
-
-specify("att_pipe:teardown", timeout, function (assert) {
-  nano.db.destroy("att_pipe", function (err) {
-    assert.equal(err, undefined, "Failed to destroy database");
-    assert.ok(mock.isDone(), "Some mocks didn't run");
-  });
-});
-
-specify.run(process.argv.slice(2));
