@@ -5,13 +5,13 @@ var harness = helpers.harness(__filename);
 var it = harness.it;
 
 it('should be able to insert a new plain text attachment', function(assert) {
-  var locals = this;
-  locals.db.attachment.insert('new',
+  var db = this.db;
+  db.attachment.insert('new',
   'att', 'Hello World!', 'text/plain', function(error, att) {
     assert.equal(error, null, 'store the attachment');
     assert.equal(att.ok, true, 'response ok');
     assert.ok(att.rev, 'have a revision number');
-    locals.db.attachment.destroy('new', 'att',
+    db.attachment.destroy('new', 'att',
     att.rev, function(error, response) {
       assert.equal(error, null, 'delete the attachment');
       assert.equal(response.ok, true, 'response ok');
@@ -22,8 +22,8 @@ it('should be able to insert a new plain text attachment', function(assert) {
 });
 
 it('should fail destroying with a bad filename', function(assert) {
-  var locals = this;
-  locals.db.attachment.destroy('new', false, true, function(error, response) {
+  var db = this.db;
+  db.attachment.destroy('new', false, true, function(error, response) {
     assert.equal(error.errid, 'bad_params',
       '`att_name` should be a string');
     assert.equal(response, undefined, 'no response should be given');

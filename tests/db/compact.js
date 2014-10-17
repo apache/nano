@@ -5,11 +5,11 @@ var harness = helpers.harness(__filename);
 var it = harness.it;
 
 it('should store and delete `goofy`', function(assert) {
-  var locals = this;
-  locals.db.insert({'foo': 'baz'}, 'goofy', function(error, foo) {
+  var db = this.db;
+  db.insert({'foo': 'baz'}, 'goofy', function(error, foo) {
     assert.equal(error, null, 'should have stored foo');
     assert.equal(foo.ok, true, 'response should be ok');
-    locals.db.destroy('goofy', foo.rev, function(error, response) {
+    db.destroy('goofy', foo.rev, function(error, response) {
       assert.equal(error, null, 'should have deleted foo');
       assert.equal(response.ok, true, 'response ok');
       assert.end();
@@ -18,10 +18,10 @@ it('should store and delete `goofy`', function(assert) {
 });
 
 it('should have run the compaction', function(assert) {
-  var locals = this;
-  locals.db.compact(function(error) {
+  var db = this.db;
+  db.compact(function(error) {
     assert.equal(error, null, 'compact should respond');
-    locals.db.info(function(error, info) {
+    db.info(function(error, info) {
       assert.equal(error, null, 'info should respond');
       assert.equal(info['doc_count'], 0, 'document count is not 3');
       assert.equal(info['doc_del_count'], 1, 'document should be deleted');
@@ -32,10 +32,10 @@ it('should have run the compaction', function(assert) {
 });
 
 it('should finish compaction before ending', function(assert) {
-  var locals = this;
+  var db = this.db;
 
   function nextWhenFinished() {
-    locals.db.info(function(err, info) {
+    db.info(function(err, info) {
       if (err) {
         return;
       }

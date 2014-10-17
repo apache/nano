@@ -1,5 +1,6 @@
 'use strict';
 
+var async = require('async');
 var path = require('path');
 var fs = require('fs');
 var url = require('url');
@@ -118,4 +119,57 @@ helpers.nock = function helpersNock(url, fixture, log) {
   nock.define(nockDefs);
 
   return nock(url);
+};
+
+helpers.prepareAView = function(assert, search, db) {
+  search = search || '';
+  var db = db || this.db;
+
+  db.insert({
+    views: {
+      by_name_and_city: {
+        map: 'function(doc) { emit([doc.name, doc.city], doc._id); }'
+      }
+    },
+    lists: {
+      'my_list': 'function(head, req) { send(\'Hello\'); }'
+    }
+  }, '_design/people' + search, function(error, response) {
+    assert.equal(error, null, 'should create view');
+    assert.equal(response.ok, true, 'response is good');
+    async.parallel([
+      function(cb) {
+        db.insert({
+          name: 'Derek',
+          city: 'San Francisco'
+        }, 'p_derek', cb);
+      }, function(cb) {
+        db.insert({
+          name: 'Randall',
+          city: 'San Francisco'
+        }, 'p_randall', cb);
+      }, function(cb) {
+        db.insert({
+          name: 'Nuno',
+          city: 'London'
+        }, 'p_nuno', cb);
+      }
+    ], function(error) {
+      assert.equal(error, undefined, 'store the peeps');
+      assert.end();
+    });
+  });
+};
+
+helpers.viewDerek = function viewDerek(db, assert, opts, next, method) {
+  method = method || 'view';
+  db[method]('people','by_name_and_city', opts, function(error, view) {
+    assert.equal(error, null, 'no errors');
+    assert.equal(view.rows.length,1);
+    assert.equal(view.rows.length,1);
+    assert.equal(view.rows[0].id,'p_derek');
+    assert.equal(view.rows[0].key[0],'Derek');
+    assert.equal(view.rows[0].key[1],'San Francisco');
+    next(error);
+  });
 };

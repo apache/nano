@@ -1,29 +1,29 @@
 [
   { "method"   : "put"
-  , "path"     : "/db_create"
+  , "path"     : "/db_create-and-destroy"
   , "status"   : 201
-  , "response" : "{ \"ok\": true }" 
+  , "response" : "{ \"ok\": true }"
   }
 , { "method"   : "put"
   , "path"     : "/az09_%24()%2B-%2F"
   , "status"   : 201
-  , "response" : "{ \"ok\": true }" 
+  , "response" : "{ \"ok\": true }"
   }
 , { "method"   : "put"
   , "path"     : "/with%2Fslash"
   , "status"   : 201
-  , "response" : "{ \"ok\": true }" 
+  , "response" : "{ \"ok\": true }"
   }
 , { "method"   : "delete"
-  , "path"     : "/db_create"
-  , "response" : "{ \"ok\": true }" 
+  , "path"     : "/db_create-and-destroy"
+  , "response" : "{ \"ok\": true }"
   }
 , { "method"   : "delete"
   , "path"     : "/az09_%24()%2B-%2F"
-  , "response" : "{ \"ok\": true }" 
+  , "response" : "{ \"ok\": true }"
   }
 , { "method"   : "delete"
   , "path"     : "/with%2Fslash"
-  , "response" : "{ \"ok\": true }" 
+  , "response" : "{ \"ok\": true }"
   }
 ]

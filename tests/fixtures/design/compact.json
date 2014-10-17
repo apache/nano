@@ -2,18 +2,18 @@
   { "method"   : "put"
   , "path"     : "/design_compact"
   , "status"   : 201
-  , "response" : "{ \"ok\": true }" 
+  , "response" : "{ \"ok\": true }"
   }
 , { "method"   : "put"
   , "path"     : "/design_compact/_design/alice"
-  , "body"     : "{\"views\":{\"by_id\":{\"map\":\"function (doc) { emit(doc._id, doc); }\"}}}"
+  , "body"     : "*"
   , "status"   : 201
   , "response" : "{\"ok\":true,\"id\":\"_design/alice\",\"rev\":\"1-14e6bc\"}"
   }
 , { "method"   : "put"
   , "status"   : 201
   , "path"     : "/design_compact/foobaz"
-  , "body"     : "{\"foo\":\"baz\"}"
+  , "body"     : "*"
   , "response" : "{\"ok\":true,\"id\":\"foobaz\",\"rev\":\"1-611488\"}"
   }
 , { "method"   : "delete"
@@ -25,11 +25,14 @@
   , "response" : "{\"ok\":true}"
   , "status"   : 202
   }
+, { "path"     : "/design_compact"
+  , "response" : "{\"compact_running\": false}"
+  }
 , { "path"     : "/design_compact/_design/alice/_view/by_id"
   , "response" : "{ \"total_rows\": 0, \"offset\": 0, \"rows\": [] }"
   }
 , { "method"   : "delete"
   , "path"     : "/design_compact"
-  , "response" : "{ \"ok\": true }" 
+  , "response" : "{ \"ok\": true }"
   }
 ]

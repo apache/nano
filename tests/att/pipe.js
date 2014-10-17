@@ -8,7 +8,7 @@ var it = harness.it;
 var pixel = helpers.pixel;
 
 it('should be able to pipe to a writeStream', function(assert) {
-  var locals = this;
+  var db = this.db;
   var buffer = new Buffer(pixel, 'base64');
   var filename = path.join(__dirname, '.temp.bmp');
   var ws = fs.createWriteStream(filename);
@@ -19,21 +19,21 @@ it('should be able to pipe to a writeStream', function(assert) {
     assert.end();
   });
 
-  locals.db.attachment.insert('new', 'att', buffer, 'image/bmp',
+  db.attachment.insert('new', 'att', buffer, 'image/bmp',
   function(error, bmp) {
     assert.equal(error, null, 'Should store the pixel');
-    locals.db.attachment.get('new', 'att', {rev: bmp.rev}).pipe(ws);
+    db.attachment.get('new', 'att', {rev: bmp.rev}).pipe(ws);
   });
 });
 
 it('should be able to pipe from a readStream', function(assert) {
-  var locals = this;
+  var db = this.db;
   var logo = path.join(__dirname, '..', 'fixtures', 'logo.png');
   var rs = fs.createReadStream(logo);
-  var is = locals.db.attachment.insert('nodejs', 'logo.png', null, 'image/png');
+  var is = db.attachment.insert('nodejs', 'logo.png', null, 'image/png');
 
   is.on('end', function() {
-    locals.db.attachment.get('nodejs', 'logo.png', function(err, buffer) {
+    db.attachment.get('nodejs', 'logo.png', function(err, buffer) {
       assert.equal(err, null, 'should get the logo');
       assert.equal(
         fs.readFileSync(logo).toString('base64'), buffer.toString('base64'),

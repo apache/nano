@@ -2,11 +2,11 @@
   { "method"   : "put"
   , "path"     : "/design_show"
   , "status"   : 201
-  , "response" : "{ \"ok\": true }" 
+  , "response" : "{ \"ok\": true }"
   }
 , { "method"   : "put"
   , "path"     : "/design_show/_design/people"
-  , "body"     : "{\"shows\":{\"singleDoc\":\"function (doc, req) {\\n        if(req.query.format === 'json' || !req.query.format) {\\n          return { body: JSON.stringify({ name: doc.name, city: doc.city, format: 'json' }), headers: { 'Content-Type': 'application/json' } };\\n        }\\n        if(req.query.format === 'html') {\\n          return { body: 'Hello Clemens!', headers: { 'Content-Type': 'text/html' } };\\n        }\\n      }\"}}"
+  , "body"     : "*"
   , "status"   : 201
   , "response" : "{\"ok\":true,\"id\":\"_design/people\",\"rev\":\"1-14e6bc\"}"
   }
@@ -39,6 +39,6 @@
 , { "method"   : "delete"
   , "path"     : "/design_show"
   , "status"   : 200
-  , "response" : "{ \"ok\": true }" 
+  , "response" : "{ \"ok\": true }"
   }
 ]

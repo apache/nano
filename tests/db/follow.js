@@ -17,7 +17,7 @@ it('should insert a bunch of items', function(assert) {
   });
 });
 
-if (process.env.NOCK_OFF) {
+if (process.env.NOCK_OFF === 'true') {
   var feed1;
 
   it('should be able to get the changes feed', function(assert) {

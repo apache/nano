@@ -1,62 +1,56 @@
-var specify  = require("specify")
-  , helpers  = require("../helpers")
-  , timeout  = helpers.timeout
-  , nano     = helpers.nano
-  , nock     = helpers.nock
-  ;
+'use strict';
 
-var mock = nock(helpers.couch, "design/atomic")
-  , db   = nano.use("design_atomic")
-  , rev
-  ;
+var helpers = require('../helpers');
+var harness = helpers.harness(__filename);
+var it = harness.it;
 
-specify("design_atomic:setup", timeout, function (assert) {
-  nano.db.create("design_atomic", function (err) {
-    assert.equal(err, undefined, "Failed to create database");
-    db.insert(
-    { "updates":
-      { "inplace": function (doc, req) {
-          var body = JSON.parse(req.body);
-          doc[body.field] = body.value;
-          return [doc, JSON.stringify(doc)];
-        }
+var rev;
+
+it('should be able to insert an atomic design doc', function(assert) {
+  var db = this.db;
+  db.insert({
+    updates: {
+      inplace: function(doc, req) {
+        var body = JSON.parse(req.body);
+        doc[body.field] = body.value;
+        return [doc, JSON.stringify(doc)];
       }
-    }, "_design/update", function (error, response) {
-      db.insert({"foo": "baz"}, "foobar", function (error, foo) {
-        assert.equal(error, undefined, "Should have stored foo");
-        assert.equal(foo.ok, true, "Response should be ok");
-        assert.ok(foo.rev, "Response should have rev");
-        rev = foo.rev;
-      });
+    }
+  }, '_design/update', function(err) {
+    assert.equal(err, null, 'should be no problems officer');
+    db.insert({'foo': 'baz'}, 'foobar', function(error, foo) {
+      assert.equal(error, null, 'stores teh foo');
+      assert.equal(foo.ok, true, 'does not have an attitude');
+      assert.ok(foo.rev, 'got the revisions');
+      rev = foo.rev;
+      assert.end();
     });
   });
 });
 
-specify("design_atomic:test", timeout, function (assert) {
-  db.atomic("update", "inplace", "foobar",
-  {field: "foo", value: "bar"}, function (error, response) {
-    assert.equal(error, undefined, "Failed to update");
-    assert.equal(response.foo, "bar", "Update worked");
+it('should be able to insert atomically', function(assert) {
+  this.db.atomic('update', 'inplace', 'foobar', {
+    field: 'foo',
+    value: 'bar'
+  }, function(error, response) {
+    assert.equal(error, null, 'should be able to update');
+    assert.equal(response.foo, 'bar', 'and the right value was set');
+    assert.end();
   });
 });
 
-specify("design_atomic:slashes_in_name", timeout, function (assert) {
-  db.insert({"wat": "wat"}, "wat/wat", function (error, foo) {
-    assert.equal(error, undefined, "Should have stored wat");
-    assert.equal(foo.ok, true, "Response should be ok");
-    db.atomic("update", "inplace", "wat/wat",
-      {field: "wat", value: "dawg"}, function (error, response) {
-      assert.equal(error, undefined, "Failed to update");
-      assert.equal(response.wat, "dawg", "Update worked");
+it('should be able to update with slashes on the id', function(assert) {
+  var db = this.db;
+  db.insert({'wat': 'wat'}, 'wat/wat', function(error, foo) {
+    assert.equal(error, null, 'stores `wat`');
+    assert.equal(foo.ok, true, 'response ok');
+    db.atomic('update', 'inplace', 'wat/wat', {
+      field: 'wat',
+      value: 'dawg'
+    }, function(error, response) {
+      assert.equal(error, null, 'should update');
+      assert.equal(response.wat, 'dawg', 'with the right copy');
+      assert.end();
     });
   });
 });
-
-specify("design_atomic:teardown", timeout, function (assert) {
-  nano.db.destroy("design_atomic", function (err) {
-    assert.equal(err, undefined, "Failed to destroy database");
-    assert.ok(mock.isDone(), "Some mocks didn't run");
-  });
-});
-
-specify.run(process.argv.slice(2));

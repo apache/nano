@@ -2,11 +2,11 @@
   { "method"   : "put"
   , "path"     : "/design_multiple"
   , "status"   : 201
-  , "response" : "{ \"ok\": true }" 
+  , "response" : "{ \"ok\": true }"
   }
 , { "method"   : "put"
   , "path"     : "/design_multiple/_design/alice"
-  , "body"     : "{\"views\":{\"by_id\":{\"map\":\"function (doc) { emit(doc._id, doc); }\"}}}"
+  , "body"     : "*"
   , "status"   : 201
   , "response" : "{\"ok\":true,\"id\":\"_design/alice\",\"rev\":\"1-14e6bc\"}"
   }
@@ -36,6 +36,6 @@
 , { "method"   : "delete"
   , "path"     : "/design_multiple"
   , "status"   : 200
-  , "response" : "{ \"ok\": true }" 
+  , "response" : "{ \"ok\": true }"
   }
 ]
