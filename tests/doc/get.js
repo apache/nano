@@ -1,47 +1,18 @@
-var specify  = require("specify")
-  , helpers  = require("../helpers")
-  , timeout  = helpers.timeout
-  , nano     = helpers.nano
-  , nock     = helpers.nock
-  ;
+'use strict';
 
-var mock = nock(helpers.couch, "doc/get")
-  , db   = nano.use("doc_get")
-  , rev
-  ;
+var helpers = require('../helpers');
+var harness = helpers.harness(__filename);
+var db = harness.locals.db;
+var it = harness.it;
 
-specify("doc_get:setup", timeout, function (assert) {
-  nano.db.create("doc_get", function (err) {
-    assert.equal(err, undefined, "Failed to create database");
-    db.insert({"foo": "baz"}, "foobaz", function (error, foo) {
-      assert.equal(error, undefined, "Should have stored foobaz");
-      assert.equal(foo.ok, true, "Response should be ok");
-      assert.equal(foo.id, "foobaz", "My id is foobaz");
-      assert.ok(foo.rev, "Response should have rev");
-      rev = foo.rev;
-    });
+it('should insert a one item', helpers.insertOne);
+
+it('should get the document', function(assert) {
+  db.get('foobaz', {'revs_info': true}, function(error, foobaz) {
+    assert.equal(error, null, 'should get foobaz');
+    assert.ok(foobaz['_revs_info'], 'got revs info');
+    assert.equal(foobaz._id, 'foobaz', 'id is food');
+    assert.equal(foobaz.foo, 'baz', 'baz is in foo');
+    assert.end();
   });
 });
-
-specify("doc_get:test", timeout, function (assert) {
-  db.insert({"foo": "bar"}, "foobaz", function (error, response) {
-    assert.equal(error["status-code"], 409, "Should be conflict");
-    assert.equal(error.scope, "couch", "Scope is couch");
-    assert.equal(error.error, "conflict", "Error is conflict");
-    db.get("foobaz", {revs_info: true}, function (error, foobaz) {
-      assert.equal(error, undefined, "Should get foobaz");
-      assert.ok(foobaz._revs_info, "Got revs info");
-      assert.equal(foobaz._id, "foobaz", "Id is food");
-      assert.equal(foobaz.foo, "baz", "Baz is in foo");
-    });
-  });
-});
-
-specify("doc_get:teardown", timeout, function (assert) {
-  nano.db.destroy("doc_get", function (err) {
-    assert.equal(err, undefined, "Failed to destroy database");
-    assert.ok(mock.isDone(), "Some mocks didn't run");
-  });
-});
-
-specify.run(process.argv.slice(2));

@@ -3,9 +3,9 @@
 var helpers = require('../helpers');
 var harness = helpers.harness(__filename);
 var it = harness.it;
+var db = harness.locals.db;
 
 it('should be able to fetch an attachment', function(assert) {
-  var db = this.db;
   db.attachment.insert('new_string', 'att', 'Hello', 'text/plain',
   function(error, hello) {
     assert.equal(error, null, 'should store `hello`');
@@ -21,7 +21,6 @@ it('should be able to fetch an attachment', function(assert) {
 });
 
 it('should insert and fetch a binary file', function(assert) {
-  var db = this.db;
   db.attachment.insert('new_binary', 'att', new Buffer('123'),
   'text/plain', function(error, hello) {
     assert.equal(error, null, 'should store `123`');

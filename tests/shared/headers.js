@@ -11,14 +11,14 @@ var mock = nock(helpers.couch, "shared/headers")
   ;
 
 
-specify("shared_headers:setup", timeout, function (assert) {
-  nano.db.create("shared_headers", function (err) {
+specify("shared_headers:setup", timeout, function(assert) {
+  nano.db.create("shared_headers", function(err) {
     assert.equal(err, undefined, "Failed to create database");
   });
 });
 
-specify("shared_headers:test", timeout, function (assert) {
-  db.attachment.insert("new", "att", "Hello", "text/plain", 
+specify("shared_headers:test", timeout, function(assert) {
+  db.attachment.insert("new", "att", "Hello", "text/plain",
   function(error, hello) {
     assert.equal(error, undefined, "Should store hello");
     assert.equal(hello.ok, true, "Response should be ok");
@@ -28,7 +28,7 @@ specify("shared_headers:test", timeout, function (assert) {
       doc: "new",
       headers: { "If-None-Match": JSON.stringify(hello.rev) }
     },
-    function (error, helloWorld, rh) {
+    function(error, helloWorld, rh) {
       assert.equal(error, undefined, "Should get the hello");
       assert.equal(rh["status-code"], 304, "status is 'not modified'");
     });
@@ -37,15 +37,15 @@ specify("shared_headers:test", timeout, function (assert) {
       doc: "new",
       att: "att"
     },
-    function (error, helloWorld, rh) {
+    function(error, helloWorld, rh) {
       assert.equal(error, undefined, "Should get the hello");
       assert.equal(rh["status-code"], 200, "status is 'ok'");
     });
   });
 });
 
-specify("shared_headers:teardown", timeout, function (assert) {
-  nano.db.destroy("shared_headers", function (err) {
+specify("shared_headers:teardown", timeout, function(assert) {
+  nano.db.destroy("shared_headers", function(err) {
     assert.equal(err, undefined, "Failed to destroy database");
     assert.ok(mock.isDone(), "Some mocks didn't run");
   });

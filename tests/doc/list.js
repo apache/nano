@@ -1,66 +1,44 @@
-var specify  = require('specify')
-  , async    = require('async')
-  , helpers  = require('../helpers')
-  , timeout  = helpers.timeout
-  , nano     = helpers.nano
-  , nock     = helpers.nock
-  ;
+'use strict';
 
-var mock = nock(helpers.couch, "doc/list")
-  , db   = nano.use("doc_list")
-  ;
+var helpers = require('../helpers');
+var harness = helpers.harness(__filename);
+var db = harness.locals.db;
+var nano = harness.locals.nano;
+var it = harness.it;
 
-specify("doc_list:setup", timeout, function (assert) {
-  nano.db.create("doc_list", function (err) {
-    assert.equal(err, undefined, "Failed to create database");
-    async.parallel(
-      [ function(cb) { db.insert({"foo": "bar"}, "foobar", cb); }
-      , function(cb) { db.insert({"bar": "foo"}, "barfoo", cb); }
-      , function(cb) { db.insert({"foo": "baz"}, "foobaz", cb); }
-      ]
-    , function(error, results) {
-      assert.equal(error, undefined, "Should have stored docs");
-    });
+it('should insert a bunch of items', helpers.insertThree);
+
+it('should list the three documents', function(assert) {
+  db.list(function(error, docs) {
+    assert.equal(error, null, 'should get list');
+    assert.equal(docs['total_rows'], 3, 'with total three rows');
+    assert.ok(docs.rows, 'and the rows themselves');
+    assert.end();
   });
 });
 
-specify("doc_list:list", timeout, function (assert) {
-  db.list(function (error, docs) {
-    assert.equal(error, undefined, "List didn't work");
-    assert.equal(docs.total_rows, 3, "Got total three rows");
-    assert.ok(docs.rows, "Got rows");
+it('should be able to list using the `relax` function', function(assert) {
+  nano.relax({
+    db: 'doc_list',
+    doc: '_all_docs',
+    method: 'GET',
+    params: {limit: 1}
+  }, function(error, docs) {
+    assert.equal(error, null, 'not relaxed');
+    assert.ok(docs.rows, 'got meh rows');
+    assert.equal(docs.rows.length, 1, 'but its only one #sadpanda');
+    assert.equal(docs['total_rows'], 3, 'out of three');
+    assert.end();
   });
 });
 
-specify("doc_list:relaxed", timeout, function (assert) {
-  nano.relax(
-  { db     : "doc_list"
-  , doc    : "_all_docs"
-  , method : "GET"
-  , params : {limit: 1}
-  }, function (error, docs) {
-    assert.equal(error, undefined, "Relax didn't work");
-    assert.ok(docs.rows, "Got rows");
-    assert.equal(docs.rows.length, 1, "Only one row");
-    assert.equal(docs.total_rows, 3, "Got total three rows");
+it('should be able to list with a startkey', function(assert) {
+  db.list({startkey: 'c'}, function(error, docs) {
+    assert.equal(error, null, 'should work');
+    assert.ok(docs.rows, 'get teh rows');
+    assert.equal(docs.rows.length, 2, 'starts in row two');
+    assert.equal(docs['total_rows'], 3, 'out of three rows');
+    assert.equal(docs.offset, 1, 'offset is 1');
+    assert.end();
   });
 });
-
-specify("doc_list:relaxed", timeout, function (assert) {
-  db.list({startkey: 'c'}, function (error, docs) {
-    assert.equal(error, undefined, "Startkey didn't work");
-    assert.ok(docs.rows, "Got rows");
-    assert.equal(docs.rows.length, 2, "Started in row two");
-    assert.equal(docs.total_rows, 3, "Got total three rows");
-    assert.equal(docs.offset, 1, "Offset by 1");
-  });
-});
-
-specify("doc_list:teardown", timeout, function (assert) {
-  nano.db.destroy("doc_list", function (err) {
-    assert.equal(err, undefined, "Failed to destroy database");
-    assert.ok(mock.isDone(), "Some mocks didn't run");
-  });
-});
-
-specify.run(process.argv.slice(2));

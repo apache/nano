@@ -3,9 +3,9 @@
 var helpers = require('../helpers');
 var harness = helpers.harness(__filename);
 var it = harness.it;
+var nano = harness.locals.nano;
 
 it('should be able to fetch the database', function(assert) {
-  var nano = this.nano;
   nano.db.get('db_get', function(error, response) {
     assert.equal(error, null, 'should get the db');
     assert.equal(response['doc_count'], 0, 'should be empty');

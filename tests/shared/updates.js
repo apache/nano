@@ -9,7 +9,7 @@ var specify  = require('specify')
 
 var mock = nock(helpers.couch, "shared/updates");
 
-specify("updates", timeout, function (assert) {
+specify("updates", timeout, function(assert) {
   nano.db.destroy('mydb', function() {
     nano.updates(function(err, updates) {
       if (err && updates.error && updates.error === 'illegal_database_name') {

@@ -1,39 +1,26 @@
-var specify  = require('specify')
-  , helpers  = require('../helpers')
-  , timeout  = helpers.timeout
-  , nano     = helpers.nano
-  , nock     = helpers.nock
-  ;
+'use strict';
 
-var mock = nock(helpers.couch, "doc/destroy")
-  , db   = nano.use("doc_destroy")
-  , rev
-  ;
+var helpers = require('../helpers');
+var harness = helpers.harness(__filename);
+var it = harness.it;
+var db = harness.locals.db;
 
-specify("doc_destroy:setup", timeout, function (assert) {
-  nano.db.create("doc_destroy", function (err) {
-    assert.equal(err, undefined, "Failed to create database");
-    db.insert({"foo": "baz"}, "foobaz", function (error, foo) {   
-      assert.equal(error, undefined, "Should have stored foo");
-      assert.equal(foo.ok, true, "Response should be ok");
-      assert.ok(foo.rev, "Response should have rev");
-      rev = foo.rev;
-    });
+var rev;
+
+it('should insert a document', function(assert) {
+  db.insert({'foo': 'baz'}, 'foobaz', function(error, foo) {
+    assert.equal(error, null, 'stores foo');
+    assert.equal(foo.ok, true, 'ok response');
+    assert.ok(foo.rev, 'response with rev');
+    rev = foo.rev;
+    assert.end();
   });
 });
 
-specify("doc_destroy:test", timeout, function (assert) {
-  db.destroy("foobaz", rev, function (error, response) {
-    assert.equal(error, undefined, "Should have deleted foo");
-    assert.equal(response.ok, true, "Response should be ok");
+it('should delete a document', function(assert) {
+  db.destroy('foobaz', rev, function(error, response) {
+    assert.equal(error, null, 'deleted foo');
+    assert.equal(response.ok, true, 'ok!');
+    assert.end();
   });
 });
-
-specify("doc_destroy:teardown", timeout, function (assert) {
-  nano.db.destroy("doc_destroy", function (err) {
-    assert.equal(err, undefined, "Failed to destroy database");
-    assert.ok(mock.isDone(), "Some mocks didn't run");
-  });
-});
-
-specify.run(process.argv.slice(2));

@@ -4,9 +4,9 @@ var async = require('async');
 var helpers = require('../helpers');
 var harness = helpers.harness(__filename);
 var it = harness.it;
+var nano = harness.locals.nano;
 
 it('should be able to create `az09_$()+-/` database', function(assert) {
-  var nano = this.nano;
   nano.db.create('az09_$()+-/', function(err) {
     assert.equal(err, null, 'should create database');
     assert.end();
@@ -24,7 +24,6 @@ function(assert) {
 });
 
 it('must destroy the databases we created', function(assert) {
-  var nano = this.nano;
   async.forEach(['az09_$()+-/', 'with/slash'], nano.db.destroy, function(err) {
     assert.equal(err, undefined, 'should destroy all dbs');
     assert.end();

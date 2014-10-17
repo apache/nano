@@ -1,40 +1,16 @@
-var specify  = require("specify")
-  , helpers  = require("../helpers")
-  , timeout  = helpers.timeout
-  , nano     = helpers.nano
-  , nock     = helpers.nock
-  ;
+'use strict';
 
-var mock = nock(helpers.couch, "doc/head")
-  , db   = nano.use("doc_head")
-  , rev
-  ;
+var helpers = require('../helpers');
+var harness = helpers.harness(__filename);
+var db = harness.locals.db;
+var it = harness.it;
 
-specify("doc_head:setup", timeout, function (assert) {
-  nano.db.create("doc_head", function (err) {
-    assert.equal(err, undefined, "Failed to create database");
-    db.insert({"foo": "baz"}, "foobaz", function (error, foo) {
-      assert.equal(error, undefined, "Should have stored foobaz");
-      assert.equal(foo.ok, true, "Response should be ok");
-      assert.equal(foo.id, "foobaz", "My id is foobaz");
-      assert.ok(foo.rev, "Response should have rev");
-      rev = foo.rev;
-    });
+it('should insert a one item', helpers.insertOne);
+
+it('should get a status code when you do head', function(assert) {
+  db.head('foobaz', function(error, body, headers) {
+    assert.equal(error, null, 'should get the head of foobaz');
+    assert.equal(headers['status-code'], 200, 'and is ok');
+    assert.end();
   });
 });
-
-specify("doc_head:test", timeout, function (assert) {
-  db.head("foobaz", function (error, body, headers) {
-    assert.equal(error, undefined, "Should get the head of foobaz");
-    assert.equal(headers["status-code"], 200, "Should be ok");
-  });
-});
-
-specify("doc_head:teardown", timeout, function (assert) {
-  nano.db.destroy("doc_head", function (err) {
-    assert.equal(err, undefined, "Failed to destroy database");
-    assert.ok(mock.isDone(), "Some mocks didn't run");
-  });
-});
-
-specify.run(process.argv.slice(2));

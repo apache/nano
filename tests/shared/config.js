@@ -9,18 +9,18 @@ var specify  = require('specify')
 
 var mock = nock(helpers.couch, "shared/config");
 
-specify("shared_config:root", timeout, function (assert) {
-  nano.dinosaur('', function (err, response) {
+specify("shared_config:root", timeout, function(assert) {
+  nano.dinosaur('', function(err, response) {
     assert.equal(err, undefined, "Failed to get root");
     assert.ok(response.version, "Version is defined");
   });
-  nano.relax(function (err, response) {
+  nano.relax(function(err, response) {
     assert.equal(err, undefined, "Failed to get root");
     assert.ok(response.version, "Version is defined");
   });
 });
 
-specify("shared_config:url_parsing", timeout, function (assert) {
+specify("shared_config:url_parsing", timeout, function(assert) {
   var base_url = 'http://someurl.com';
 
   assert.equal(Nano(base_url).config.url, base_url, "Simple URL failed");
@@ -39,7 +39,7 @@ specify("shared_config:url_parsing", timeout, function (assert) {
     Nano(base_url+'/a').config.url, base_url, "Simple db failed");
 });
 
-specify("shared_config:default_headers", timeout, function (assert) {
+specify("shared_config:default_headers", timeout, function(assert) {
   var nanoWithDefaultHeaders = Nano(
   { url: couch
   , default_headers:
@@ -62,7 +62,7 @@ specify("shared_config:default_headers", timeout, function (assert) {
   , 'Custom headers "x-second-header" not honored');
 });
 
-specify("shared_config:clone", timeout, function (assert) {
+specify("shared_config:clone", timeout, function(assert) {
   var config = {
     url: 'http://someurl.com'
   };

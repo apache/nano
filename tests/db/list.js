@@ -3,9 +3,9 @@
 var helpers = require('../helpers');
 var harness = helpers.harness(__filename);
 var it = harness.it;
+var nano = harness.locals.nano;
 
 it('should list the correct databases', function(assert) {
-  var nano = this.nano;
   nano.db.list(function(error, list) {
     assert.equal(error, null, 'should list databases');
     var filtered = list.filter(function(e) {

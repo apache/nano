@@ -4,9 +4,9 @@ var async = require('async');
 var helpers = require('../helpers');
 var harness = helpers.harness(__filename);
 var it = harness.it;
+var db = harness.locals.db;
 
 it('should insert `alice` the design doc', function(assert) {
-  var db = this.db;
   async.waterfall([
     function(next) {
       db.insert({
@@ -30,8 +30,6 @@ it('should insert `alice` the design doc', function(assert) {
 });
 
 it('should be able to compact a view', function(assert) {
-  var db = this.db;
-
   async.waterfall([
     function(next) {
       db.view.compact('alice', next);

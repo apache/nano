@@ -3,11 +3,11 @@
 var helpers = require('../helpers');
 var harness = helpers.harness(__filename);
 var it = harness.it;
+var db = harness.locals.db;
 
 var rev;
 
 it('should be able to insert an atomic design doc', function(assert) {
-  var db = this.db;
   db.insert({
     updates: {
       inplace: function(doc, req) {
@@ -29,7 +29,7 @@ it('should be able to insert an atomic design doc', function(assert) {
 });
 
 it('should be able to insert atomically', function(assert) {
-  this.db.atomic('update', 'inplace', 'foobar', {
+  db.atomic('update', 'inplace', 'foobar', {
     field: 'foo',
     value: 'bar'
   }, function(error, response) {
@@ -40,7 +40,6 @@ it('should be able to insert atomically', function(assert) {
 });
 
 it('should be able to update with slashes on the id', function(assert) {
-  var db = this.db;
   db.insert({'wat': 'wat'}, 'wat/wat', function(error, foo) {
     assert.equal(error, null, 'stores `wat`');
     assert.equal(foo.ok, true, 'response ok');

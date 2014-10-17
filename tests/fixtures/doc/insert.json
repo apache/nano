@@ -2,13 +2,19 @@
   { "method"   : "put"
   , "path"     : "/doc_insert"
   , "status"   : 201
-  , "response" : "{ \"ok\": true }" 
+  , "response" : "{ \"ok\": true }"
   }
 , { "method"   : "put"
   , "status"   : 201
   , "path"     : "/doc_insert/foobaz"
   , "body"     : "{\"foo\":\"baz\"}"
   , "response" : "{\"ok\":true,\"id\":\"foobaz\",\"rev\":\"1-611488\"}"
+  }
+, { "method"   : "put"
+  , "status"   : 409
+  , "path"     : "/doc_insert/foobaz"
+  , "body"     : "*"
+  , "response" : "{\"error\":\"conflict\",\"reason\":\"Document update conflict.\"}"
   }
 , { "method"   : "put"
   , "status"   : 201
@@ -19,11 +25,11 @@
 , { "method"   : "post"
   , "status"   : 201
   , "path"     : "/doc_insert"
-  , "body"     : "{\"fn\":\"function () { return true; }\",\"fn2\":\"function () { return true; }\"}"
+  , "body"     : "{\"fn\":\"function() { return true; }\",\"fn2\":\"function() { return true; }\"}"
   , "response" : "{\"ok\":true,\"id\":\"123\",\"rev\":\"1-611488\"}"
   }
 , { "path"     : "/doc_insert/123"
-  , "response" : "{\"fn\":\"function () { return true; }\",\"fn2\":\"function () { return true; }\",\"id\":\"123\",\"rev\":\"1-611488\"}"
+  , "response" : "{\"fn\":\"function() { return true; }\",\"fn2\":\"function() { return true; }\",\"id\":\"123\",\"rev\":\"1-611488\"}"
   }
 , { "method"   : "post"
   , "status"   : 201
@@ -37,6 +43,6 @@
   }
 , { "method"   : "delete"
   , "path"     : "/doc_insert"
-  , "response" : "{ \"ok\": true }" 
+  , "response" : "{ \"ok\": true }"
   }
 ]

@@ -4,11 +4,11 @@ var fs = require('fs');
 var path = require('path');
 var helpers = require('../helpers');
 var harness = helpers.harness(__filename);
+var db = harness.locals.db;
 var it = harness.it;
 var pixel = helpers.pixel;
 
 it('should be able to pipe to a writeStream', function(assert) {
-  var db = this.db;
   var buffer = new Buffer(pixel, 'base64');
   var filename = path.join(__dirname, '.temp.bmp');
   var ws = fs.createWriteStream(filename);
@@ -27,7 +27,6 @@ it('should be able to pipe to a writeStream', function(assert) {
 });
 
 it('should be able to pipe from a readStream', function(assert) {
-  var db = this.db;
   var logo = path.join(__dirname, '..', 'fixtures', 'logo.png');
   var rs = fs.createReadStream(logo);
   var is = db.attachment.insert('nodejs', 'logo.png', null, 'image/png');

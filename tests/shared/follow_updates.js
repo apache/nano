@@ -11,8 +11,8 @@ var mock = nock(helpers.couch, "shared/follow_updates")
   , feed
   ;
 
-specify("shared_follow_updates:setup", timeout, function (assert) {
-  nano.db.create("shared_follow_updates", function (err) {
+specify("shared_follow_updates:setup", timeout, function(assert) {
+  nano.db.create("shared_follow_updates", function(err) {
     assert.equal(err, undefined, "Failed to create database");
   });
 });
@@ -20,11 +20,11 @@ specify("shared_follow_updates:setup", timeout, function (assert) {
 if(!process.env.NOCK) {
   // nock doesn support streaming
   // please run tests with local couchdb
-  specify("shared_follow_updates:stream", timeout, function (assert) {
+  specify("shared_follow_updates:stream", timeout, function(assert) {
     assert.expect(2);
     nano.db.destroy('mydb', function() {
       feed  = nano.follow_updates();
-      feed.on('change', function (change) {
+      feed.on('change', function(change) {
         assert.ok(change, "Change existed");
         assert.equal(change.db_name, 'mydb', "db_name is set correctly");
       });
@@ -34,10 +34,10 @@ if(!process.env.NOCK) {
       });
     });
   });
-  
-  specify("shared_follow_updates:callback", timeout, function (assert) {
+
+  specify("shared_follow_updates:callback", timeout, function(assert) {
     nano.db.destroy('mydb', function() {
-      var feed = nano.follow_updates(function (error, change) {
+      var feed = nano.follow_updates(function(error, change) {
         assert.equal(error, undefined, "No errors happened");
         assert.ok(change, "Change existed");
       });
@@ -48,11 +48,11 @@ if(!process.env.NOCK) {
   });
 }
 
-specify("shared_follow_updates:teardown", timeout, function (assert) {
+specify("shared_follow_updates:teardown", timeout, function(assert) {
   if (feed && typeof feed.stop === "function") {
     feed.stop();
   }
-  nano.db.destroy("shared_follow_updates", function (err) {
+  nano.db.destroy("shared_follow_updates", function(err) {
     assert.equal(err, undefined, "Failed to destroy database");
     assert.ok(mock.isDone(), "Some mocks didn't run");
   });

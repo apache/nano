@@ -35,10 +35,10 @@
     "pre-commit": "0.0.9"
   },
   "scripts": {
-    "test": "LEAKS=false DEBUG=* NOCK_OFF=true istanbul cover tape tests/{att,db,design}/*.js",
-    "mocked": "LEAKS=false DEBUG=* NOCK_OFF=false tape tests/{att,db,design}/*.js",
-    "jshint": "jshint tests/{att,db,design}/*.js",
-    "codestyle": "jscs -p google tests/{att,db,design}/*.js",
+    "test": "DEBUG=* NOCK_OFF=true istanbul cover tape tests/{att,db,design,doc}/*.js",
+    "mocked": "tape tests/{att,db,design,doc}/*.js",
+    "jshint": "jshint tests/{att,db,design,doc}/*.js",
+    "codestyle": "jscs -p google tests/{att,db,design,doc}/*.js",
     "checkcoverage": "istanbul check-coverage --statements 100 --functions 100 --lines 100 --branches 100"
   },
   "main": "./nano.js",

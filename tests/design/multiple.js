@@ -1,12 +1,11 @@
 'use strict';
 
-var async = require('async');
 var helpers = require('../helpers');
 var harness = helpers.harness(__filename);
 var it = harness.it;
+var db = harness.locals.db;
 
 it('should be able to insert docs and design doc', function(assert) {
-  var db = this.db;
   db.insert({
     views: {
       'by_id': {
@@ -16,19 +15,13 @@ it('should be able to insert docs and design doc', function(assert) {
   }, '_design/alice', function(error, response) {
     assert.equal(error, null, 'should create views');
     assert.equal(response.ok, true, 'response ok');
-    async.parallel([
-      function(cb) { db.insert({'foo': 'bar'}, 'foobar', cb); },
-      function(cb) { db.insert({'bar': 'foo'}, 'barfoo', cb); },
-      function(cb) { db.insert({'foo': 'baz'}, 'foobaz', cb); }
-    ], function(error) {
-      assert.equal(error, undefined, 'stores docs');
-      assert.end();
-    });
+    assert.end();
   });
 });
 
+it('should insert a bunch of items', helpers.insertThree);
+
 it('get multiple docs with a composed key', function(assert) {
-  var db = this.db;
   db.view('alice', 'by_id', {
     keys: ['foobar', 'barfoo'],
     'include_docs': true

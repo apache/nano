@@ -4,6 +4,7 @@ var async = require('async');
 var helpers = require('../helpers');
 var harness = helpers.harness(__filename);
 var it = harness.it;
+var db = harness.locals.db;
 var viewDerek = helpers.viewDerek;
 
 //
@@ -14,15 +15,14 @@ if (!process.env.NOCK_OFF) {
   var opts = {key: ['Derek', 'San Francisco']};
 
   it('should create a ddoc and insert some docs', function(assert) {
-    helpers.prepareAView(assert, '/_search', this.db);
+    helpers.prepareAView(assert, '/_search', db);
   });
 
   it('should respond with derek when asked for derek', function(assert) {
-    viewDerek(this.db, assert, opts, assert.end, 'search');
+    viewDerek(db, assert, opts, assert.end, 'search');
   });
 
   it('should have no cloning issues when doing queries', function(assert) {
-    var db = this.db;
     async.waterfall([
       function(next) { viewDerek(db, assert, opts, next, 'search'); },
       function(next) { viewDerek(db, assert, opts, next, 'search'); }

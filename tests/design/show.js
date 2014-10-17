@@ -4,9 +4,9 @@ var async = require('async');
 var helpers = require('../helpers');
 var harness = helpers.harness(__filename);
 var it = harness.it;
+var db = harness.locals.db;
 
 it('should insert a show ddoc', function(assert) {
-  var db = this.db;
   db.insert({
     shows: {
       singleDoc: function(doc, req) {
@@ -61,7 +61,6 @@ it('should insert a show ddoc', function(assert) {
 });
 
 it('should show the amazing clemens in json', function(assert) {
-  var db = this.db;
   db.show('people', 'singleDoc', 'p_clemens', function(error, doc, rh) {
     assert.equal(error, null, 'its alive');
     assert.equal(rh['content-type'], 'application/json');
@@ -73,7 +72,6 @@ it('should show the amazing clemens in json', function(assert) {
 });
 
 it('should show the amazing clemens in html', function(assert) {
-  var db = this.db;
   db.show('people', 'singleDoc', 'p_clemens', {format: 'html'},
   function(error, doc, rh) {
     assert.equal(error, null, 'should work');

@@ -2,18 +2,18 @@
   { "method"   : "put"
   , "path"     : "/doc_copy"
   , "status"   : 201
-  , "response" : "{ \"ok\": true }" 
+  , "response" : "{ \"ok\": true }"
   }
 , { "method"   : "put"
   , "status"   : 201
   , "path"     : "/doc_copy/foo_src"
-  , "body"     : "{\"foo\":\"baz\"}"
+  , "body"     : "*"
   , "response" : "{\"ok\":true,\"id\":\"foo_src\",\"rev\":\"1-611488\"}"
   }
 , { "method"   : "put"
   , "status"   : 201
   , "path"     : "/doc_copy/foo_dest"
-  , "body"     : "{\"baz\":\"foo\"}"
+  , "body"     : "*"
   , "response" : "{\"ok\":true,\"id\":\"foo_dest\",\"rev\":\"1-351431\"}"
   }
 , { "method"   : "head"
@@ -38,6 +38,6 @@
   }
 , { "method"   : "delete"
   , "path"     : "/doc_copy"
-  , "response" : "{ \"ok\": true }" 
+  , "response" : "{ \"ok\": true }"
   }
 ]

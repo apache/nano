@@ -9,7 +9,7 @@ var debug = require('debug');
 var path = require('path');
 var endsWith = require('endswith');
 var cfg = require('./fixtures/cfg');
-var nano = require('../nano');
+var nano = require('../lib/nano');
 var helpers = exports;
 
 var auth = url.parse(cfg.admin).auth.split(':');
@@ -123,7 +123,7 @@ helpers.nock = function helpersNock(url, fixture, log) {
 
 helpers.prepareAView = function(assert, search, db) {
   search = search || '';
-  var db = db || this.db;
+  db = db || this.db;
 
   db.insert({
     views: {
@@ -171,5 +171,25 @@ helpers.viewDerek = function viewDerek(db, assert, opts, next, method) {
     assert.equal(view.rows[0].key[0],'Derek');
     assert.equal(view.rows[0].key[1],'San Francisco');
     next(error);
+  });
+};
+
+helpers.insertOne = function insertThree(assert) {
+  var db = this.db;
+  db.insert({'foo': 'baz'}, 'foobaz', function(err) {
+    assert.equal(err, null, 'should store docs');
+    assert.end();
+  });
+};
+
+helpers.insertThree = function insertThree(assert) {
+  var db = this.db;
+  async.parallel([
+    function(cb) { db.insert({'foo': 'bar'}, 'foobar', cb); },
+    function(cb) { db.insert({'bar': 'foo'}, 'barfoo', cb); },
+    function(cb) { db.insert({'foo': 'baz'}, 'foobaz', cb); }
+  ], function(error) {
+    assert.equal(error, undefined, 'should store docs');
+    assert.end();
   });
 };

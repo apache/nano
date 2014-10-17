@@ -3,9 +3,9 @@
 var helpers = require('../helpers');
 var harness = helpers.harness(__filename);
 var it = harness.it;
+var db = harness.locals.db;
 
 it('should store and delete `goofy`', function(assert) {
-  var db = this.db;
   db.insert({'foo': 'baz'}, 'goofy', function(error, foo) {
     assert.equal(error, null, 'should have stored foo');
     assert.equal(foo.ok, true, 'response should be ok');
@@ -18,7 +18,6 @@ it('should store and delete `goofy`', function(assert) {
 });
 
 it('should have run the compaction', function(assert) {
-  var db = this.db;
   db.compact(function(error) {
     assert.equal(error, null, 'compact should respond');
     db.info(function(error, info) {
@@ -32,8 +31,6 @@ it('should have run the compaction', function(assert) {
 });
 
 it('should finish compaction before ending', function(assert) {
-  var db = this.db;
-
   function nextWhenFinished() {
     db.info(function(err, info) {
       if (err) {

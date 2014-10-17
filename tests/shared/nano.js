@@ -3,7 +3,7 @@ var specify  = require('specify')
   , nano     = require('../../nano')
   ;
 
-specify("shared_nano:test", timeout, function (assert) {
+specify("shared_nano:test", timeout, function(assert) {
   assert.ok(nano.version, "Version is defined");
   assert.ok(nano.path, "Path is defined");
 });

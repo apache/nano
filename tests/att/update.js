@@ -3,12 +3,12 @@
 var helpers = require('../helpers');
 var pixel = helpers.pixel;
 var harness = helpers.harness(__filename);
+var db = harness.locals.db;
 var it = harness.it;
 
 var rev;
 
 it('should be able to insert and update attachments', function(assert) {
-  var db = this.db;
   var buffer = new Buffer(pixel, 'base64');
   db.attachment.insert('new', 'att', 'Hello', 'text/plain',
   function(error, hello) {
@@ -26,7 +26,6 @@ it('should be able to insert and update attachments', function(assert) {
 });
 
 it('should be able to fetch the updated pixel', function(assert) {
-  var db = this.db;
   db.get('new', function(error, newDoc) {
     assert.equal(error, null, 'should get new');
     newDoc.works = true;

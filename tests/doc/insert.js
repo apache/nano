@@ -1,73 +1,74 @@
-var specify  = require('specify')
-  , helpers  = require('../helpers')
-  , timeout  = helpers.timeout
-  , nano     = helpers.nano
-  , nock     = helpers.nock
-  , rev
-  ;
+'use strict';
 
-var mock = nock(helpers.couch, "doc/insert")
-  , db   = nano.use("doc_insert")
-  ;
+var helpers = require('../helpers');
+var harness = helpers.harness(__filename);
+var db = harness.locals.db;
+var it = harness.it;
 
-specify("doc_insert:setup", timeout, function (assert) {
-  nano.db.create("doc_insert", function (err) {
-    assert.equal(err, undefined, "Failed to create database");
-  });
-});
+var rev;
 
-specify("doc_insert:simple", timeout, function (assert) {
-  db.insert({"foo": "baz"}, "foobaz", function (error, foo) {
+it('should insert one simple document', function(assert) {
+  db.insert({'foo': 'baz'}, 'foobaz', function(error, foo) {
     rev = foo.rev;
-    assert.equal(error, undefined, "Should have stored foo");
-    assert.equal(foo.ok, true, "Response should be ok");
-    assert.ok(foo.rev, "Response should have rev");
+    assert.equal(error, null, 'should have stored foo');
+    assert.equal(foo.ok, true, 'response should be ok');
+    assert.ok(foo.rev, 'response should have rev');
+    assert.end();
   });
 });
 
-specify("doc_insert:params", timeout, function (assert) {
-  db.insert({"foo": "baz", _rev: rev}, {doc_name:"foobaz", new_edits:false},
-  function (error, foo) {
-    assert.equal(error, undefined, "Should have stored foo");
-    assert.equal(foo.ok, true, "Response should be ok");
-    assert.ok(foo.rev, "Response should have rev");
+it('should fail to insert again since it already exists', function(assert) {
+  db.insert({}, 'foobaz', function(error) {
+    assert.equal(error['status-code'], 409, 'should be conflict');
+    assert.equal(error.scope, 'couch', 'scope is couch');
+    assert.equal(error.error, 'conflict', 'type is conflict');
+    assert.end();
   });
 });
 
-specify("doc_insert:functions", timeout, function (assert) {
-  db.insert({fn: function () { return true; },
-  fn2: "function () { return true; }"}, function (error, fns) {
-    assert.equal(error, undefined, "Should have stored foo");
-    assert.equal(fns.ok, true, "Response should be ok");
-    assert.ok(fns.rev, "Response should have rev");
-    db.get(fns.id, function (error, fns) {
-      assert.equal(fns.fn, fns.fn2, "fn matches fn2");
-      assert.equal(error, undefined, "Should get foo");
+it('should be able to use custom params in insert', function(assert) {
+  db.insert({
+    foo: 'baz',
+    _rev: rev
+  }, {
+    'doc_name': 'foobaz',
+    'new_edits': false
+  }, function(error, foo) {
+    assert.equal(error, null, 'should have stored foo');
+    assert.equal(foo.ok, true, 'response should be ok');
+    assert.ok(foo.rev, 'response should have rev');
+    assert.end();
+  });
+});
+
+it('should be able to insert functions in docs', function(assert) {
+  db.insert({
+    fn: function() { return true; },
+    fn2: 'function() { return true; }'
+  }, function(error, fns) {
+    assert.equal(error, null, 'should have stored foo');
+    assert.equal(fns.ok, true, 'response should be ok');
+    assert.ok(fns.rev, 'response should have rev');
+    db.get(fns.id, function(error, fns) {
+      assert.equal(fns.fn, fns.fn2, 'fn matches fn2');
+      assert.equal(error, null, 'should get foo');
+      assert.end();
     });
   });
 });
 
-specify("doc_insert:streaming", timeout, function (assert) {
-  var buffer = ""
-    , foobar = db.insert({"foo": "bar"})
-    ;
+it('should be able to stream an insert', function(assert) {
+  var buffer = '';
+  var foobar = db.insert({'foo': 'bar'});
 
   function runAssertions(error, foobar) {
-    assert.equal(error, undefined, "Should have stored foobar");
-    assert.ok(foobar.ok, "This is ok");
-    assert.ok(foobar.rev, "I GOT REVZ");
+    assert.equal(error, null, 'should have stored foobar');
+    assert.ok(foobar.ok, 'this is ok');
+    assert.ok(foobar.rev, 'and i got revz');
+    assert.end();
   }
 
   foobar.on('data', function(chunk) { buffer += chunk; });
-  foobar.on('end', function () { runAssertions(null, JSON.parse(buffer)); });
+  foobar.on('end', function() { runAssertions(null, JSON.parse(buffer)); });
   foobar.on('error', runAssertions);
 });
-
-specify("doc_insert:teardown", timeout, function (assert) {
-  nano.db.destroy("doc_insert", function (err) {
-    assert.equal(err, undefined, "Failed to destroy database");
-    assert.ok(mock.isDone(), "Some mocks didn't run");
-  });
-});
-
-specify.run(process.argv.slice(2));

@@ -1,58 +1,46 @@
-var specify  = require('specify')
-  , helpers  = require('../helpers')
-  , timeout  = helpers.timeout
-  , nano     = helpers.nano
-  , nock     = helpers.nock
-  ;
+'use strict';
 
-var mock = nock(helpers.couch, "doc/copy")
-  , db   = nano.use("doc_copy")
-  ;
+var helpers = require('../helpers');
+var harness = helpers.harness(__filename);
+var it = harness.it;
+var db = harness.locals.db;
 
-specify("doc_copy:setup", timeout, function (assert) {
-  nano.db.create("doc_copy", function (err) {
-    assert.equal(err, undefined, "Failed to create database");
-    db.insert({"foo": "baz"}, "foo_src", function (error, foo) {
-      assert.equal(error, undefined, "Should have stored foo");
-      assert.equal(foo.ok, true, "Response should be ok");
-      assert.ok(foo.rev, "Response should have rev");
-    });
-    db.insert({"baz": "foo"}, "foo_dest", function (error, foo) {
-      assert.equal(error, undefined, "Should have stored foo");
-      assert.equal(foo.ok, true, "Response should be ok");
-      assert.ok(foo.rev, "Response should have rev");
+it('must insert two docs before the tests start', function(assert) {
+  db.insert({'foo': 'baz'}, 'foo_src', function(error, src) {
+    assert.equal(error, null, 'stores src');
+    assert.equal(src.ok, true, 'response ok');
+    assert.ok(src.rev, 'haz rev');
+    db.insert({'bar': 'qux'}, 'foo_dest', function(error, dest) {
+      assert.equal(error, null, 'stores dest');
+      assert.equal(dest.ok, true, 'oki doki');
+      assert.ok(dest.rev, 'response has rev');
+      assert.end();
     });
   });
 });
 
-specify("doc_copy:overwrite", timeout, function (assert) {
-  db.copy("foo_src", "foo_dest", { overwrite: true }, 
-  function (error, response, headers) {
-    assert.equal(error, undefined, 
-      "Should have copied and overwritten foo_src to foo_dest");
-    assert.equal(headers["status-code"], 201, "Status code should be 201");
+it('should be able to copy and overwrite a document', function(assert) {
+  db.copy('foo_src', 'foo_dest', {overwrite: true},
+  function(error, response, headers) {
+    assert.equal(error, null,
+      'should have copied and overwritten foo_src to foo_dest');
+    assert.equal(headers['status-code'], 201, 'status code should be 201');
+    assert.end();
   });
 });
 
-specify("doc_copy:no_overwrite", timeout, function (assert) {
-  db.copy("foo_src", "foo_dest", function (error, response, headers) {
-    assert.equal(error.error, "conflict", "Should have a document conflict.");
+it('copy without overwrite should return conflict for exists docs',
+function(assert) {
+  db.copy('foo_src', 'foo_dest', function(error) {
+    assert.equal(error.error, 'conflict', 'should be a conflict');
+    assert.end();
   });
 });
 
-specify("doc_copy:new_doc", timeout, function (assert) {
-  db.copy("foo_src", "baz_dest", function (error, response, headers) {
-    assert.equal(error, undefined, 
-      "Should have copied foo_src to new baz_dest document");
-    assert.equal(headers["status-code"], 201, "Status code should be 201");
+it('copy to a new destination should work', function(assert) {
+  db.copy('foo_src', 'baz_dest', function(error, response, headers) {
+    assert.equal(error, null, 'copies into new document');
+    assert.equal(headers['status-code'], 201, 'Status code should be 201');
+    assert.end();
   });
 });
-
-specify("doc_copy:teardown", timeout, function (assert) {
-  nano.db.destroy("doc_copy", function (err) {
-    assert.equal(err, undefined, "Failed to destroy database");
-    assert.ok(mock.isDone(), "Some mocks didn't run");
-  });
-});
-
-specify.run(process.argv.slice(2));
