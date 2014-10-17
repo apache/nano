@@ -1,64 +1,56 @@
-var specify  = require('specify')
-  , async    = require('async')
-  , helpers  = require('../helpers')
-  , timeout  = helpers.timeout
-  , nano     = helpers.nano
-  , nock     = helpers.nock
-  ;
+'use strict';
 
-var mock = nock(helpers.couch, "db/follow")
-  , db   = nano.use("db_follow")
-  , feed
-  ;
+var async = require('async');
+var helpers = require('../helpers');
+var harness = helpers.harness(__filename);
+var it = harness.it;
 
-specify("db_follow:setup", timeout, function (assert) {
-  nano.db.create("db_follow", function (err) {
-    assert.equal(err, undefined, "Failed to create database");
-    async.parallel(
-      [ function(cb) { db.insert({"foo": "bar"}, "foobar", cb); }
-      , function(cb) { db.insert({"bar": "foo"}, "barfoo", cb); }
-      , function(cb) { db.insert({"foo": "baz"}, "foobaz", cb); }
-      ]
-    , function(error, results){
-      assert.equal(error, undefined, "Should have stored docs");
-    });
+it('should insert a bunch of items', function(assert) {
+  var db = this.db;
+  async.parallel([
+    function(cb) { db.insert({'foo': 'bar'}, 'foobar', cb); },
+    function(cb) { db.insert({'bar': 'foo'}, 'barfoo', cb); },
+    function(cb) { db.insert({'foo': 'baz'}, 'foobaz', cb); }
+  ], function(error) {
+    assert.equal(error, undefined, 'should stored docs');
+    assert.end();
   });
 });
 
-if(!process.env.NOCK) {
-  // nock doesn support streaming
-  // please run tests with local couchdb
-  specify("db_follow:stream", timeout, function (assert) {
-    assert.expect(2);
-    feed  = db.follow({since: 3});
+if (process.env.NOCK_OFF) {
+  var feed1;
+
+  it('should be able to get the changes feed', function(assert) {
+    var db = this.db;
     var i = 3;
-    feed.on('change', function (change) {
-      assert.ok(change, "Change existed");
-      assert.equal(change.seq, i+1, "Seq is set correctly");
+
+    feed1 = db.follow({since: 3});
+
+    feed1.on('change', function(change) {
+      assert.ok(change, 'change existed');
+      assert.equal(change.seq, i + 1, 'seq is set correctly');
       ++i;
+      if (i === 4) {
+        console.log(change, i);
+        assert.end();
+      }
     });
-    feed.follow();
-    process.nextTick(function () {
-      db.insert({"bar": "baz"}, "barbaz");
-    });
+
+    feed1.follow();
+
+    setTimeout(function() {
+      db.insert({'bar': 'baz'}, 'barbaz');
+    }, 100);
   });
-  
-  specify("db_follow:callback", timeout, function (assert) {
-    db.follow({since: 3}, function (error, change) {
-      assert.equal(error, undefined, "No errors happened");
-      assert.ok(change, "Change existed");
+
+  it('should see changes since `seq:3`', function(assert) {
+    var db = this.db;
+    var feed = db.follow({since: 3}, function(error, change) {
+      assert.equal(error, null, 'should not have errors');
+      assert.ok(change, 'change existed');
+      feed.die();
+      feed1.die();
+      setImmediate(assert.end);
     });
   });
 }
-
-specify("db_follow:teardown", timeout, function (assert) {
-  if (feed && typeof feed.stop === "function") {
-    feed.stop();
-  }
-  nano.db.destroy("db_follow", function (err) {
-    assert.equal(err, undefined, "Failed to destroy database");
-    assert.ok(mock.isDone(), "Some mocks didn't run");
-  });
-});
-
-specify.run(process.argv.slice(2));

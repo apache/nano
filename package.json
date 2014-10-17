@@ -18,7 +18,7 @@
   ],
   "dependencies": {
     "request": "^2.45.0",
-    "follow": "^0.11.2",
+    "follow": "^0.11.3",
     "errs": "^0.3.0",
     "underscore": "^1.7.0",
     "debug": "^2.0.0"
@@ -29,15 +29,16 @@
     "istanbul": "^0.3.2",
     "jshint": "^2.5.6",
     "jscs": "^1.7.0",
-    "nock": "^0.48.0",
+    "nock": "^0.48.1",
     "endswith": "^0.0.0",
-    "tape-it": "^0.0.1",
+    "tape-it": "^0.2.0",
     "pre-commit": "0.0.9"
   },
   "scripts": {
-    "test": "DEBUG=* NOCK_OFF=true istanbul cover tape tests/att/*.js",
-    "jshint": "jshint tests/att/*.js",
-    "codestyle": "jscs -p google tests/att/*.js",
+    "test": "LEAKS=false DEBUG=* NOCK_OFF=true istanbul cover tape tests/{att,db}/*.js",
+    "test_mocked": "LEAKS=false DEBUG=* NOCK_OFF=false tape tests/{att,db}/*.js",
+    "jshint": "jshint tests/{att,db}/*.js",
+    "codestyle": "jscs -p google tests/{att,db}/*.js",
     "checkcoverage": "istanbul check-coverage --statements 100 --functions 100 --lines 100 --branches 100"
   },
   "main": "./nano.js",

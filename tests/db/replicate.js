@@ -1,66 +1,62 @@
-var specify  = require('specify')
-  , async    = require('async')
-  , helpers  = require('../helpers')
-  , timeout  = helpers.timeout
-  , nano     = helpers.nano
-  , nock     = helpers.nock
-  ;
+'use strict';
 
-var mock     = nock(helpers.couch, "db/replicate")
-  , db       = nano.use("db_replicate")
-  , replica  = nano.use("db_replica")
-  , replica2 = nano.use("db_replica2")
-  ;
+var async = require('async');
+var helpers = require('../helpers');
+var harness = helpers.harness(__filename);
+var it = harness.it;
 
-specify("db_replicate:setup", timeout, function (assert) {
-  async.series(
-    [ function(cb) { nano.db.create("db_replicate", cb); }
-    , function(cb) { nano.db.create("db_replica", cb);   }
-    , function(cb) { nano.db.create("db_replica2", cb);  }
-    ]
-  , function(error, results) {
-    assert.equal(error, undefined, "Should have created databases");
-    async.parallel(
-      [ function(cb) { db.insert({"foo": "bar"}, "foobar", cb); }
-      , function(cb) { db.insert({"bar": "foo"}, "barfoo", cb); }
-      , function(cb) { db.insert({"foo": "baz"}, "foobaz", cb); }
-      ]
-    , function(error, results){
-      assert.equal(error, undefined, "Should have stored docs");
+it('creates a bunch of database replicas', function(assert) {
+  var nano = this.nano;
+  var db = this.db;
+
+  async.forEach(['db_replica', 'db_replica2'],
+    nano.db.create, function(error) {
+    assert.equal(error, undefined, 'created database(s)');
+    async.parallel([
+      function(cb) { db.insert({'foo': 'bar'}, 'foobar', cb); },
+      function(cb) { db.insert({'bar': 'foo'}, 'barfoo', cb); },
+      function(cb) { db.insert({'foo': 'baz'}, 'foobaz', cb); }
+    ], function(error) {
+      assert.equal(error, undefined, 'stores docs');
+      assert.end();
     });
   });
 });
 
-specify("db_replicate:test", timeout, function (assert) {
-  db.replicate("db_replica", function(error) {
-    assert.equal(error, undefined, "Should be able to replicate");
-    replica.list(function (error, list) {
-      assert.equal(error, undefined, "Should be able to list");
-      assert.equal(list.total_rows, 3, "Should have three documents");
+it('should be able to replicate three docs', function(assert) {
+  var db = this.db;
+  var replica = this.nano.use('db_replica');
+
+  db.replicate('db_replica', function(error) {
+    assert.equal(error, null, 'replication should work');
+    replica.list(function(error, list) {
+      assert.equal(error, null, 'should be able to invoke list');
+      assert.equal(list['total_rows'], 3, 'and have three documents');
+      assert.end();
     });
   });
 });
 
-specify("db_replicate:test_objects", timeout, function (assert) {
+it('should be able to replicate to a `nano` object', function(assert) {
+  var nano = this.nano;
+  var db = this.db;
+  var replica2 = this.nano.use('db_replica2');
+
   nano.db.replicate(db, replica2, function(error) {
-    assert.equal(error, undefined, "Should be able to replicate");
-    replica2.list(function (error, list) {
-      assert.equal(error, undefined, "Should be able to list");
-      assert.equal(list.total_rows, 3, "Should have three documents");
+    assert.equal(error, null, 'should replicate');
+    replica2.list(function(error, list) {
+      assert.equal(error, null, 'should list');
+      assert.equal(list['total_rows'], 3, 'and have three documents');
+      assert.end();
     });
   });
 });
 
-specify("db_replicate:teardown", timeout, function (assert) {
-  async.series(
-    [ function(cb) { nano.db.destroy("db_replicate", cb); }
-    , function(cb) { nano.db.destroy("db_replica", cb);   }
-    , function(cb) { nano.db.destroy("db_replica2", cb);  }
-    ]
-  , function(error, results) {
-    assert.equal(error, undefined, "Should have deleted databases");
-    assert.ok(mock.isDone(), "Some mocks didn't run");
+it('should destroy the extra databases', function(assert) {
+  var nano = this.nano;
+  async.forEach(['db_replica', 'db_replica2'],
+  nano.db.destroy, function(error) {
+    assert.equal(error, undefined, 'deleted databases');
+    assert.end();
   });
 });
-
-specify.run(process.argv.slice(2));

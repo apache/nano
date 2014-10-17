@@ -1,42 +1,27 @@
-var specify  = require('specify')
-  , async    = require('async')
-  , helpers  = require('../helpers')
-  , timeout  = helpers.timeout
-  , nano     = helpers.nano
-  , nock     = helpers.nock
-  ;
+'use strict';
 
-var mock = nock(helpers.couch, "db/changes")
-  , db   = nano.use("db_changes")
-  ;
+var async = require('async');
+var helpers = require('../helpers');
+var harness = helpers.harness(__filename);
+var it = harness.it;
 
-specify("db_changes:setup", timeout, function (assert) {
-  nano.db.create("db_changes", function (err) {
-    assert.equal(err, undefined, "Failed to create database");
-    async.parallel(
-      [ function(cb) { db.insert({"foo": "bar"}, "foobar", cb); }
-      , function(cb) { db.insert({"bar": "foo"}, "barfoo", cb); }
-      , function(cb) { db.insert({"foo": "baz"}, "foobaz", cb); }
-      ]
-    , function(error, results){
-      assert.equal(error, undefined, "Should have stored docs");
-    });
+it('should be able to insert three documents', function(assert) {
+  var locals = this;
+  async.parallel([
+    function(cb) { locals.db.insert({'foo': 'bar'}, 'foobar', cb); },
+    function(cb) { locals.db.insert({'bar': 'foo'}, 'barfoo', cb); },
+    function(cb) { locals.db.insert({'foo': 'baz'}, 'foobaz', cb); }
+  ], function(error) {
+    assert.equal(error, undefined, 'should store docs');
+    assert.end();
   });
 });
 
-specify("db_changes:test", timeout, function (assert) {
-  db.changes({since:2}, function (error, response) {
-    assert.equal(error, undefined, "Changes should respond");
-    assert.equal(response.results.length, 1, 'Gets one result');
-    assert.equal(response.last_seq, 3, 'seq is 3');
+it('should be able to receive changes since seq:2', function(assert) {
+  this.db.changes({since:2}, function(error, response) {
+    assert.equal(error, null, 'gets response from changes');
+    assert.equal(response.results.length, 1, 'gets one result');
+    assert.equal(response['last_seq'], 3, 'seq is 3');
+    assert.end();
   });
 });
-
-specify("db_changes:teardown", timeout, function (assert) {
-  nano.db.destroy("db_changes", function (err) {
-    assert.equal(err, undefined, "Failed to destroy database");
-    assert.ok(mock.isDone(), "Some mocks didn't run");
-  });
-});
-
-specify.run(process.argv.slice(2));

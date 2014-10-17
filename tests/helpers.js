@@ -59,10 +59,10 @@ helpers.teardown = function() {
   };
 };
 
-helpers.harness = function(opts) {
-  opts = opts || {};
-  var fileName   = path.basename(module.parent.filename).split('.')[0];
-  var parentDir    = path.dirname(module.parent.filename)
+helpers.harness = function(name) {
+  var parent = name || module.parent.filename;
+  var fileName   = path.basename(parent).split('.')[0];
+  var parentDir    = path.dirname(parent)
       .split(path.sep).reverse()[0];
   var shortPath    = path.join(parentDir, fileName);
   var log = debug(path.join('tests', shortPath));
@@ -82,7 +82,7 @@ helpers.harness = function(opts) {
   return harness({
     id: shortPath,
     timeout: helpers.timeout,
-    checkLeaks: false,
+    checkLeaks: !!process.env.LEAKS,
     locals: locals,
     setup: helpers.setup.call(locals, dbName),
     teardown: helpers.teardown.call(locals, dbName)

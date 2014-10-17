@@ -2,7 +2,7 @@
 
 var helpers = require('../helpers');
 var pixel = helpers.pixel;
-var harness = helpers.harness();
+var harness = helpers.harness(__filename);
 var it = harness.it;
 
 var rev;
@@ -16,7 +16,7 @@ it('should be able to insert and update attachments', function(assert) {
     assert.equal(hello.ok, true, 'response ok');
     assert.ok(hello.rev, 'should have a revision');
     locals.db.attachment.insert('new', 'att', buffer, 'image/bmp',
-    { rev: hello.rev }, function(error, bmp) {
+    {rev: hello.rev}, function(error, bmp) {
       assert.equal(error, null, 'should store the pixel');
       assert.ok(bmp.rev, 'should store a revision');
       rev = bmp.rev;
@@ -27,10 +27,10 @@ it('should be able to insert and update attachments', function(assert) {
 
 it('should be able to fetch the updated pixel', function(assert) {
   var locals = this;
-  locals.db.get('new', function(error, new_doc) {
+  locals.db.get('new', function(error, newDoc) {
     assert.equal(error, null, 'should get new');
-    new_doc.works = true;
-    locals.db.insert(new_doc, 'new', function(error, response) {
+    newDoc.works = true;
+    locals.db.insert(newDoc, 'new', function(error, response) {
       assert.equal(error, null, 'should update doc');
       assert.equal(response.ok, true, 'response ok');
       assert.end();

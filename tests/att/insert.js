@@ -1,7 +1,7 @@
 'use strict';
 
 var helpers = require('../helpers');
-var harness = helpers.harness();
+var harness = helpers.harness(__filename);
 var it = harness.it;
 
 it('should be able to insert a simple attachment', function(assert) {
