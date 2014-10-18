@@ -44,7 +44,7 @@ it('should be able to use custom params in insert', function(assert) {
 it('should be able to insert functions in docs', function(assert) {
   db.insert({
     fn: function() { return true; },
-    fn2: 'function() { return true; }'
+    fn2: 'function () { return true; }'
   }, function(error, fns) {
     assert.equal(error, null, 'should have stored foo');
     assert.equal(fns.ok, true, 'response should be ok');

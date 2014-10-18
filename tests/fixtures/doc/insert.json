@@ -25,7 +25,7 @@
 , { "method"   : "post"
   , "status"   : 201
   , "path"     : "/doc_insert"
-  , "body"     : "{\"fn\":\"function() { return true; }\",\"fn2\":\"function() { return true; }\"}"
+  , "body"     : "*"
   , "response" : "{\"ok\":true,\"id\":\"123\",\"rev\":\"1-611488\"}"
   }
 , { "path"     : "/doc_insert/123"
