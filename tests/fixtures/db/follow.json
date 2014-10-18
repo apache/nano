@@ -2,7 +2,7 @@
   { "method"   : "put"
   , "path"     : "/db_follow"
   , "status"   : 201
-  , "response" : "{ \"ok\": true }" 
+  , "response" : "{ \"ok\": true }"
   }
 , { "method"   : "put"
   , "status"   : 201
@@ -25,6 +25,6 @@
 , { "method"   : "delete"
   , "path"     : "/db_follow"
   , "status"   : 200
-  , "response" : "{ \"ok\": true }" 
+  , "response" : "{ \"ok\": true }"
   }
 ]

@@ -1,96 +1,64 @@
-var specify  = require("specify")
-  , helpers  = require("../helpers")
-  , timeout  = helpers.timeout
-  , nano     = helpers.nano
-  , Nano     = helpers.Nano
-  , nock     = helpers.nock
-  ;
+'use strict';
 
-var mock = nock(helpers.couch, "shared/error")
-  , db   = nano.use("shared_error")
-  ;
+var helpers = require('../helpers');
+var harness = helpers.harness(__filename);
+var nano = harness.locals.nano;
+var db = harness.locals.db;
+var Nano = helpers.Nano;
+var it = harness.it;
 
-specify("shared_error:setup", timeout, function(assert) {
-  nano.db.create("shared_error", function(err) {
-    assert.equal(err, undefined, "Failed to create database");
-    db.insert({"foo": "baz"}, "foobaz", function(error, foo) {
-      assert.equal(error, undefined, "Should have stored foobaz");
-      assert.equal(foo.ok, true, "Response should be ok");
-      assert.equal(foo.id, "foobaz", "My id is foobaz");
-      assert.ok(foo.rev, "Response should have rev");
-    });
-  });
-});
-
-specify("shared_error:conflict", timeout, function(assert) {
-  db.insert({"foo": "bar"}, "foobaz", function(error, response) {
-    assert.equal(error["status-code"], 409, "Should be conflict");
-    assert.equal(error.message, error.reason, "Message should be reason");
-    assert.equal(error.scope, "couch", "Scope is couch");
-    assert.equal(error.error, "conflict", "Error is conflict");
-  });
-});
-
-specify("shared_error:init", timeout, function(assert) {
+it('should throw when initialize fails', function(assert) {
   try {
     Nano('Not a File');
-  } catch(err) {
-    assert.ok(err, "There must be an error");
-    assert.ok(err.message, "A note is given");
-    assert.equal(err.errid, "bad_file", "Code is right");
-    assert.equal(err.scope, "init", "Scope is init");
+  } catch (err) {
+    assert.ok(err, 'should have throw');
+    assert.ok(err.message, 'with a description');
+    assert.equal(err.errid, 'bad_file', 'and an error id');
+    assert.equal(err.scope, 'init', 'and scope');
   }
   try {
     Nano({});
-  } catch(err2) {
-    assert.ok(err2, "There must be an error");
-    assert.ok(err2.message, "A note is given");
-    assert.equal(err2.errid, "bad_url", "Code is right");
-    assert.equal(err2.scope, "init", "Scope is init");
+  } catch (err2) {
+    assert.ok(err2, 'should have throw');
+    assert.ok(err2.message, 'with a message');
+    assert.equal(err2.errid, 'bad_url', 'and error id');
+    assert.equal(err2.scope, 'init', 'and scope');
   }
+  assert.end();
 });
 
-specify("shared_error:root", timeout, function(assert) {
-  // this shouldn't error
-  var root   = nano.request()
-    , buffer = ""
-    ;
-  root.on('data', function(chunk) { buffer += chunk; });
+it('should be able to stream the simplest request', function(assert) {
+  var root = nano.request();
   root.on('end', function() {
-    assert.ok(true, "Ended");
+    assert.pass('request worked');
+    assert.end();
   });
 });
 
-specify("shared_error:stream", timeout, function(assert) {
-  db.list("bad params").on('error', function(error) {
-    assert.ok(error.message, "A note is given");
-    assert.equal(error.errid, "bad_params", "Code is right");
-    assert.equal(error.scope, "nano", "Scope exists");
+it('should get an error when streaming with bad params', function(assert) {
+  var stream = db.list('bad params');
+  stream.on('error', function(error) {
+    assert.ok(error.message, 'msg');
+    assert.equal(error.errid, 'bad_params', 'id');
+    assert.equal(error.scope, 'nano', 'and scope');
+    assert.end();
   });
 });
 
-specify("shared_error:callback", timeout, function(assert) {
-  db.list("bad params", function(error, response) {
-    assert.ok(error, "There must be an error");
-    assert.ok(error.message, "A note is given");
-    assert.equal(error.errid, "bad_params", "Code is right");
-    assert.equal(error.scope, "nano", "Scope exists");
+it('should give an error with bad params on callback', function(assert) {
+  db.list('bad params', function(error) {
+    assert.ok(error.message, 'a message');
+    assert.equal(error.errid, 'bad_params', 'and a code');
+    assert.equal(error.scope, 'nano', 'and a scope');
+    assert.end();
   });
 });
 
-specify("shared_error:bad_delete", timeout, function(assert) {
-  nano.db.destroy("say_wat_wat", function(error, response) {
-    assert.ok(error, "There must be an error");
-    assert.ok(error.message, "A note is given");
-    assert.equal(error.description,'missing');
+it('should error when destroying a db that does not exist', function(assert) {
+  nano.db.destroy('say_wat_wat', function(error) {
+    assert.ok(error, 'an error');
+    assert.ok(error.message, 'a note');
+    assert.equal(error.description, 'missing', 'is missing');
+    assert.end();
   });
 });
-
-specify("shared_error:teardown", timeout, function(assert) {
-  nano.db.destroy("shared_error", function(err) {
-    assert.equal(err, undefined, "Failed to destroy database");
-    assert.ok(mock.isDone(), "Some mocks didn't run");
-  });
-});
-
-specify.run(process.argv.slice(2));

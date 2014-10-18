@@ -1,75 +1,100 @@
-var specify  = require('specify')
-  , helpers  = require('../helpers')
-  , timeout  = helpers.timeout
-  , nano     = helpers.nano
-  , Nano     = helpers.Nano
-  , nock     = helpers.nock
-  , couch    = helpers.couch
-  ;
+'use strict';
 
-var mock = nock(helpers.couch, "shared/config");
+var helpers = require('../helpers');
+var harness = helpers.harness(__filename);
+var nano = harness.locals.nano;
+var Nano = helpers.Nano;
 
-specify("shared_config:root", timeout, function(assert) {
+var it = harness.it;
+
+it('should serve the root when no path is specified', function(assert) {
   nano.dinosaur('', function(err, response) {
-    assert.equal(err, undefined, "Failed to get root");
-    assert.ok(response.version, "Version is defined");
-  });
-  nano.relax(function(err, response) {
-    assert.equal(err, undefined, "Failed to get root");
-    assert.ok(response.version, "Version is defined");
+    assert.equal(err, null, 'failed to get root');
+    assert.ok(response.version, 'version is defined');
+    nano.relax(function(err, response) {
+      assert.equal(err, null, 'relax');
+      assert.ok(response.version, 'had version');
+      assert.end();
+    });
   });
 });
 
-specify("shared_config:url_parsing", timeout, function(assert) {
-  var base_url = 'http://someurl.com';
+it('should be able to parse urls', function(assert) {
+  var baseUrl = 'http://someurl.com';
 
-  assert.equal(Nano(base_url).config.url, base_url, "Simple URL failed");
   assert.equal(
-    Nano(base_url+'/').config.url, base_url+'/', "Simple URL with / failed");
+    Nano(baseUrl).config.url,
+    baseUrl,
+    'simple url');
+
+  assert.equal(
+    Nano(baseUrl + '/').config.url,
+    baseUrl + '/',
+    'simple with trailing');
+
   assert.equal(
     Nano('http://a:b@someurl.com:5984').config.url,
-    'http://a:b@someurl.com:5984', "Auth failed");
+    'http://a:b@someurl.com:5984',
+    'with authentication');
+
   assert.equal(
     Nano('http://a:b%20c%3F@someurl.com:5984/mydb').config.url,
-    'http://a:b%20c%3F@someurl.com:5984', "Database escaped auth failed");
+    'http://a:b%20c%3F@someurl.com:5984',
+    'with escaped auth');
+
   assert.equal(
-    Nano(base_url+':5984/a').config.url, base_url+':5984',
-    "Port failed");
+    Nano(baseUrl + ':5984/a').config.url,
+    baseUrl + ':5984',
+    'with port');
+
   assert.equal(
-    Nano(base_url+'/a').config.url, base_url, "Simple db failed");
+    Nano(baseUrl + '/a').config.url,
+    baseUrl,
+    '`a` database');
+
+  assert.end();
 });
 
-specify("shared_config:default_headers", timeout, function(assert) {
-  var nanoWithDefaultHeaders = Nano(
-  { url: couch
-  , default_headers:
-    { 'x-custom-header': 'custom'
-    , 'x-second-header': 'second'
+it('should accept and handle customer http headers', function(assert) {
+  var nanoWithDefaultHeaders = Nano({
+    url: helpers.couch,
+    'default_headers': {
+      'x-custom-header': 'custom',
+      'x-second-header': 'second'
     }
   });
 
   var req = nanoWithDefaultHeaders.db.list(function(err) {
-    assert.equal(err, undefined, 'Error when using custom headers');
+    assert.equal(err, null, 'should list');
+    assert.end();
   });
 
   assert.equal(
-    req.headers['x-custom-header']
-  , 'custom'
-  , 'Custom headers "x-second-header" not honored');
+    req.headers['x-custom-header'],
+    'custom',
+    'header `x-second-header` honored');
+
   assert.equal(
-    req.headers['x-second-header']
-  , 'second'
-  , 'Custom headers "x-second-header" not honored');
+    req.headers['x-second-header'],
+    'second',
+    'headers `x-second-header` honored');
 });
 
-specify("shared_config:clone", timeout, function(assert) {
+it('should prevent shallow object copies', function(assert) {
   var config = {
     url: 'http://someurl.com'
   };
 
-  assert.equal(Nano(config).config.url, config.url, "Simple URL failed");
-  assert.ok(Nano(config).config.request_defaults, "request_defaults not set");
-  assert.ok(!config.request_defaults, "request_defaults set on original object");
-});
+  assert.equal(
+    Nano(config).config.url,
+    config.url,
+    'simple url');
 
-specify.run(process.argv.slice(2));
+  assert.ok(
+    Nano(config).config['request_defaults'],
+    '`request_defaults` should be set');
+  assert.ok(!config['request_defaults'],
+    'should not be re-using the same object');
+
+  assert.end();
+});

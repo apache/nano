@@ -2,7 +2,7 @@
   { "method"   : "put"
   , "path"     : "/db_changes"
   , "status"   : 201
-  , "response" : "{ \"ok\": true }" 
+  , "response" : "{ \"ok\": true }"
   }
 , { "method"   : "put"
   , "status"   : 201
@@ -29,6 +29,6 @@
 , { "method"   : "delete"
   , "path"     : "/db_changes"
   , "status"   : 200
-  , "response" : "{ \"ok\": true }" 
+  , "response" : "{ \"ok\": true }"
   }
 ]

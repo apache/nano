@@ -2,7 +2,7 @@
   { "method"   : "put"
   , "path"     : "/doc_list"
   , "status"   : 201
-  , "response" : "{ \"ok\": true }" 
+  , "response" : "{ \"ok\": true }"
   }
 , { "method"   : "put"
   , "status"   : 201
@@ -34,6 +34,6 @@
 , { "method"   : "delete"
   , "path"     : "/doc_list"
   , "status"   : 200
-  , "response" : "{ \"ok\": true }" 
+  , "response" : "{ \"ok\": true }"
   }
 ]

@@ -2,7 +2,7 @@
   { "method"   : "put"
   , "path"     : "/shared_headers"
   , "status"   : 201
-  , "response" : "{ \"ok\": true }" 
+  , "response" : "{ \"ok\": true }"
   }
 , { "method"   : "put"
   , "path"     : "/shared_headers/new/att"
@@ -24,6 +24,6 @@
 , { "method"   : "delete"
   , "path"     : "/shared_headers"
   , "status"   : 200
-  , "response" : "{ \"ok\": true }" 
+  , "response" : "{ \"ok\": true }"
   }
 ]

@@ -1,11 +1,12 @@
-var specify  = require('specify')
-  , timeout  = require('../helpers').timeout
-  , nano     = require('../../nano')
-  ;
+'use strict';
 
-specify("shared_nano:test", timeout, function(assert) {
-  assert.ok(nano.version, "Version is defined");
-  assert.ok(nano.path, "Path is defined");
+var helpers = require('../helpers');
+var harness = helpers.harness(__filename);
+var Nano = helpers.Nano;
+var it = harness.it;
+
+it('should have a version and a path', function(assert) {
+  assert.ok(Nano.version, 'version is defined');
+  assert.ok(Nano.path, 'path is defined');
+  assert.end();
 });
-
-specify.run(process.argv.slice(2));

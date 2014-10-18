@@ -2,7 +2,7 @@
   { "method"   : "put"
   , "path"     : "/shared_cookie"
   , "status"   : 201
-  , "response" : "{ \"ok\": true }" 
+  , "response" : "{ \"ok\": true }"
   }
 , { "path"     : "/_config/admins/admin"
   , "method"   : "put"
@@ -34,6 +34,6 @@
   }
 , { "method"   : "delete"
   , "path"     : "/shared_cookie"
-  , "response" : "{ \"ok\": true }" 
+  , "response" : "{ \"ok\": true }"
   }
 ]

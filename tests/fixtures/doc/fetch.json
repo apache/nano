@@ -2,7 +2,7 @@
   { "method"   : "put"
   , "path"     : "/doc_fetch"
   , "status"   : 201
-  , "response" : "{ \"ok\": true }" 
+  , "response" : "{ \"ok\": true }"
   }
 , { "method"   : "put"
   , "status"   : 201
@@ -35,6 +35,6 @@
 , { "method"   : "delete"
   , "path"     : "/doc_fetch"
   , "status"   : 200
-  , "response" : "{ \"ok\": true }" 
+  , "response" : "{ \"ok\": true }"
   }
 ]

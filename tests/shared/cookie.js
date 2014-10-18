@@ -1,71 +1,61 @@
-var specify    = require("specify")
-  , helpers    = require("../helpers")
-  , timeout    = helpers.timeout
-  , nano       = helpers.nano
-  , Nano       = helpers.Nano
-  , nock       = helpers.nock
-  ;
+'use strict';
 
-var mock  = nock(helpers.couch, "shared/cookie")
-  , admin = Nano(helpers.admin)
-  , cookie
-  , cookie_nano
-  ;
+var helpers = require('../helpers');
+var harness = helpers.harness(__filename);
+var nano = harness.locals.nano;
+var Nano = helpers.Nano;
+var it = harness.it;
 
-specify("shared_cookie:setup", timeout, function(assert) {
-  // creates a db in admin party mode
-  nano.db.create("shared_cookie", function(err, response) {
-    assert.equal(err, undefined, "Failed to create database");
-    // creates a admin user, leaves admin party mode
-    nano.relax(
-    { method : "PUT"
-    , path   : "_config/admins/" + helpers.username
-    , body   : helpers.password
-    }, function(err, response, headers) {
-      assert.equal(err, undefined, "Failed to create admin user");
-      // authenticate
-      nano.auth(helpers.username, helpers.password,
-      function(err, response, headers) {
-        assert.equal(err, undefined, "Should have logged in successfully");
-        assert.ok(headers['set-cookie'],
-          "Response should have a set-cookie header");
-        cookie = headers['set-cookie'];
-      });
-      });
-  });
-});
+var admin = Nano(helpers.admin);
+var cookie;
+var server;
 
-specify("shared_cookie:test", timeout, function(assert) {
-  var server = Nano({ url : helpers.couch, cookie: cookie });
-  var db = server.use("shared_cookie");
-  // insert with a shared cookie
-  db.insert({"foo": "baz"}, null, function(error, response) {
-    assert.equal(error, undefined, "Should have stored value");
-    assert.equal(response.ok, true, "Response should be ok");
-    assert.ok(response.rev, "Response should have rev");
-  });
-});
-
-specify("shared_cookie:get_session", timeout, function(assert) {
-  var server = Nano({ url : helpers.couch, cookie: cookie });
-  server.session(function(error, session) {
-    assert.equal(error, undefined, "Should have gotten the session");
-    assert.equal(session.userCtx.name, helpers.username);
-  });
-});
-
-specify("shared_cookie:teardown", timeout, function(assert) {
-  // back to admin party mode
-  admin.relax(
-  { method : "DELETE"
-  , path   : "_config/admins/" + helpers.username
-  }, function(err, response, headers) {
-    // delete the database that we created
-    nano.db.destroy("shared_cookie", function(err) {
-      assert.equal(err, undefined, "Failed to destroy database");
-      assert.ok(mock.isDone(), "Some mocks didn't run");
+it('should be able to setup admin and login', function(assert) {
+  nano.relax({
+    method : 'PUT',
+    path: '_config/admins/' + helpers.username,
+    body: helpers.password
+  }, function(err) {
+    assert.equal(err, null, 'should create admin');
+    nano.auth(helpers.username, helpers.password, function(err, _, headers) {
+      assert.equal(err, null, 'should have logged in successfully');
+      assert.ok(headers['set-cookie'],
+        'response should have a set-cookie header');
+      cookie = headers['set-cookie'];
+      assert.end();
     });
   });
 });
 
-specify.run(process.argv.slice(2));
+it('should be able to insert with a cookie', function(assert) {
+  server = Nano({
+    url: helpers.couch,
+    cookie: cookie
+  });
+  var db = server.use('shared_cookie');
+
+  db.insert({'foo': 'baz'}, null, function(error, response) {
+    assert.equal(error, null, 'should have stored value');
+    assert.equal(response.ok, true, 'response should be ok');
+    assert.ok(response.rev, 'response should have rev');
+    assert.end();
+  });
+});
+
+it('should be able to get the session', function(assert) {
+  server.session(function(error, session) {
+    assert.equal(error, null, 'should have gotten the session');
+    assert.equal(session.userCtx.name, helpers.username);
+    assert.end();
+  });
+});
+
+it('must restore admin parteh mode for other tests', function(assert) {
+  admin.relax({
+    method: 'DELETE',
+    path: '_config/admins/' + helpers.username
+  }, function(err, response, headers) {
+    assert.equal(err, null, 'should have deleted admin user');
+    assert.end();
+  });
+});

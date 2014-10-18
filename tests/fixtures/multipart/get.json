@@ -2,7 +2,7 @@
   { "method"   : "put"
   , "path"     : "/multipart_get"
   , "status"   : 201
-  , "response" : "{ \"ok\": true }" 
+  , "response" : "{ \"ok\": true }"
   }
 , { "method"   : "put"
   , "path"     : "/multipart_get/foobaz"
@@ -18,6 +18,6 @@
 , { "method"   : "delete"
   , "path"     : "/multipart_get"
   , "status"   : 200
-  , "response" : "{ \"ok\": true }" 
+  , "response" : "{ \"ok\": true }"
   }
 ]

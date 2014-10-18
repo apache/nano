@@ -2,7 +2,7 @@
   { "method"   : "put"
   , "path"     : "/att_get"
   , "status"   : 201
-  , "response" : "{ \"ok\": true }" 
+  , "response" : "{ \"ok\": true }"
   }
 , { "method"   : "put"
   , "path"     : "/att_get/new_string/att"
@@ -27,6 +27,6 @@
 , { "method"   : "delete"
   , "path"     : "/att_get"
   , "status"   : 200
-  , "response" : "{ \"ok\": true }" 
+  , "response" : "{ \"ok\": true }"
   }
 ]

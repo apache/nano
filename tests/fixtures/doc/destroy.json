@@ -2,7 +2,7 @@
   { "method"   : "put"
   , "path"     : "/doc_destroy"
   , "status"   : 201
-  , "response" : "{ \"ok\": true }" 
+  , "response" : "{ \"ok\": true }"
   }
 , { "method"   : "put"
   , "status"   : 201
@@ -16,6 +16,6 @@
   }
 , { "method"   : "delete"
   , "path"     : "/doc_destroy"
-  , "response" : "{ \"ok\": true }" 
+  , "response" : "{ \"ok\": true }"
   }
 ]

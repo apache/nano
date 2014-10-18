@@ -5,7 +5,7 @@ var harness = helpers.harness(__filename);
 var it = harness.it;
 var db = harness.locals.db;
 
-if (process.env.NOCK_OFF === 'true') {
+if (helpers.unmocked) {
   it('should insert a bunch of items', helpers.insertThree);
 
   var feed1;
