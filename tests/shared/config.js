@@ -21,7 +21,6 @@ it('should serve the root when no path is specified', function(assert) {
 
 it('should be able to parse urls', function(assert) {
   var baseUrl = 'http://someurl.com';
-
   assert.equal(
     Nano(baseUrl).config.url,
     baseUrl,
@@ -36,6 +35,14 @@ it('should be able to parse urls', function(assert) {
     Nano('http://a:b@someurl.com:5984').config.url,
     'http://a:b@someurl.com:5984',
     'with authentication');
+
+  //var withDb = Nano({
+  //  url: 'http://a:b@someurl.com:5984',
+  //  db: 'foo'
+  //})
+
+  //assert.equal(withDb.config.db, 'foo', 'should create url with db');
+  //assert.ok(withDb.attachment, 'should have an attachment');
 
   assert.equal(
     Nano('http://a:b%20c%3F@someurl.com:5984/mydb').config.url,
@@ -58,7 +65,7 @@ it('should be able to parse urls', function(assert) {
 it('should accept and handle customer http headers', function(assert) {
   var nanoWithDefaultHeaders = Nano({
     url: helpers.couch,
-    'default_headers': {
+    defaultHeaders: {
       'x-custom-header': 'custom',
       'x-second-header': 'second'
     }
@@ -91,9 +98,9 @@ it('should prevent shallow object copies', function(assert) {
     'simple url');
 
   assert.ok(
-    Nano(config).config['request_defaults'],
-    '`request_defaults` should be set');
-  assert.ok(!config['request_defaults'],
+    Nano(config).config.requestDefaults,
+    '`requestDefaults` should be set');
+  assert.ok(!config.requestDefaults,
     'should not be re-using the same object');
 
   assert.end();

@@ -19,7 +19,7 @@ it('should insert one simple document', function(assert) {
 
 it('should fail to insert again since it already exists', function(assert) {
   db.insert({}, 'foobaz', function(error) {
-    assert.equal(error['status-code'], 409, 'should be conflict');
+    assert.equal(error['statusCode'], 409, 'should be conflict');
     assert.equal(error.scope, 'couch', 'scope is couch');
     assert.equal(error.error, 'conflict', 'type is conflict');
     assert.end();
@@ -31,7 +31,7 @@ it('should be able to use custom params in insert', function(assert) {
     foo: 'baz',
     _rev: rev
   }, {
-    'doc_name': 'foobaz',
+    docName: 'foobaz',
     'new_edits': false
   }, function(error, foo) {
     assert.equal(error, null, 'should have stored foo');

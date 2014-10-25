@@ -54,7 +54,7 @@ it('must restore admin parteh mode for other tests', function(assert) {
   admin.relax({
     method: 'DELETE',
     path: '_config/admins/' + helpers.username
-  }, function(err, response, headers) {
+  }, function(err) {
     assert.equal(err, null, 'should have deleted admin user');
     assert.end();
   });

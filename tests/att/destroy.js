@@ -23,8 +23,6 @@ it('should be able to insert a new plain text attachment', function(assert) {
 
 it('should fail destroying with a bad filename', function(assert) {
   db.attachment.destroy('new', false, true, function(error, response) {
-    assert.equal(error.errid, 'bad_params',
-      '`att_name` should be a string');
     assert.equal(response, undefined, 'no response should be given');
     assert.end();
   });

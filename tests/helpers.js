@@ -66,7 +66,7 @@ helpers.harness = function(name) {
   var parentDir    = path.dirname(parent)
       .split(path.sep).reverse()[0];
   var shortPath    = path.join(parentDir, fileName);
-  var log = debug(path.join('tests', shortPath));
+  var log = debug(path.join('nano', 'tests', shortPath));
   var dbName       = shortPath.replace('/', '_');
   var nanoLog = nano({
     url: cfg.couch,

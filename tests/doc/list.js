@@ -22,7 +22,7 @@ it('should be able to list using the `relax` function', function(assert) {
     db: 'doc_list',
     doc: '_all_docs',
     method: 'GET',
-    params: {limit: 1}
+    qs: {limit: 1}
   }, function(error, docs) {
     assert.equal(error, null, 'not relaxed');
     assert.ok(docs.rows, 'got meh rows');

@@ -6,13 +6,13 @@ var it = harness.it;
 var nano = harness.locals.nano;
 
 it('should be able to track updates in couch', function(assert) {
-  var once = false;
+  var called = false;
   nano.db.destroy('mydb', function() {
     nano.updates(function(err, updates) {
-      if (once) {
+      if (called) {
         return;
       }
-      once = true;
+      called = true;
       //
       // older couches
       //

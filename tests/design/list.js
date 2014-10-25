@@ -8,7 +8,7 @@ var db = harness.locals.db;
 it('should create a ddoc and insert some docs', helpers.prepareAView);
 
 it('should get the people by running the ddoc', function(assert) {
-  db['view_with_list']('people', 'by_name_and_city', 'my_list', {
+  db.viewWithList('people', 'by_name_and_city', 'my_list', {
     key: [
       'Derek',
       'San Francisco'

@@ -8,7 +8,7 @@ var it = harness.it;
 it('should insert a bunch of items', helpers.insertThree);
 
 it('should be able to fetch with one key', function(assert) {
-  db['fetch_revs']({keys:['foobar']}, function(error, docs) {
+  db.fetchRevs({keys:['foobar']}, function(error, docs) {
     assert.equal(error, null, 'should work');
     assert.equal(docs.rows.length, 1, 'and get one row');
     assert.equal(docs['total_rows'], 3, 'out of 3');
@@ -18,7 +18,7 @@ it('should be able to fetch with one key', function(assert) {
 });
 
 it('should be able to fetch with multiple keys', function(assert) {
-  db['fetch_revs']({keys:['foobar', 'barfoo']}, function(error, docs) {
+  db.fetchRevs({keys:['foobar', 'barfoo']}, function(error, docs) {
     assert.equal(error, null, 'it works');
     assert.equal(docs.rows.length, 2, 'two rows');
     assert.equal(docs['total_rows'], 3, 'out of 3');

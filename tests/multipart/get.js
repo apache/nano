@@ -26,7 +26,8 @@ it('should be able to insert a doc with att', function(assert) {
 it('should be able to get the document with the attachment', function(assert) {
   db.multipart.get('foobaz', function(error, foobaz, headers) {
     assert.equal(error, null, 'should get foobaz');
-    assert.ok(headers['content-type'].match(/^multipart\/related;/));
+    assert.ok(headers['content-type'], 'should have content type');
+    assert.equal(headers['content-type'].split(';')[0], 'multipart/related');
     assert.equal(typeof foobaz, 'object', 'foobaz should be a buffer');
     assert.end();
   });

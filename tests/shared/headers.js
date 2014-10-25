@@ -18,14 +18,14 @@ it('should get headers', function(assert) {
       headers: {'If-None-Match': JSON.stringify(hello.rev)}
     }, function(error, helloWorld, rh) {
       assert.equal(error, null, 'should get the hello');
-      assert.equal(rh['status-code'], 304, 'status is not modified');
+      assert.equal(rh['statusCode'], 304, 'status is not modified');
       nano.request({
         db: 'shared_headers',
         doc: 'new',
         att: 'att'
       }, function(error, helloWorld, rh) {
         assert.equal(error, null, 'should get the hello');
-        assert.equal(rh['status-code'], 200, 'status is `ok`');
+        assert.equal(rh['statusCode'], 200, 'status is `ok`');
         assert.end();
       });
     });

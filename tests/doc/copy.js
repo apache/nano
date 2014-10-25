@@ -24,7 +24,7 @@ it('should be able to copy and overwrite a document', function(assert) {
   function(error, response, headers) {
     assert.equal(error, null,
       'should have copied and overwritten foo_src to foo_dest');
-    assert.equal(headers['status-code'], 201, 'status code should be 201');
+    assert.equal(headers['statusCode'], 201, 'status code should be 201');
     assert.end();
   });
 });
@@ -40,7 +40,7 @@ function(assert) {
 it('copy to a new destination should work', function(assert) {
   db.copy('foo_src', 'baz_dest', function(error, response, headers) {
     assert.equal(error, null, 'copies into new document');
-    assert.equal(headers['status-code'], 201, 'Status code should be 201');
+    assert.equal(headers['statusCode'], 201, 'Status code should be 201');
     assert.end();
   });
 });
