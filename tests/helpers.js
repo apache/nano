@@ -60,19 +60,27 @@ helpers.teardown = function() {
   };
 };
 
-helpers.harness = function(name) {
+helpers.noopTest = function (assert) {
+  assert.pass('werk werk werk');
+  assert.end();
+};
+
+helpers.harness = function(name, unit) {
+  unit = !!unit;
+
   var parent = name || module.parent.filename;
-  var fileName   = path.basename(parent).split('.')[0];
-  var parentDir    = path.dirname(parent)
-      .split(path.sep).reverse()[0];
-  var shortPath    = path.join(parentDir, fileName);
+  var fileName = path.basename(parent).split('.')[0];
+  var parentDir = path.dirname(parent)
+    .split(path.sep).reverse()[0];
+  var shortPath = path.join(parentDir, fileName);
   var log = debug(path.join('nano', 'tests', shortPath));
-  var dbName       = shortPath.replace('/', '_');
+  var dbName = shortPath.replace('/', '_');
   var nanoLog = nano({
     url: cfg.couch,
     log: log
   });
-  var mock = helpers.nock(helpers.couch, shortPath, log);
+
+  var mock = unit ? null : helpers.nock(helpers.couch, shortPath, log);
   var db   = nanoLog.use(dbName);
   var locals = {
     mock: mock,
@@ -85,8 +93,8 @@ helpers.harness = function(name) {
     timeout: helpers.timeout,
     checkLeaks: !!process.env.LEAKS,
     locals: locals,
-    setup: helpers.setup.call(locals, dbName),
-    teardown: helpers.teardown.call(locals, dbName)
+    setup: unit ? helpers.noopTest : helpers.setup.call(locals, dbName),
+    teardown: unit ? helpers.noopTest : helpers.teardown.call(locals, dbName)
   });
 };
 
@@ -195,3 +203,4 @@ helpers.insertThree = function insertThree(assert) {
 };
 
 helpers.unmocked = (process.env.NOCK_OFF === 'true');
+helpers.mocked = !helpers.unmocked;

@@ -35,11 +35,11 @@
     "pre-commit": "0.0.9"
   },
   "scripts": {
-    "test": "DEBUG=* NOCK_OFF=true istanbul cover tape tests/*/*.js",
-    "unmocked": "NOCK_OFF=true tape tests/*/*.js",
-    "mocked": "tape tests/*/*.js",
-    "jshint": "jshint tests/*/*.js lib/*.js",
-    "codestyle": "jscs -p google tests/*/*.js lib/*.js",
+    "test": "DEBUG=* NOCK_OFF=true istanbul cover tape tests/*/*/*.js",
+    "unmocked": "NOCK_OFF=true tape tests/*/*/*.js",
+    "mocked": "tape tests/*/*/*.js",
+    "jshint": "jshint tests/*/*/*.js lib/*.js",
+    "codestyle": "jscs -p google tests/*/*/*.js lib/*.js",
     "coverage": "open coverage/lcov-report/index.html",
     "checkcoverage": "istanbul check-coverage --statements 100 --functions 100 --lines 100 --branches 100"
   },
