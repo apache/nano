@@ -60,6 +60,19 @@ specify("multipart_insert:test_with_present_attachment", timeout, function (asse
   });
 });
 
+specify("multipart_insert:test_with_attachment_via_buffer", timeout, function (assert) {
+  var att = {
+    name: 'att',
+    data: new Buffer('foo'),
+    content_type: 'text/plain'
+  };
+  db.multipart.insert({"foo": "bar"}, [att], "otherdoc", function (error, foo) {
+    assert.equal(error, undefined, "Should have stored foo and attachment");
+    assert.equal(foo.ok, true, "Response should be ok");
+    assert.ok(foo.rev, "Response should have rev");
+  });
+});
+
 specify("multipart_insert:teardown", timeout, function (assert) {
   nano.db.destroy("multipart_insert", function (err) {
     assert.equal(err, undefined, "Failed to destroy database");

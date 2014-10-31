@@ -36,6 +36,12 @@
   , "status"   : 200
   , "response" : "{\"_id\": \"mydoc\", \"_rev\": \"2-921bd51\", \"_attachments\": {  \"one\": { \"stub\": true }, \"two\": { \"stub\": true } } }"
   }
+, { "method"   : "put"
+  , "path"     : "/multipart_insert/otherdoc"
+  , "body"     : "*"
+  , "status"   : 201
+  , "response" : "{\"ok\": true, \"id\": \"foobar\", \"rev\": \"1-921bd51\" }"
+  }
 , { "method"   : "delete"
   , "path"     : "/multipart_insert"
   , "status"   : 200
