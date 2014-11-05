@@ -11,7 +11,6 @@ minimalistic couchdb driver for node.js
 * **errors** - errors are proxied directly from couchdb: if you know couchdb
   you already know `nano`.
 
-
 ## installation
 
 1. install [npm][1]
@@ -23,45 +22,45 @@ minimalistic couchdb driver for node.js
 - [tutorials & screencasts](#tutorials-examples-in-the-wild--screencasts)
 - [configuration](#configuration)
 - [database functions](#database-functions)
-	- [nano.db.create(name, [callback])](#nanodbcreatename-callback)
-	- [nano.db.get(name, [callback])](#nanodbgetname-callback)
-	- [nano.db.destroy(name, [callback])](#nanodbdestroyname-callback)
-	- [nano.db.list([callback])](#nanodblistcallback)
-	- [nano.db.compact(name, [designname], [callback])](#nanodbcompactname-designname-callback)
-	- [nano.db.replicate(source, target, [opts], [callback])](#nanodbreplicatesource-target-opts-callback)
-	- [nano.db.changes(name, [params], [callback])](#nanodbchangesname-params-callback)
-	- [nano.db.follow(name, [params], [callback])](#nanodbfollowname-params-callback)
-	- [nano.use(name)](#nanousename)
-	- [nano.request(opts, [callback])](#nanorequestopts-callback)
-	- [nano.config](#nanoconfig)
-	- [nano.updates([params], [callback])](#nanoupdatesparams-callback)
-	- [nano.follow_updates([params], [callback])](#nanofollow_updatesparams-callback)
+  - [nano.db.create(name, [callback])](#nanodbcreatename-callback)
+  - [nano.db.get(name, [callback])](#nanodbgetname-callback)
+  - [nano.db.destroy(name, [callback])](#nanodbdestroyname-callback)
+  - [nano.db.list([callback])](#nanodblistcallback)
+  - [nano.db.compact(name, [designname], [callback])](#nanodbcompactname-designname-callback)
+  - [nano.db.replicate(source, target, [opts], [callback])](#nanodbreplicatesource-target-opts-callback)
+  - [nano.db.changes(name, [params], [callback])](#nanodbchangesname-params-callback)
+  - [nano.db.follow(name, [params], [callback])](#nanodbfollowname-params-callback)
+  - [nano.use(name)](#nanousename)
+  - [nano.request(opts, [callback])](#nanorequestopts-callback)
+  - [nano.config](#nanoconfig)
+  - [nano.updates([params], [callback])](#nanoupdatesparams-callback)
+  - [nano.followUpdates([params], [callback])](#nanofollowUpdatesparams-callback)
 - [document functions](#document-functions)
-	- [db.insert(doc, [params], [callback])](#dbinsertdoc-params-callback)
-	- [db.destroy(docname, rev, [callback])](#dbdestroydocname-rev-callback)
-	- [db.get(docname, [params], [callback])](#dbgetdocname-params-callback)
-	- [db.head(docname, [callback])](#dbheaddocname-callback)
-	- [db.copy(src_doc, dest_doc, opts, [callback])](#dbcopysrc_doc-dest_doc-opts-callback)
-	- [db.bulk(docs, [params], [callback])](#dbbulkdocs-params-callback)
-	- [db.list([params], [callback])](#dblistparams-callback)
-	- [db.fetch(docnames, [params], [callback])](#dbfetchdocnames-params-callback)
-  - [db.fetch_revs(docnames, [params], [callback])](#dbfetch_revsdocnames-params-callback)
+  - [db.insert(doc, [params], [callback])](#dbinsertdoc-params-callback)
+  - [db.destroy(docname, rev, [callback])](#dbdestroydocname-rev-callback)
+  - [db.get(docname, [params], [callback])](#dbgetdocname-params-callback)
+  - [db.head(docname, [callback])](#dbheaddocname-callback)
+  - [db.copy(src_doc, dest_doc, opts, [callback])](#dbcopysrc_doc-dest_doc-opts-callback)
+  - [db.bulk(docs, [params], [callback])](#dbbulkdocs-params-callback)
+  - [db.list([params], [callback])](#dblistparams-callback)
+  - [db.fetch(docnames, [params], [callback])](#dbfetchdocnames-params-callback)
+  - [db.fetchRevs(docnames, [params], [callback])](#dbfetchRevsdocnames-params-callback)
 - [multipart functions](#multipart-functions)
-	- [db.multipart.insert(doc, attachments, [params], [callback])](#dbmultipartinsertdoc-attachments-params-callback)
-	- [db.multipart.get(docname, [params], [callback])](#dbmultipartgetdocname-params-callback)
+  - [db.multipart.insert(doc, attachments, [params], [callback])](#dbmultipartinsertdoc-attachments-params-callback)
+  - [db.multipart.get(docname, [params], [callback])](#dbmultipartgetdocname-params-callback)
 - [attachments functions](#attachments-functions)
-	- [db.attachment.insert(docname, attname, att, contenttype, [params], [callback])](#dbattachmentinsertdocname-attname-att-contenttype-params-callback)
-	- [db.attachment.get(docname, attname, [params], [callback])](#dbattachmentgetdocname-attname-params-callback)
-	- [db.attachment.destroy(docname, attname, rev, [callback])](#dbattachmentdestroydocname-attname-rev-callback)
+  - [db.attachment.insert(docname, attname, att, contenttype, [params], [callback])](#dbattachmentinsertdocname-attname-att-contenttype-params-callback)
+  - [db.attachment.get(docname, attname, [params], [callback])](#dbattachmentgetdocname-attname-params-callback)
+  - [db.attachment.destroy(docname, attname, [params], [callback])](#dbattachmentdestroydocname-attname-rev-callback)
 - [views and design functions](#views-and-design-functions)
-	- [db.view(designname, viewname, [params], [callback])](#dbviewdesignname-viewname-params-callback)
-	- [db.show(designname, showname, doc_id, [params], [callback])](#dbshowdesignname-showname-doc_id-params-callback)
-	- [db.atomic(designname, updatename, docname, [body], [callback])](#dbatomicdesignname-updatename-docname-body-callback)
-	- [db.search(designname, viewname, [params], [callback])](#dbsearchdesignname-searchname-params-callback)
+  - [db.view(designname, viewname, [params], [callback])](#dbviewdesignname-viewname-params-callback)
+  - [db.show(designname, showname, doc_id, [params], [callback])](#dbshowdesignname-showname-doc_id-params-callback)
+  - [db.atomic(designname, updatename, docname, [body], [callback])](#dbatomicdesignname-updatename-docname-body-callback)
+  - [db.search(designname, viewname, [params], [callback])](#dbsearchdesignname-searchname-params-callback)
 - [using cookie authentication](#using-cookie-authentication)
 - [advanced features](#advanced-features)
-	- [extending nano](#extending-nano)
-	- [pipes](#pipes)
+  - [extending nano](#extending-nano)
+  - [pipes](#pipes)
 - [tests](#tests)
 
 ## getting started
@@ -354,7 +353,7 @@ an object containing the nano configurations, possible keys are:
 ### nano.updates([params], [callback])
 
 listen to db updates, the available `params` are:
-  
+
 * `params.feed` – Type of feed. Can be one of
  * `longpoll`: Closes the connection after the first event.
  * `continuous`: Send a line of JSON per event. Keeps the socket open until timeout.
@@ -363,14 +362,16 @@ listen to db updates, the available `params` are:
 * `params.heartbeat` – Whether CouchDB will send a newline character (\n) on timeout. Default is true.
 
 
-### nano.follow_updates([params], [callback])
+### nano.followUpdates([params], [callback])
+
+** changed in version 6 **
 
 uses [follow](https://github.com/iriscouch/follow) to create a solid
 [`_db_updates`](http://docs.couchdb.org/en/latest/api/server/common.html?highlight=db_updates#get--_db_updates) feed.
 please consult follow documentation for more information as this is a very complete api on it's own
 
 ```js
-var feed = nano.follow_updates({since: "now"});
+var feed = nano.followUpdates({since: "now"});
 feed.on('change', function (change) {
   console.log("change: ", change);
 });
@@ -467,7 +468,9 @@ bulk fetch of the database documents, `docnames` are specified as per
 additional query string `params` can be specified, `include_docs` is always set
 to `true`.
 
-### db.fetch_revs(docnames, [params], [callback])
+### db.fetchRevs(docnames, [params], [callback])
+
+** changed in version 6 **
 
 bulk fetch of the revisions of the database documents, `docnames` are specified as per
 [couchdb doc](http://wiki.apache.org/couchdb/HTTP_Bulk_Document_API).
@@ -564,13 +567,15 @@ var fs = require('fs');
 alice.attachment.get('rabbit', 'rabbit.png').pipe(fs.createWriteStream('rabbit.png'));
 ```
 
-### db.attachment.destroy(docname, attname, rev, [callback])
+### db.attachment.destroy(docname, attname, [params], [callback])
+
+**changed in version 6**
 
 destroy attachment `attname` of `docname`'s revision `rev`.
 
 ``` js
 alice.attachment.destroy('rabbit', 'rabbit.png',
-    '1-4701d73a08ce5c2f2983bf7c9ffd3320', function(err, body) {
+    {rev: '1-4701d73a08ce5c2f2983bf7c9ffd3320'}, function(err, body) {
       if (!err)
         console.log(body);
 });

@@ -1,6 +1,6 @@
 'use strict';
 
-var helpers = require('../../helpers');
+var helpers = require('../../helpers/integration');
 var harness = helpers.harness(__filename);
 var db = harness.locals.db;
 var it = harness.it;

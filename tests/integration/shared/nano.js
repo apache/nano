@@ -1,6 +1,6 @@
 'use strict';
 
-var helpers = require('../../helpers');
+var helpers = require('../../helpers/integration');
 var harness = helpers.harness(__filename);
 var Nano = helpers.Nano;
 var it = harness.it;

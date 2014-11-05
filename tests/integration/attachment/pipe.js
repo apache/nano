@@ -2,7 +2,7 @@
 
 var fs = require('fs');
 var path = require('path');
-var helpers = require('../../helpers');
+var helpers = require('../../helpers/integration');
 var harness = helpers.harness(__filename);
 var db = harness.locals.db;
 var it = harness.it;

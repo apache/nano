@@ -1,6 +1,6 @@
 'use strict';
 
-var helpers = require('../../helpers');
+var helpers = require('../../helpers/integration');
 var harness = helpers.harness(__filename);
 var nano = harness.locals.nano;
 var Nano = helpers.Nano;
@@ -34,7 +34,7 @@ it('should error when destroying a db that does not exist', function(assert) {
   nano.db.destroy('say_wat_wat', function(error) {
     assert.ok(error, 'an error');
     assert.ok(error.message, 'a note');
-    assert.equal(error.description, 'missing', 'is missing');
+    assert.equal(error.message, 'missing', 'is missing');
     assert.end();
   });
 });

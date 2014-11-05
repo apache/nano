@@ -1,7 +1,7 @@
 'use strict';
 
 var async = require('async');
-var helpers = require('../../helpers');
+var helpers = require('../../helpers/integration');
 var harness = helpers.harness(__filename);
 var it = harness.it;
 var nano = harness.locals.nano;

@@ -1,35 +1,13 @@
 'use strict';
 
 var async = require('async');
-var path = require('path');
-var fs = require('fs');
-var url = require('url');
-var harness = require('tape-it');
 var debug = require('debug');
 var path = require('path');
+var harness = require('tape-it');
 var endsWith = require('endswith');
-var cfg = require('./fixtures/cfg');
-var nano = require('../lib/nano');
-var helpers = exports;
-
-var auth = url.parse(cfg.admin).auth.split(':');
-
-helpers.timeout = cfg.timeout;
-helpers.nano = nano(cfg.couch);
-helpers.Nano = nano;
-helpers.couch = cfg.couch;
-helpers.admin = cfg.admin;
-helpers.pixel = 'Qk06AAAAAAAAADYAAAAoAAAAAQAAAP////8BABgAAAAA' +
-  'AAAAAAATCwAAEwsAAAAAAAAAAAAAWm2CAA==';
-
-helpers.username = auth[0];
-helpers.password = auth[1];
-
-helpers.loadFixture = function helpersLoadFixture(filename, json) {
-  var contents = fs.readFileSync(
-    path.join(__dirname, 'fixtures', filename), (json ? 'ascii' : null));
-  return json ? JSON.parse(contents) : contents;
-};
+var cfg = require('../fixtures/cfg');
+var nano = require('../../lib/nano');
+var helpers = require('./');
 
 helpers.setup = function() {
   var self = this;
@@ -60,27 +38,20 @@ helpers.teardown = function() {
   };
 };
 
-helpers.noopTest = function (assert) {
-  assert.pass('werk werk werk');
-  assert.end();
-};
-
-helpers.harness = function(name, unit) {
-  unit = !!unit;
-
+helpers.harness = function(name) {
   var parent = name || module.parent.filename;
   var fileName = path.basename(parent).split('.')[0];
   var parentDir = path.dirname(parent)
     .split(path.sep).reverse()[0];
   var shortPath = path.join(parentDir, fileName);
-  var log = debug(path.join('nano', 'tests', shortPath));
+  var log = debug(path.join('nano', 'tests', 'integration', shortPath));
   var dbName = shortPath.replace('/', '_');
   var nanoLog = nano({
     url: cfg.couch,
     log: log
   });
 
-  var mock = unit ? null : helpers.nock(helpers.couch, shortPath, log);
+  var mock = helpers.nock(helpers.couch, shortPath, log);
   var db   = nanoLog.use(dbName);
   var locals = {
     mock: mock,
@@ -93,14 +64,14 @@ helpers.harness = function(name, unit) {
     timeout: helpers.timeout,
     checkLeaks: !!process.env.LEAKS,
     locals: locals,
-    setup: unit ? helpers.noopTest : helpers.setup.call(locals, dbName),
-    teardown: unit ? helpers.noopTest : helpers.teardown.call(locals, dbName)
+    setup: helpers.setup.call(locals, dbName),
+    teardown: helpers.teardown.call(locals, dbName)
   });
 };
 
 helpers.nock = function helpersNock(url, fixture, log) {
   var nock = require('nock');
-  var nockDefs = require('./fixtures/' + fixture + '.json');
+  var nockDefs = require('../fixtures/' + fixture + '.json');
 
   nockDefs.forEach(function(n) {
     var headers = n.headers || {};
@@ -204,3 +175,6 @@ helpers.insertThree = function insertThree(assert) {
 
 helpers.unmocked = (process.env.NOCK_OFF === 'true');
 helpers.mocked = !helpers.unmocked;
+
+module.exports = helpers;
+
