@@ -13,6 +13,7 @@ it('should be able to insert a doc with att', function(assert) {
     data: 'Hello World!',
     'content_type': 'text/plain'
   };
+
   db.multipart.insert({'foo': 'baz'}, [att], 'foobaz', function(error, foo) {
     assert.equal(error, null, 'should have stored foobaz');
     assert.equal(foo.ok, true, 'response should be ok');
