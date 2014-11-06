@@ -12,14 +12,27 @@ everyone is welcome to contribute with patches, bug-fixes and new features
 to run tests make sure you npm test but also run tests without mocks:
 
 ``` sh
-npm run nock_off
+npm run unmocked
+npm run mocked
+npm test
 ```
 
 check this [blogpost](http://writings.nunojob.com/2012/05/Mock-HTTP-Integration-Testing-in-Node.js-using-Nock-and-Specify.html) to learn more about how to write your own tests
 
-change this
-add NOCK_OFF
-add DEBUG
-base from message-queue
+please fix all issues identified in the pre-commit hooks before sending your patch. if you don't, we will close the patch and ask you to re-open it once you have:
+
+1. 100% code coverage
+2. proper codestyle
+3. linted all your code
+
+even in this state, if you changed something you need to add appropriate tests.
+
+you can control verbosity during tests using
+
+```
+DEBUG=* node your_nano_scripts.js
+```
+
+you can turn nocks on and off using the `NOCK_OFF` environment variable.
 
 [2]: http://github.com/dscape/nano/issues

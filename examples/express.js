@@ -3,8 +3,8 @@ var express = require('express')
    , app     = module.exports = express.createServer()
    ;
 
-app.get("/", function(request,response) {
-    db.get("foo", function (error, body, headers) {
+app.get('/', function(request,response) {
+    db.get('foo', function (error, body, headers) {
       if(error) { return response.send(error.message, error['status-code']); }
       response.send(body, 200);
     });
@@ -12,4 +12,4 @@ app.get("/", function(request,response) {
 });
 
 app.listen(3333);
-console.log("server is running. check expressjs.org for more cool tricks");
+console.log('server is running. check expressjs.org for more cool tricks');

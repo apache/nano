@@ -1,5 +1,6 @@
+[![By](https://img.shields.io/badge/made%20by-yld!-32bbee.svg?style=flat-square)](http://yld.io/contact?source=github-nano)[![Chat](https://img.shields.io/badge/help-gitter-eb9348.svg?style=flat-square)](https://gitter.im/dscape/nano)[![Tests](http://img.shields.io/travis/dscape/nano.svg?style=flat-square)](https://travis-ci.org/dscape/nano)![Coverage](https://img.shields.io/badge/coverage-100%-ff69b4.svg?style=flat-square)[![Dependencies](https://img.shields.io/david/dscape/nano.svg?style=flat-square)](https://david-dm.org/dscape/nano)[![NPM](http://img.shields.io/npm/v/nano.svg?style=flat-square)](http://browsenpm.org/package/nano)
+
 # nano
-[![Gitter chat](http://img.shields.io/badge/gitter-dscape%2Fnano-1dce73.svg?style=flat)](https://gitter.im/dscape/nano)[![Build Status](http://img.shields.io/travis/dscape/nano.svg?style=flat)](https://travis-ci.org/dscape/nano)![NPM Downloads](http://img.shields.io/npm/dm/nano.svg?style=flat)![NPM Version](http://img.shields.io/npm/v/nano.svg?style=flat)
 
 minimalistic couchdb driver for node.js
 
