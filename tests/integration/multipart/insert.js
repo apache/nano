@@ -41,3 +41,17 @@ it('should test with presence of attachment', function(assert) {
     });
   });
 });
+
+it('should work with attachment as a buffer', function (assert) {
+  var att = {
+    name: 'att',
+    data: new Buffer('foo'),
+    content_type: 'text/plain'
+  };
+  db.multipart.insert({'foo': 'bar'}, [att], 'otherdoc', function (error, foo) {
+    assert.equal(error, null, 'Should have stored foo and attachment');
+    assert.equal(foo.ok, true, 'Response should be ok');
+    assert.ok(foo.rev, 'Response should have rev');
+    assert.end();
+  });
+});
