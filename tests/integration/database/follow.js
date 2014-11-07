@@ -38,7 +38,7 @@ if (helpers.unmocked) {
       assert.ok(change, 'change existed');
       feed.die();
       feed1.die();
-      setImmediate(assert.end);
+      process.nextTick(assert.end);
     });
   });
 }
