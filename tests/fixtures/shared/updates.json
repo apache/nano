@@ -1,10 +1,5 @@
 [
   { "method"   : "put"
-  , "path"     : "/shared_updates"
-  , "status"   : 201
-  , "response" : "{ \"ok\": true }"
-  }
-, { "method"   : "put"
   , "path"     : "/mydb"
   , "status"   : 201
   , "response" : "{ \"ok\": true }"
@@ -15,10 +10,6 @@
   }
 , { "method"   : "delete"
   , "path"     : "/mydb"
-  , "response" : "{ \"ok\": true }"
-  }
-, { "method"   : "delete"
-  , "path"     : "/shared_updates"
   , "response" : "{ \"ok\": true }"
   }
 ]

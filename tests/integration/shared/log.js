@@ -3,7 +3,7 @@
 var logger = require('../../../lib/logger');
 
 var helpers = require('../../helpers');
-var harness = helpers.harness(__filename, true);
+var harness = helpers.harness(__filename);
 var it = harness.it;
 
 it('should be able to instantiate a log', function(assert) {

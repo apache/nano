@@ -1,14 +1,14 @@
 'use strict';
 
 var helpers = require('../../helpers/integration');
-var harness = helpers.harness(__filename);
+var harness = helpers.harness(__filename, helpers.noopTest, helpers.noopTest);
 var it = harness.it;
 var nano = harness.locals.nano;
 
 it('should be able to track updates in couch', function(assert) {
   var called = false;
 
-  setTimeout(runTest, 100);
+  setImmediate(runTest);
 
   function runTest() {
     nano.db.destroy('mydb', function() {

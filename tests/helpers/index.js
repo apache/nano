@@ -9,6 +9,7 @@ var helpers = exports;
 var cfg = helpers.cfg = require('../fixtures/cfg');
 var auth = url.parse(cfg.admin).auth.split(':');
 
+helpers.noopTest = function(t){ t.end(); };
 helpers.timeout = cfg.timeout;
 helpers.nano = nano(cfg.couch);
 helpers.Nano = nano;

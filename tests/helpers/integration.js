@@ -38,7 +38,7 @@ helpers.teardown = function() {
   };
 };
 
-helpers.harness = function(name) {
+helpers.harness = function(name, setup, teardown) {
   var parent = name || module.parent.filename;
   var fileName = path.basename(parent).split('.')[0];
   var parentDir = path.dirname(parent)
@@ -64,8 +64,8 @@ helpers.harness = function(name) {
     timeout: helpers.timeout,
     checkLeaks: !!process.env.LEAKS,
     locals: locals,
-    setup: helpers.setup.call(locals, dbName),
-    teardown: helpers.teardown.call(locals, dbName)
+    setup: setup ? setup : helpers.setup.call(locals, dbName),
+    teardown: teardown ? teardown : helpers.teardown.call(locals, dbName)
   });
 };
 
