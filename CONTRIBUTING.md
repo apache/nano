@@ -1,13 +1,25 @@
-everyone is welcome to contribute with patches, bug-fixes and new features
+# DCO
 
-1. create an [issue][2] on github so the community can comment on your idea
-2. fork `nano` in github
-3. create a new branch `git checkout -b my_branch`
-4. create tests for the changes you made
-5. make sure you pass both existing and newly inserted tests
-6. commit your changes
-7. push to your branch `git push origin my_branch`
-8. create a pull request
+To contribute to this project you must accept our [developer certificate of origin](https://github.com/dscape/nano/blob/master/README.md)
+
+To accept simply add the following text to one of your commits:
+
+```
+Signed-off-by: Jane Doe <jane.doe@person.com>
+```
+
+# Contributing
+
+Everyone is welcome to contribute with patches, bug-fixes and new features
+
+1. Create an [issue][2] on github so the community can comment on your idea
+2. Fork `nano` in github
+3. Create a new branch `git checkout -b my_branch`
+4. Create tests for the changes you made
+5. Make sure you pass both existing and newly inserted tests
+6. Commit your changes
+7. Push to your branch `git push origin my_branch`
+8. Create a pull request
 
 to run tests make sure you npm test but also run tests without mocks:
 
@@ -17,22 +29,20 @@ npm run mocked
 npm test
 ```
 
-check this [blogpost](http://writings.nunojob.com/2012/05/Mock-HTTP-Integration-Testing-in-Node.js-using-Nock-and-Specify.html) to learn more about how to write your own tests
-
-please fix all issues identified in the pre-commit hooks before sending your patch. if you don't, we will close the patch and ask you to re-open it once you have:
+Please fix all issues identified in the pre-commit hooks before sending your patch. if you don't, we will close the patch and ask you to re-open it once you have:
 
 1. 100% code coverage
 2. proper codestyle
 3. linted all your code
 
-even in this state, if you changed something you need to add appropriate tests.
+This is not a replacement for appropriate tests, please make sure that you have adequate coverage and thoroughly test the code you introduced.
 
-you can control verbosity during tests using
+You can add verbose debug messages while running tests by doing:
 
 ```
 DEBUG=* node your_nano_scripts.js
 ```
 
-you can turn nocks on and off using the `NOCK_OFF` environment variable.
+You can turn nocks on and off using the `NOCK_OFF` environment variable.
 
 [2]: http://github.com/dscape/nano/issues
