@@ -2,12 +2,6 @@
 
 To contribute to this project you must accept our [developer certificate of origin](https://github.com/dscape/nano/blob/master/README.md)
 
-To accept simply add the following text to one of your commits:
-
-```
-Signed-off-by: Jane Doe <jane.doe@person.com>
-```
-
 # Contributing
 
 Everyone is welcome to contribute with patches, bug-fixes and new features
