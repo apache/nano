@@ -14,5 +14,5 @@ services:
 os:
   - linux
   - osx
-before_script:
+before_install:
   - npm update -g npm
