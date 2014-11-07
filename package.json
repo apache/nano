@@ -31,7 +31,7 @@
     "jscs": "^1.7.0",
     "nock": "^0.48.1",
     "endswith": "^0.0.0",
-    "tape-it": "^0.2.0",
+    "tape-it": "^0.3.1",
     "pre-commit": "0.0.9"
   },
   "scripts": {
