@@ -8,36 +8,42 @@ var nano = harness.locals.nano;
 it('should be able to track updates in couch', function(assert) {
   var called = false;
 
-  setImmediate(runTest);
+  function getUpdates() {
+    nano.updates(function(err, updates) {
+      if (called) {
+        return;
+      }
+      called = true;
 
-  function runTest() {
-    nano.db.destroy('mydb', function() {
-      nano.updates(function(err, updates) {
-        if (called) {
-          return;
-        }
-        called = true;
-        //
-        // older couches
-        //
-        if (err && updates.error && updates.error === 'illegal_database_name') {
-          assert.expect(1);
-          assert.ok(updates.ok, 'db updates are not supported');
-          assert.end();
-        }
-        //
-        // new couches
-        //
-        else {
-          assert.equal(err, null, 'got root');
-          assert.ok(updates.ok, 'updates are ok');
-          assert.equal(updates.type, 'created', 'update was a create');
-          assert.equal(updates['db_name'], 'mydb', 'mydb was updated');
-          assert.end();
-        }
-      });
-
-      nano.db.create('mydb');
+      //
+      // older couches
+      //
+      if (err && updates.error && updates.error === 'illegal_database_name') {
+        assert.expect(1);
+        assert.ok(updates.ok, 'db updates are not supported');
+        assert.end();
+      }
+      //
+      // new couches
+      //
+      else {
+        assert.equal(err, null, 'got root');
+        assert.ok(updates.ok, 'updates are ok');
+        assert.equal(updates.type, 'created', 'update was a create');
+        assert.equal(updates['db_name'], 'mydb', 'mydb was updated');
+        assert.end();
+      }
     });
+
+    setTimeout(function() { nano.db.create('mydb'); }, 50);
   }
+
+  nano.db.destroy('mydb', getUpdates);
+});
+
+it('should destroy mydb', function(assert) {
+  nano.db.destroy('mydb', function(err) {
+    assert.equal(err, null, 'no errors');
+    assert.end();
+  });
 });
