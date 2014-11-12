@@ -4,7 +4,7 @@
   "license": "apache 2.0",
   "homepage": "http://github.com/dscape/nano",
   "repository": "git://github.com/dscape/nano",
-  "version": "6.0.0",
+  "version": "6.0.1",
   "author": "Nuno Job <nunojobpinto@gmail.com> (http://nunojob.com)",
   "keywords": [
     "couchdb",
@@ -43,7 +43,7 @@
     "coverage": "open coverage/lcov-report/index.html",
     "checkcoverage": "istanbul check-coverage --statements 100 --functions 100 --lines 100 --branches 100"
   },
-  "main": "./lib/index.js",
+  "main": "./lib/nano.js",
   "engines": {
     "node": ">=0.8.0"
   },
