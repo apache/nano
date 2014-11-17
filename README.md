@@ -157,7 +157,7 @@ to specify further configuration options you can pass an object literal instead:
 // nano parses the url and knows this is a database
 var db = require('nano')(
   { "url"             : "http://localhost:5984/foo"
-  , "request_defaults" : { "proxy" : "http://someproxy" }
+  , "requestDefaults" : { "proxy" : "http://someproxy" }
   , "log"             : function (id, args) {
       console.log(id, args);
     }
@@ -167,13 +167,13 @@ Please check [request] for more information on the defaults. They support featur
 
 ### pool size and open sockets
 
-a very important configuration parameter if you have a high traffic website and are using nano is setting up the `pool.size`. by default, the node.js http global agent (client) has a certain size of active connections that can run simultaneously, while others are kept in a queue. pooling can be disabled by setting the `agent` property in `request_defaults` to false, or adjust the global pool size using:
+a very important configuration parameter if you have a high traffic website and are using nano is setting up the `pool.size`. by default, the node.js http global agent (client) has a certain size of active connections that can run simultaneously, while others are kept in a queue. pooling can be disabled by setting the `agent` property in `requestDefaults` to false, or adjust the global pool size using:
 
 ``` js
 http.globalAgent.maxSockets = 20;
 ```
 
-you can also increase the size in your calling context using `request_defaults` if this is problematic. refer to the [request] documentation and examples for further clarification.
+you can also increase the size in your calling context using `requestDefaults` if this is problematic. refer to the [request] documentation and examples for further clarification.
 
 here's an example explicitly using the keep alive agent (installed using `npm install agentkeepalive`), especially useful to limit your open sockets when doing high-volume access to couchdb on localhost:
 
@@ -187,7 +187,7 @@ var myagent = new agentkeepalive({
 
 var db = require('nano')(
   { "url"              : "http://localhost:5984/foo"
-  , "request_defaults" : { "agent" : myagent }
+  , "requestDefaults" : { "agent" : myagent }
   });
 ```
 
