@@ -50,6 +50,21 @@ it('should be able to parse urls', function(assert) {
     'with escaped auth');
 
   assert.equal(
+    Nano('http://a:b%20c%3F@someurl.com:5984/my%2Fdb').config.url,
+    'http://a:b%20c%3F@someurl.com:5984',
+    'with dbname containing encoded slash');
+
+  assert.equal(
+    Nano('http://mydb-a:b%20c%3F@someurl.com:5984/mydb').config.url,
+    'http://mydb-a:b%20c%3F@someurl.com:5984',
+    'with repeating dbname');
+
+  assert.equal(
+    Nano('http://a:b%20c%3F@someurl.com:5984/prefix/mydb').config.url,
+    'http://a:b%20c%3F@someurl.com:5984/prefix',
+    'with subdir');
+
+  assert.equal(
     Nano(baseUrl + ':5984/a').config.url,
     baseUrl + ':5984',
     'with port');
