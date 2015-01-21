@@ -321,7 +321,7 @@ makes a request to couchdb, the available `opts` are:
   `opts.att`
 * `opts.doc` – the document name
 * `opts.att` – the attachment name
-* `opts.params` – query string parameters, appended after any existing `opts.path`, `opts.doc`, or `opts.att`
+* `opts.qs` – query string parameters, appended after any existing `opts.path`, `opts.doc`, or `opts.att`
 * `opts.content_type` – the content type of the request, default to `json`
 * `opts.headers` – additional http headers, overrides existing ones
 * `opts.body` – the document or attachment body
