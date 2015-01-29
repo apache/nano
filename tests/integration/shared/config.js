@@ -77,6 +77,20 @@ it('should be able to parse urls', function(assert) {
   assert.end();
 });
 
+it('should not parse urls when parseURL flag set to false', function(assert) {
+  var url = 'http://someurl.com/path';
+
+  assert.equal(
+    Nano({
+      url: url,
+      parseUrl: false
+    }).config.url,
+    url,
+    'the untouched url');
+
+  assert.end();
+});
+
 it('should accept and handle customer http headers', function(assert) {
   var nanoWithDefaultHeaders = Nano({
     url: helpers.couch,
