@@ -4,7 +4,7 @@
   "license": "apache 2.0",
   "homepage": "http://github.com/dscape/nano",
   "repository": "git://github.com/dscape/nano",
-  "version": "6.1.0",
+  "version": "6.1.1",
   "author": "Nuno Job <nunojobpinto@gmail.com> (http://nunojob.com)",
   "keywords": [
     "couchdb",
