@@ -16,7 +16,10 @@ insertMultipart({hey: 1}, [{
   method: 'PUT',
   multipart: [
     {
-      body: '{"_attachments":{"att":{"follows":true,"length":4}},"hey":1}',
+      body:
+      '{"_attachments":' +
+        '{"att":{"follows":true,"length":4,"content_type":"text/plain"}}' +
+        ',"hey":1}',
       'content-type': 'application/json'
     },
     {body: 'some'}
