@@ -738,7 +738,7 @@ nano.session(function(err, session) {
   }
 
   console.log('user is %s and has these roles: %j',
-    session.userCtx.user, session.userCtx.roles);
+    session.userCtx.name, session.userCtx.roles);
 });
 ```
 
