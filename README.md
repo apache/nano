@@ -165,6 +165,18 @@ var db = require('nano')(
 ```
 Please check [request] for more information on the defaults. They support features like cookie jar, proxies, ssl, etc.
 
+You can tell nano to not parse the url (maybe the server is behind a proxy, is accessed through a rewrite rule or other):
+
+```js
+// nano does not parse the url and return the server api
+// "http://localhost:5984/prefix" is the CouchDB server root
+var couch = require('nano')(
+  { "url"      : "http://localhost:5984/prefix"
+    "parseUrl" : false
+  });
+var db = couch.use('foo')
+```
+
 ### pool size and open sockets
 
 a very important configuration parameter if you have a high traffic website and are using nano is setting up the `pool.size`. by default, the node.js http global agent (client) has a certain size of active connections that can run simultaneously, while others are kept in a queue. pooling can be disabled by setting the `agent` property in `requestDefaults` to false, or adjust the global pool size using:
