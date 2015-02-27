@@ -15,18 +15,17 @@ it('should be able to track updates in couch', function(assert) {
       }
       called = true;
 
-      //
-      // older couches
-      //
       if (err && updates.error && updates.error === 'illegal_database_name') {
+        //
+        // older couches
+        //
         assert.expect(1);
         assert.ok(updates.ok, 'db updates are not supported');
         assert.end();
-      }
-      //
-      // new couches
-      //
-      else {
+      } else {
+        //
+        // new couches
+        //
         assert.equal(err, null, 'got root');
         assert.ok(updates.ok, 'updates are ok');
         assert.equal(updates.type, 'created', 'update was a create');
