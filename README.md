@@ -398,7 +398,7 @@ process.nextTick(function () {
 
 ### db.insert(doc, [params], [callback])
 
-inserts `doc` in the database with  optional `params`. if params is a string, its assumed as the intended document name. if params is an object, its passed as query string parameters and `doc_name` is checked for defining the document name.
+inserts `doc` in the database with  optional `params`. if params is a string, its assumed as the intended document name. if params is an object, its passed as query string parameters and `docName` is checked for defining the document name.
 
 ``` js
 var alice = nano.use('alice');
@@ -494,7 +494,7 @@ additional query string `params` can be specified, this is the same method as fe
 
 ### db.multipart.insert(doc, attachments, params, [callback])
 
-inserts a `doc` together with `attachments` and `params`. if params is a string, its assumed as the intended document name. if params is an object, its passed as query string parameters and `doc_name` is checked for defining the document name.
+inserts a `doc` together with `attachments` and `params`. if params is a string, its assumed as the intended document name. if params is an object, its passed as query string parameters and `docName` is checked for defining the document name.
  refer to the [doc](http://wiki.apache.org/couchdb/HTTP_Document_API#Multiple_Attachments) for more details.
  `attachments` must be an array of objects with `name`, `data` and `content_type` properties.
 
