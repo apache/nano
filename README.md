@@ -174,7 +174,7 @@ var couch = require('nano')(
   { "url"      : "http://localhost:5984/prefix"
     "parseUrl" : false
   });
-var db = couch.use('foo')
+var db = couch.use('foo');
 ```
 
 ### pool size and open sockets
