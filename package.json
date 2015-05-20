@@ -1,7 +1,7 @@
 {
   "name": "nano",
   "description": "minimalistic couchdb driver for node.js",
-  "license": "apache 2.0",
+  "license": "Apache-2.0",
   "homepage": "http://github.com/dscape/nano",
   "repository": "git://github.com/dscape/nano",
   "version": "6.1.2",
