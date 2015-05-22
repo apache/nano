@@ -25,3 +25,21 @@ it('should be able to fetch the database', function(assert) {
     assert.end();
   });
 });
+
+it('resolves db URL correctly for http://app.com/_couchdb', function(assert) {
+  var nano = require('../../../lib/nano');
+
+  var couch = nano({
+    url: 'http://app.com/_couchdb/',
+    parseUrl: false,
+    request: function(options) {
+      assert.equal(
+        options.uri,
+        'http://app.com/_couchdb/mydb/mydoc',
+        'should get doc at prefixed path'
+      );
+      assert.end();
+    }
+  });
+  couch.use('mydb').get('mydoc');
+});
