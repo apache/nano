@@ -408,6 +408,26 @@ alice.insert({ crazy: true }, 'rabbit', function(err, body) {
 });
 ```
 
+The `insert` function can also be used with the method signature `db.insert(doc,[callback])`, where the `doc` contains the `_id` field e.g.
+
+~~~ js
+var alice = cloudant.use('alice')
+alice.insert({ _id: 'myid', crazy: true }, function(err, body) {
+  if (!err)
+    console.log(body)
+})
+~~~
+
+and also used to update an existing document, by including the `_rev` token in the document being saved:
+
+~~~ js
+var alice = cloudant.use('alice')
+alice.insert({ _id: 'myid', _rev: '1-23202479633c2b380f79507a776743d5', crazy: false }, function(err, body) {
+  if (!err)
+    console.log(body)
+})
+~~~
+
 ### db.destroy(docname, rev, [callback])
 
 removes revision `rev` of `docname` from couchdb.
