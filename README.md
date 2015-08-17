@@ -861,7 +861,7 @@ where `list_doc_params` is the test name.
 [3]: http://caos.di.uminho.pt/
 [4]: https://github.com/dscape/nano/blob/master/cfg/couch.example.js
 [follow]: https://github.com/jhs/follow
-[request]:  https://github.com/mikeal/request
+[request]:  https://github.com/request/request
 
 ## license
 
