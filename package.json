@@ -5,7 +5,7 @@
   "homepage": "http://github.com/dscape/nano",
   "repository": "git://github.com/dscape/nano",
   "version": "6.1.5",
-  "author": "Nuno Job <nunojobpinto@gmail.com> (http://nunojob.com)",
+  "author": "Apache CouchDB <dev@couchdb.apache.org> (http://couchdb.apache.org)",
   "keywords": [
     "couchdb",
     "data",
