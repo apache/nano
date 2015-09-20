@@ -31,8 +31,7 @@
     "jscs": "^1.7.0",
     "nock": "^0.48.1",
     "endswith": "^0.0.0",
-    "tape-it": "^0.3.1",
-    "pre-commit": "0.0.9"
+    "tape-it": "^0.3.1"
   },
   "scripts": {
     "test": "DEBUG=* NOCK_OFF=true istanbul cover tape tests/*/*/*.js",
