@@ -11,7 +11,7 @@
 // the License.
 
 var nano    = require('nano')
-  , couch   = 
+  , couch   =
     { "master"  : "http://localhost:5984/landing_m"
     , "replica" : "http://localhost:5984/landing_r"
     }
@@ -24,7 +24,7 @@ function insert_with_retry(db, email, retries, callback) {
   }
   callback = callback || function(){};
   db.insert(email, function(err, resp, head) {
-    if(err) { 
+    if(err) {
       if(err.message === 'no_db_file'  && retries < 1) {
         var db_name = db.config.db
           , server  = nano(db.config.url)
