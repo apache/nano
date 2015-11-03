@@ -146,3 +146,50 @@ it('should prevent shallow object copies', function(assert) {
 
   assert.end();
 });
+
+it('should accept requestDefaults', function(assert) {
+  var nanoWithDefaultHeaders = Nano({
+    url: helpers.couch,
+    requestDefaults: {
+      auth: {
+        user: 'wiki',
+        pass: 'pedia'
+      }
+    }
+  });
+
+  var req = nanoWithDefaultHeaders.db.list(function(err) {
+    assert.equal(err.statusCode, 401, 'should be access denied');
+    assert.end();
+  });
+
+  assert.equal(
+    req.headers['authorization'],
+    'Basic d2lraTpwZWRpYQ==',
+    'header `Authorization` honored');
+});
+
+it('should preserve requestDefaults on database api', function(assert) {
+  var nanoWithDefaultHeaders = Nano({
+    url: helpers.couch,
+    requestDefaults: {
+      auth: {
+        user: 'wiki',
+        pass: 'pedia'
+      }
+    }
+  });
+
+  var nanoDatabaseWithDefaultHeaders = nanoWithDefaultHeaders.use('foo');
+
+  var req = nanoDatabaseWithDefaultHeaders.list(function(err) {
+    assert.equal(err.statusCode, 401, 'should be access denied');
+    assert.end();
+  });
+
+  assert.equal(
+    req.headers['authorization'],
+    'Basic d2lraTpwZWRpYQ==',
+    'header `Authorization` honored');
+});
+
