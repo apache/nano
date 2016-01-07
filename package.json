@@ -1,11 +1,11 @@
 {
   "name": "nano",
-  "description": "minimalistic couchdb driver for node.js",
+  "description": "The official CouchDB client for Node.js",
   "license": "Apache-2.0",
   "homepage": "http://github.com/dscape/nano",
   "repository": "git://github.com/dscape/nano",
-  "version": "6.1.5",
-  "author": "Nuno Job <nunojobpinto@gmail.com> (http://nunojob.com)",
+  "version": "6.2.0",
+  "author": "Apache CouchDB <dev@couchdb.apache.org> (http://couchdb.apache.org)",
   "keywords": [
     "couchdb",
     "data",
@@ -31,8 +31,7 @@
     "jscs": "^1.7.0",
     "nock": "^0.48.1",
     "endswith": "^0.0.0",
-    "tape-it": "^0.3.1",
-    "pre-commit": "0.0.9"
+    "tape-it": "^0.3.1"
   },
   "scripts": {
     "test": "DEBUG=* NOCK_OFF=true istanbul cover tape tests/*/*/*.js",
