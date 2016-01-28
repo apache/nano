@@ -17,6 +17,5 @@ services:
   - couchdb
 os:
   - linux
-  - osx
 before_install:
   - npm update -g npm
