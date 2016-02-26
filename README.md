@@ -31,6 +31,7 @@ minimalistic couchdb driver for node.js
   - [nano.db.replicate(source, target, [opts], [callback])](#nanodbreplicatesource-target-opts-callback)
   - [nano.db.changes(name, [params], [callback])](#nanodbchangesname-params-callback)
   - [nano.db.follow(name, [params], [callback])](#nanodbfollowname-params-callback)
+  - [nano.db.info([callback])](#nanodbinfocallback)
   - [nano.use(name)](#nanousename)
   - [nano.request(opts, [callback])](#nanorequestopts-callback)
   - [nano.config](#nanoconfig)
@@ -299,6 +300,16 @@ process.nextTick(function () {
   db.insert({"bar": "baz"}, "bar");
 });
 ```
+
+### nano.db.info([callback])
+
+gets database information.
+
+nano.db.info(function(err, body) {
+  if (!err) {
+    console.log('got database info'', body);
+  }
+});
 
 ### nano.use(name)
 
