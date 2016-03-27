@@ -2,8 +2,8 @@
   "name": "nano",
   "description": "The official CouchDB client for Node.js",
   "license": "Apache-2.0",
-  "homepage": "http://github.com/dscape/nano",
-  "repository": "git://github.com/dscape/nano",
+  "homepage": "http://github.com/apache/couchdb-nano",
+  "repository": "git://github.com/apache/couchdb-nano",
   "version": "6.2.0",
   "author": "Apache CouchDB <dev@couchdb.apache.org> (http://couchdb.apache.org)",
   "keywords": [
