@@ -26,6 +26,10 @@ it('should be able to insert an atomic design doc', function(assert) {
         var body = JSON.parse(req.body);
         doc[body.field] = body.value;
         return [doc, JSON.stringify(doc)];
+      },
+      addbaz: function (doc, req) {
+        doc.baz = "biz";
+        return [doc, JSON.stringify(doc)];
       }
     }
   }, '_design/update', function(err) {
@@ -48,6 +52,16 @@ it('should be able to insert atomically', function(assert) {
     assert.equal(error, null, 'should be able to update');
     assert.equal(response.foo, 'bar', 'and the right value was set');
     assert.end();
+  });
+});
+
+it('should be able to update atomically without a body', function (assert) {
+  db.insert({}, 'baz', function (error, doc) {
+    db.atomic('update', 'addbaz', 'baz', function (error, response) {
+      assert.equal(error, null, 'should be able to update');
+      assert.equal(response.baz, 'biz', 'and the new field is present');
+      assert.end();
+    });
   });
 });
 
