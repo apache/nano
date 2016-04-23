@@ -22,6 +22,10 @@
   , "response" : "{\"foo\": \"bar\"}"
   }
 , { "method"   : "put"
+  , "path"     : "/design_atomic/_design/update/_update/addbaz/baz"
+  , "response" : "{\"baz\": \"biz\"}"
+  }
+, { "method"   : "put"
   , "status"   : 201
   , "path"     : "/design_atomic/wat%2Fwat"
   , "body"     : "{\"wat\":\"wat\"}"
