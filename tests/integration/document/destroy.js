@@ -29,6 +29,14 @@ it('should insert a document', function(assert) {
   });
 });
 
+it('should not delete a db', function(assert) {
+  db.destroy(undefined, undefined, function(error, response) {
+    assert.equal(error, 'Invalid doc id', 'validated delete parameters');
+    assert.equal(response, null, 'ok!');
+    assert.end();
+  });
+});
+
 it('should delete a document', function(assert) {
   db.destroy('foobaz', rev, function(error, response) {
     assert.equal(error, null, 'deleted foo');
