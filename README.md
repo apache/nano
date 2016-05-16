@@ -493,10 +493,10 @@ bulk operations(update/delete/insert) on the database, refer to the
 
 ### db.list([params], [callback])
 
-list all the docs in the database with optional query string additions `params`.
+list all the docs in the database with optional query string additions `params`. This is useful for searching.
 
 ``` js
-alice.list(function(err, body) {
+alice.list({startkey:'cat', limit:3}, function(err, body) {
   if (!err) {
     body.rows.forEach(function(doc) {
       console.log(doc);
@@ -504,6 +504,7 @@ alice.list(function(err, body) {
   }
 });
 ```
+For a full list of params, see [couchdb doc](https://wiki.apache.org/couchdb/HTTP_view_API#Querying_Options).
 
 ### db.fetch(docnames, [params], [callback])
 
