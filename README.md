@@ -816,6 +816,32 @@ alice.attachment.get('rabbit', 'picture.png').pipe(fs.createWriteStream('/tmp/ra
 
 then open `/tmp/rabbit.png` and you will see the rabbit picture.
 
+### debugging
+
+debugging messages can be enabled in Nano by
+
+
+#### setting the DEBUG environment variable
+
+Either in the shell
+
+    export DEBUG=nano
+    # then run your Node.js script
+
+or on the same line as you execute your Node.js script:
+
+    DEBUG=nano node myscript.js
+
+#### providing your own debugging function
+
+when initialising Nano, pass in a `log` function:
+
+``` js
+    nano = require('nano')({ url: 'http://127.0.0.1:5984/', log: function(d) {  console.log("!!!",d)}} );
+```
+    
+* setting an environment variable `DEBUG` with value of 'nano'
+* or, providing
 
 ## tutorials, examples in the wild & screencasts
 
