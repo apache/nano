@@ -689,8 +689,8 @@ An example update handler follows:
 ``` js
 "updates": {
   "in-place" : "function(doc, req) {
-      var field = req.form.field;
-      var value = req.form.value;
+      var field = req.body.field;
+      var value = req.body.value;
       var message = 'set '+field+' to '+value;
       doc[field] = value;
       return [doc, message];
