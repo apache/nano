@@ -67,3 +67,32 @@ it('should work with attachment as a buffer', function(assert) {
     assert.end();
   });
 });
+
+it('should work with attachment as a stream, when length is specified', function (assert) {
+  var Readable = require('stream').Readable;
+  var rs = Readable();
+
+  var c = 'a'.charCodeAt(0);
+  rs._read = function () {
+      // this stream emits alphabet (abcde...xyz) one character at a time
+      // stolen from: https://github.com/substack/stream-handbook
+      rs.push(String.fromCharCode(c++));
+      if (c > 'z'.charCodeAt(0)) rs.push(null);
+  };
+
+  var att = {
+    name: 'att',
+    data: rs,
+    length: 26, // 'z'.charCodeAt(0) - 'a'.charCodeAt(0) + 1;
+    'content_type': 'text/plain'
+  };
+
+  db.multipart.insert({'foo': 'bar'}, [att], 'otherdoc', function(error, foo) {
+    assert.equal(error, null, 'Should have stored foo and attachment');
+    assert.equal(foo.ok, true, 'Response should be ok');
+    assert.ok(foo.rev, 'Response should have rev');
+    assert.end();
+  });
+});
+
+// TODO it('should fail early with attachment as a stream, when length is NOT specified')
