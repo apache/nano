@@ -13,7 +13,7 @@
 module.exports = function() {
 var nano       = require('nano')('http://localhost:5984')
   , users      = nano.use('users')
-  , VIEWS      = { by_twitter_id: 
+  , VIEWS      = { by_twitter_id:
     { "map": "function(doc) { emit(doc.twitter.screen_name, doc); }" } }
   ;
 
@@ -56,7 +56,7 @@ function user_create(email_address,secret,name,retries) {
 /*****************************************************************************
  * user.find()
  ****************************************************************************/
- // 
+ //
  // some more logic needed
  // what if design document exists but view doesnt, we cant just overwrite it
  //
@@ -69,11 +69,11 @@ function user_find(view, id, opts, tried, callback) {
     tried = {tried:0, max_retries:2};
   }
   users.view('users', view, opts, function (e,b,h) {
-    if(e) { 
+    if(e) {
       var current_view = VIEWS[view];
-      if(!current_view) { 
+      if(!current_view) {
         e.message = 'View is not available';
-        return callback(e,b,h); 
+        return callback(e,b,h);
       }
       if(tried.tried < tried.max_retries) {
         if(e.message === 'missing' || e.message === 'deleted') { // create design document
@@ -96,7 +96,7 @@ function user_find(view, id, opts, tried, callback) {
           return;
         }
       }
-      else { return callback(e,b,h); } 
+      else { return callback(e,b,h); }
     }
     return callback(null,b,h);
   });
