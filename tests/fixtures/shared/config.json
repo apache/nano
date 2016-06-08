@@ -13,6 +13,14 @@
 , { "path"     : "/_all_dbs"
   , "response" : "{}"
   }
+, { "path"     : "/_all_dbs"
+  , "status"   : 401
+  , "response" : "{}"
+  }
+, { "path"     : "/foo/_all_docs"
+  , "status"   : 401
+  , "response" : "{}"
+  }
 , { "method"   : "delete"
   , "path"     : "/shared_config"
   , "response" : "{ \"ok\": true }"
