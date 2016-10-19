@@ -729,7 +729,7 @@ nano.auth(username, userpass, function (err, body, headers) {
   }
 
   if (headers && headers['set-cookie']) {
-    cookies[user] = headers['set-cookie'];
+    cookies[username] = headers['set-cookie'];
   }
 
   callback(null, "it worked");
@@ -742,7 +742,7 @@ reusing a cookie:
 var auth = "some stored cookie"
   , callback = console.log // this would normally be some callback
   , alice = require('nano')(
-    { url : 'http://localhost:5984/alice', cookie: 'AuthSession=' + auth });
+    { url : 'http://localhost:5984/alice', cookie: auth });
   ;
 
 alice.insert(doc, function (err, body, headers) {
