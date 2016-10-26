@@ -4,8 +4,8 @@
   , "status"   : 201
   , "response" : "{ \"ok\": true }"
   }
-, { "path"     : "/_config/admins/admin"
-  , "method"   : "put"
+, { "path"     : "/_users"
+  , "method"   : "post"
   , "body"     : "*"
   , "response" : "{\"ok\": true}"
   }
@@ -27,10 +27,6 @@
   , "path"     : "/shared_cookie"
   , "body"     : "{\"foo\":\"baz\"}"
   , "response" : "{\"ok\":true,\"id\":\"234\",\"rev\":\"1-333231\"}"
-  }
-, { "path"     : "/_config/admins/admin"
-  , "method"   : "delete"
-  , "response" : "{\"ok\": true}"
   }
 , { "method"   : "delete"
   , "path"     : "/shared_cookie"

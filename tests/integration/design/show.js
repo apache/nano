@@ -87,7 +87,9 @@ it('should show the amazing clemens in html', function(assert) {
   db.show('people', 'singleDoc', 'p_clemens', {format: 'html'},
   function(error, doc, rh) {
     assert.equal(error, null, 'should work');
-    assert.equal(rh['content-type'], 'text/html');
+    if (helpers.unmocked) {
+      assert.equal(rh['content-type'], 'text/html');
+    }
     assert.equal(doc, 'Hello Clemens!');
     assert.end();
   });

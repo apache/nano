@@ -22,17 +22,25 @@ var admin = Nano(helpers.admin);
 var cookie;
 var server;
 
-it('should be able to setup admin and login', function(assert) {
+it('should be able to create a user', function(assert) {
   nano.relax({
-    method : 'PUT',
-    path: '_node/couchdb@localhost/_config/admins/' + helpers.username,
-    body: helpers.password
+    method : 'POST',
+    path: '_users',
+    body: {
+      _id: 'org.couchdb.user:' + helpers.username,
+      type: 'user',
+      name: helpers.username,
+      roles: ['admin'],
+      password: helpers.password
+    }
   }, function(err) {
     assert.equal(err, null, 'should create admin');
     nano.auth(helpers.username, helpers.password, function(err, _, headers) {
       assert.equal(err, null, 'should have logged in successfully');
-      assert.ok(headers['set-cookie'],
-        'response should have a set-cookie header');
+      if (helpers.unmocked) {
+        assert.ok(headers['set-cookie'],
+          'response should have a set-cookie header');
+      }
       cookie = headers['set-cookie'];
       assert.end();
     });
@@ -62,12 +70,3 @@ it('should be able to get the session', function(assert) {
   });
 });
 
-it('must restore admin parteh mode for other tests', function(assert) {
-  admin.relax({
-    method: 'DELETE',
-    path: '_node/couchdb@localhost/_config/admins/' + helpers.username
-  }, function(err) {
-    assert.equal(err, null, 'should have deleted admin user');
-    assert.end();
-  });
-});

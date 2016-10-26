@@ -14,8 +14,10 @@ node_js:
   - "4.2"
   - "node"
 services:
-  - couchdb
+  - docker
 os:
   - linux
+before_script:
+  - ./scripts/run_couchdb_on_travis.sh
 before_install:
   - npm update -g npm

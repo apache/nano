@@ -19,8 +19,10 @@ var nano = harness.locals.nano;
 
 it('should ensure _replicator and _users are created', function(assert) {
   nano.db.create('_replicator', function() {
-    nano.db.create('_users', function() {
-      assert.end();
+    nano.db.destroy('_users', function() {
+      nano.db.create('_users', function() {
+        assert.end();
+      });
     });
   });
 });

@@ -34,7 +34,8 @@
     "tape-it": "^0.3.1"
   },
   "scripts": {
-    "test": "DEBUG=* NOCK_OFF=true istanbul cover tape tests/*/*/*.js",
+    "test": "bash scripts/run_couchdb_on_travis.sh; npm run mocha",
+    "mocha": "DEBUG=* NOCK_OFF=true istanbul cover tape tests/*/*/*.js",
     "unmocked": "NOCK_OFF=true tape tests/*/*/*.js",
     "mocked": "tape tests/*/*/*.js",
     "jshint": "jshint tests/*/*/*.js lib/*.js",

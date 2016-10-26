@@ -36,7 +36,6 @@ it('should have run the compaction', function(assert) {
       assert.equal(error, null, 'info should respond');
       assert.equal(info['doc_count'], 0, 'document count is not 3');
       assert.equal(info['doc_del_count'], 1, 'document should be deleted');
-      assert.equal(info['update_seq'][0], '2', 'seq is two');
       assert.end();
     });
   });
