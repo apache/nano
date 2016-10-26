@@ -66,7 +66,7 @@ it('should insert a show ddoc', function(assert) {
           }, 'p_nuno', cb);
         }
       ], function(error) {
-        assert.equal(error, undefined, 'stores docs');
+        assert.equal(error, null, 'stores docs');
         assert.end();
       });
     });

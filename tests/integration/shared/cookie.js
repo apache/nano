@@ -25,7 +25,7 @@ var server;
 it('should be able to setup admin and login', function(assert) {
   nano.relax({
     method : 'PUT',
-    path: '_config/admins/' + helpers.username,
+    path: '_node/couchdb@localhost/_config/admins/' + helpers.username,
     body: helpers.password
   }, function(err) {
     assert.equal(err, null, 'should create admin');
@@ -65,7 +65,7 @@ it('should be able to get the session', function(assert) {
 it('must restore admin parteh mode for other tests', function(assert) {
   admin.relax({
     method: 'DELETE',
-    path: '_config/admins/' + helpers.username
+    path: '_node/couchdb@localhost/_config/admins/' + helpers.username
   }, function(err) {
     assert.equal(err, null, 'should have deleted admin user');
     assert.end();
