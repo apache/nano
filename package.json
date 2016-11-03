@@ -3,7 +3,7 @@
   "description": "The official CouchDB client for Node.js",
   "license": "Apache-2.0",
   "homepage": "http://github.com/apache/couchdb-nano",
-  "repository": "git://github.com/apache/couchdb-nano",
+  "repository": "http://github.com/apache/couchdb-nano",
   "version": "6.2.0",
   "author": "Apache CouchDB <dev@couchdb.apache.org> (http://couchdb.apache.org)",
   "keywords": [
@@ -45,7 +45,7 @@
   },
   "main": "./lib/nano.js",
   "engines": {
-    "node": ">=0.8.0"
+    "node": ">=0.12"
   },
   "pre-commit": [
     "jshint",

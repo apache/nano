@@ -1,0 +1,12 @@
+[
+  { "method"   : "get"
+  , "path"     : "/uuids?count=3"
+  , "status"   : 200
+  , "response" : "{ \"uuids\": [\"1\",\"2\",\"3\"] }"
+  }
+, { "method"   : "get"
+  , "path"     : "/uuids"
+  , "status"   : 200
+  , "response" : "{ \"uuids\": [\"1\"] }"
+  }
+]

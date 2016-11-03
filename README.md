@@ -61,6 +61,7 @@ minimalistic couchdb driver for node.js
   - [db.search(designname, viewname, [params], [callback])](#dbsearchdesignname-searchname-params-callback)
 - [using cookie authentication](#using-cookie-authentication)
 - [advanced features](#advanced-features)
+  - [getting uuids](#getting-uuids)
   - [extending nano](#extending-nano)
   - [pipes](#pipes)
 - [tests](#tests)
@@ -775,6 +776,21 @@ nano.session(function(err, session) {
 
 
 ## advanced features
+
+### getting uuids
+
+if your application needs to generate UUIDs, then CouchDB can provide some for you
+
+```js
+nano.uuids(3, callback);
+// { uuid: [
+// '5d1b3ef2bc7eea51f660c091e3dffa23',
+// '5d1b3ef2bc7eea51f660c091e3e006ff',
+// '5d1b3ef2bc7eea51f660c091e3e007f0',
+//]}
+```
+
+The first parameter is the number of uuids to generate. If omitted, it defaults to 1.
 
 ### extending nano
 

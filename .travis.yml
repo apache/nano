@@ -6,9 +6,6 @@ branches:
     - next
     - rewrite
 node_js:
-  - "0.8"
-  - "0.10"
-  - "0.11"
   - "0.12"
   - "iojs"
   - "4.2"
