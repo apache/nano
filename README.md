@@ -29,6 +29,9 @@ minimalistic couchdb driver for node.js
   - [nano.db.list([callback])](#nanodblistcallback)
   - [nano.db.compact(name, [designname], [callback])](#nanodbcompactname-designname-callback)
   - [nano.db.replicate(source, target, [opts], [callback])](#nanodbreplicatesource-target-opts-callback)
+  - [nano.db.replication.enable(source, target, [opts], [callback])](#nanodbreplicatorenablesource-target-opts-callback)
+  - [nano.db.replication.query(id, [opts], [callback])](#nanodbreplicatorquery-id-opts-callback)
+  - [nano.db.replication.disable(id, [opts], [callback])](#nanodbreplicatordisable-id-opts-callback)
   - [nano.db.changes(name, [params], [callback])](#nanodbchangesname-params-callback)
   - [nano.db.follow(name, [params], [callback])](#nanodbfollowname-params-callback)
   - [nano.db.info([callback])](#nanodbinfocallback)
@@ -271,6 +274,55 @@ nano.db.replicate('alice', 'http://admin:password@otherhost.com:5984/alice',
                   { create_target:true }, function(err, body) {
     if (!err)
       console.log(body);
+});
+```
+
+### nano.db.replication.enable(source, target, [opts], [callback])
+
+enables replication using the new couchdb api from `source` to `target`
+with options `opts`. `target` has to exist, add `create_target:true` to
+`opts` to create it prior to replication.
+replication will survive server restarts.
+
+``` js
+nano.db.replication.enable('alice', 'http://admin:password@otherhost.com:5984/alice',
+                  { create_target:true }, function(err, body) {
+    if (!err)
+      console.log(body);
+});
+```
+
+### nano.db.replication.query(id, [opts], [callback])
+
+queries the state of replication using the new couchdb api. `id` comes from the response
+given by the call to enable.
+
+``` js
+nano.db.replication.enable('alice', 'http://admin:password@otherhost.com:5984/alice',
+                   { create_target:true }, function(err, body) {
+    if (!err) {
+      nano.db.replication.query(body.id, function(error, reply) {
+        if (!err)
+          console.log(reply);
+      }
+    }
+});
+```
+
+### nano.db.replication.disable(id, [opts], [callback])
+
+disables replication using the new couchdb api. `id` comes from the response given
+by the call to enable.
+
+``` js
+nano.db.replication.enable('alice', 'http://admin:password@otherhost.com:5984/alice',
+                   { create_target:true }, function(err, body) {
+    if (!err) {
+      nano.db.replication.disable(body.id, function(error, reply) {
+        if (!err)
+          console.log(reply);
+      }
+    }
 });
 ```
 
