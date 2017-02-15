@@ -56,7 +56,18 @@ helpers.unit = function(method, error) {
       // are at the top level in nano
       //
       if(method[0] === 'database') {
-        f = cli.server.db[method[1]];
+        //
+        // Due to the way this harness is designed we cannot differentiate between different methods
+        // when those methods are embedded on an object.
+        // We have two options, either we hardcode the resolution or we write a full harness that
+        // can differentiate between methods embedded on an object.
+        // I go the hardcoded route for now.
+        //
+        if (method[1] === 'replicator') {
+          f = cli.server.db.replication.enable;
+        } else {
+          f = cli.server.db[method[1]];
+        }
       } else if(method[0] === 'view' && method[1] === 'compact') {
         f = cli.view.compact;
       } else if(!~['multipart', 'attachment'].indexOf(method[0])) {
