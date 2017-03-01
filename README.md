@@ -107,7 +107,7 @@ nano.db.destroy('alice', function() {
     // specify the database we are going to use
     var alice = nano.use('alice');
     // and insert a document in it
-    alice.insert({ crazy: true }, 'rabbit', function(err, body, header) {
+    alice.insert({ happy: true }, 'rabbit', function(err, body, header) {
       if (err) {
         console.log('[alice.insert] ', err.message);
         return;
@@ -317,7 +317,7 @@ creates a scope where you operate inside `name`.
 
 ``` js
 var alice = nano.use('alice');
-alice.insert({ crazy: true }, 'rabbit', function(err, body) {
+alice.insert({ happy: true }, 'rabbit', function(err, body) {
   // do something
 });
 ```
@@ -413,7 +413,7 @@ inserts `doc` in the database with  optional `params`. if params is a string, it
 
 ``` js
 var alice = nano.use('alice');
-alice.insert({ crazy: true }, 'rabbit', function(err, body) {
+alice.insert({ happy: true }, 'rabbit', function(err, body) {
   if (!err)
     console.log(body);
 });
@@ -423,7 +423,7 @@ The `insert` function can also be used with the method signature `db.insert(doc,
 
 ~~~ js
 var alice = nano.use('alice')
-alice.insert({ _id: 'myid', crazy: true }, function(err, body) {
+alice.insert({ _id: 'myid', happy: true }, function(err, body) {
   if (!err)
     console.log(body)
 })
@@ -433,7 +433,7 @@ and also used to update an existing document, by including the `_rev` token in t
 
 ~~~ js
 var alice = nano.use('alice')
-alice.insert({ _id: 'myid', _rev: '1-23202479633c2b380f79507a776743d5', crazy: false }, function(err, body) {
+alice.insert({ _id: 'myid', _rev: '1-23202479633c2b380f79507a776743d5', happy: false }, function(err, body) {
   if (!err)
     console.log(body)
 })
@@ -635,7 +635,7 @@ calls a view of the specified design with optional query string additions
 `{ keys: ['key1', 'key2', 'key_n'] }`, as `params`.
 
 ``` js
-alice.view('characters', 'crazy_ones', function(err, body) {
+alice.view('characters', 'happy_ones', function(err, body) {
   if (!err) {
     body.rows.forEach(function(doc) {
       console.log(doc.value);
@@ -649,7 +649,7 @@ alice.view('characters', 'crazy_ones', function(err, body) {
 calls a list function feeded by the given view of the specified design document.
 
 ``` js
-alice.viewWithList('characters', 'crazy_ones', 'my_list', function(err, body) {
+alice.viewWithList('characters', 'happy_ones', 'my_list', function(err, body) {
   if (!err) {
     console.log(body);
   }
@@ -702,7 +702,7 @@ An example update handler follows:
 calls a view of the specified design with optional query string additions `params`.
 
 ``` js
-alice.search('characters', 'crazy_ones', { q: 'cat' }, function(err, doc) {
+alice.search('characters', 'happy_ones', { q: 'cat' }, function(err, doc) {
   if (!err) {
     console.log(doc);
   }
