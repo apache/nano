@@ -10,7 +10,7 @@
 , { "method"   : "delete"
   , "path"     : "/say_wat_wat"
   , "status"   : 404
-  , "response" : "{\"error\":\"not_found\",\"reason\":\"missing\"}"
+  , "response" : "{\"error\":\"not_found\",\"reason\":\"Database does not exist.\"}"
   }
 , { "method"   : "delete"
   , "path"     : "/shared_error"

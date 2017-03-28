@@ -46,7 +46,7 @@ it('should error when destroying a db that does not exist', function(assert) {
   nano.db.destroy('say_wat_wat', function(error) {
     assert.ok(error, 'an error');
     assert.ok(error.message, 'a note');
-    assert.equal(error.message, 'missing', 'is missing');
+    assert.equal(error.message, 'Database does not exist.', 'is missing');
     assert.end();
   });
 });

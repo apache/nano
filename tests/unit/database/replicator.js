@@ -12,17 +12,27 @@
 
 'use strict';
 
-var helpers = require('../../helpers/integration');
-var harness = helpers.harness(__filename);
-var db = harness.locals.db;
-var it = harness.it;
+var replicator = require('../../helpers/unit').unit([
+  'database',
+  'replicator'
+]);
 
-it('should be able to insert three documents', helpers.insertThree);
+replicator('baa', 'baashep', {
+  body: '{"source":"baa","target":"baashep"}',
+  headers: {
+    accept: 'application/json',
+    'content-type': 'application/json'
+  },
+  method: 'POST',
+  uri: '/_replicator'
+});
 
-it('should be able to receive changes since seq:0', function(assert) {
-  db.changes({since:0}, function(error, response) {
-    assert.equal(error, null, 'gets response from changes');
-    assert.equal(response.results.length, 3, 'gets three results');
-    assert.end();
-  });
+replicator('molly', 'anne', {some: 'params'}, {
+  body: '{"some":"params","source":"molly","target":"anne"}',
+  headers: {
+    accept: 'application/json',
+    'content-type': 'application/json'
+  },
+  method: 'POST',
+  uri: '/_replicator'
 });

@@ -37,7 +37,7 @@ function(assert) {
 
 it('must destroy the databases we created', function(assert) {
   async.forEach(['az09_$()+-/', 'with/slash'], nano.db.destroy, function(err) {
-    assert.equal(err, undefined, 'should destroy all dbs');
+    assert.equal(err, null, 'should destroy all dbs');
     assert.end();
   });
 });

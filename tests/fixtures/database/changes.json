@@ -23,8 +23,8 @@
   , "response" : "{\"ok\":true,\"id\":\"barfoo\",\"rev\":\"1-3cde10\"}"
   }
 , { "status"   : 200
-  , "path"     : "/database_changes/_changes?since=2"
-  , "response" : "{\"results\":[\n{\"seq\":3,\"id\":\"foobaz\",\"changes\":[{\"rev\":\"1-cfa20dddac397da5bf0be2b50fb472fe\"}]}\n],\n\"last_seq\":3}"
+  , "path"     : "/database_changes/_changes?since=0"
+  , "response" : "{\"results\":[{\"seq\":\"1-abc\",\"id\":\"a\",\"changes\":[{\"rev\":\"1-abc\"}]},{\"seq\":\"2-abc\",\"id\":\"b\",\"changes\":[{\"rev\":\"1-abc\"}]},{\"seq\":\"3-abc\",\"id\":\"c\",\"changes\":[{\"rev\":\"1-abc\"}]}],\"last_seq\":\"3-abc\"}"
   }
 , { "method"   : "delete"
   , "path"     : "/database_changes"

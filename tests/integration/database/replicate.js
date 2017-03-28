@@ -27,7 +27,7 @@ it('should insert a bunch of items', helpers.insertThree);
 it('creates a bunch of database replicas', function(assert) {
   async.forEach(['database_replica', 'database_replica2'],
   nano.db.create, function(error) {
-    assert.equal(error, undefined, 'created database(s)');
+    assert.equal(error, null, 'created database(s)');
     assert.end();
   });
 });
@@ -68,7 +68,7 @@ it('should be able to replicate with params', function(assert) {
 it('should destroy the extra databases', function(assert) {
   async.forEach(['database_replica', 'database_replica2'],
   nano.db.destroy, function(error) {
-    assert.equal(error, undefined, 'deleted databases');
+    assert.equal(error, null, 'deleted databases');
     assert.end();
   });
 });

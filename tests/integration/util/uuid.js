@@ -14,33 +14,28 @@
 
 var helpers = require('../../helpers/integration');
 var harness = helpers.harness(__filename);
-var it = harness.it;
 var db = harness.locals.db;
+var nano = helpers.nano;
+var it = harness.it;
 
-var rev;
+it('should insert a one item', helpers.insertOne);
 
-it('should insert a document', function(assert) {
-  db.insert({'foo': 'baz'}, 'foobaz', function(error, foo) {
-    assert.equal(error, null, 'stores foo');
-    assert.equal(foo.ok, true, 'ok response');
-    assert.ok(foo.rev, 'response with rev');
-    rev = foo.rev;
+it('should generate three uuids', function(assert) {
+  nano.uuids(3, function(error, data) {
+    assert.equal(error, null, 'should generate uuids');
+    assert.ok(data, 'got response');
+    assert.ok(data.uuids, 'got uuids');
+    assert.equal(data.uuids.count, 3, 'got 3');
     assert.end();
   });
 });
 
-it('should not delete a db', function(assert) {
-  db.destroy(undefined, undefined, function(error, response) {
-    assert.equal(error, 'Invalid doc id', 'validated delete parameters');
-    assert.equal(response, null, 'ok!');
-    assert.end();
-  });
-});
-
-it('should delete a document', function(assert) {
-  db.destroy('foobaz', rev, function(error, response) {
-    assert.equal(error, null, 'deleted foo');
-    assert.equal(response.ok, true, 'ok!');
+it('should generate one uuid', function(assert) {
+  nano.uuids(function(error, data) {
+    assert.equal(error, null, 'should generate uuids');
+    assert.ok(data, 'got response');
+    assert.ok(data.uuids, 'got uuid');
+    assert.equal(data.uuids.count, 1, 'got 1');
     assert.end();
   });
 });

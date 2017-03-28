@@ -6,15 +6,15 @@ branches:
     - next
     - rewrite
 node_js:
-  - "0.8"
-  - "0.10"
-  - "0.11"
   - "0.12"
   - "iojs"
+  - "4.2"
+  - "node"
 services:
-  - couchdb
+  - docker
 os:
   - linux
-  - osx
+before_script:
+  - ./scripts/run_couchdb_on_travis.sh
 before_install:
   - npm update -g npm

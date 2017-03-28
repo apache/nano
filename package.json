@@ -1,11 +1,11 @@
 {
   "name": "nano",
-  "description": "minimalistic couchdb driver for node.js",
+  "description": "The official CouchDB client for Node.js",
   "license": "Apache-2.0",
-  "homepage": "http://github.com/dscape/nano",
-  "repository": "git://github.com/dscape/nano",
-  "version": "6.1.3",
-  "author": "Nuno Job <nunojobpinto@gmail.com> (http://nunojob.com)",
+  "homepage": "http://github.com/apache/couchdb-nano",
+  "repository": "http://github.com/apache/couchdb-nano",
+  "version": "6.2.0",
+  "author": "Apache CouchDB <dev@couchdb.apache.org> (http://couchdb.apache.org)",
   "keywords": [
     "couchdb",
     "data",
@@ -17,25 +17,25 @@
     "database"
   ],
   "dependencies": {
-    "request": "^2.53.0",
-    "follow": "^0.11.4",
-    "errs": "^0.3.0",
-    "underscore": "^1.7.0",
-    "debug": "^2.0.0"
+    "request": "^2.76.0",
+    "follow": "^0.12.1",
+    "errs": "^0.3.2",
+    "underscore": "^1.8.3",
+    "debug": "^2.2.0"
   },
   "devDependencies": {
-    "async": "^0.9.0",
-    "tape": "^3.0.0",
-    "istanbul": "^0.3.2",
-    "jshint": "^2.5.6",
-    "jscs": "^1.7.0",
-    "nock": "^0.48.1",
+    "async": "^2.1.2",
+    "tape": "^4.6.2",
+    "istanbul": "^0.4.5",
+    "jshint": "^2.9.4",
+    "jscs": "^3.0.7",
+    "nock": "^9.0.0",
     "endswith": "^0.0.0",
-    "tape-it": "^0.3.1",
-    "pre-commit": "0.0.9"
+    "tape-it": "^0.3.1"
   },
   "scripts": {
-    "test": "DEBUG=* NOCK_OFF=true istanbul cover tape tests/*/*/*.js",
+    "test": "bash scripts/run_couchdb_on_travis.sh; npm run mocha; bash scripts/stop_couchdb_on_travis.sh",
+    "mocha": "DEBUG=* NOCK_OFF=true istanbul cover tape tests/*/*/*.js",
     "unmocked": "NOCK_OFF=true tape tests/*/*/*.js",
     "mocked": "tape tests/*/*/*.js",
     "jshint": "jshint tests/*/*/*.js lib/*.js",
@@ -45,7 +45,7 @@
   },
   "main": "./lib/nano.js",
   "engines": {
-    "node": ">=0.8.0"
+    "node": ">=0.12"
   },
   "pre-commit": [
     "jshint",

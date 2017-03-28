@@ -29,8 +29,12 @@ minimalistic couchdb driver for node.js
   - [nano.db.list([callback])](#nanodblistcallback)
   - [nano.db.compact(name, [designname], [callback])](#nanodbcompactname-designname-callback)
   - [nano.db.replicate(source, target, [opts], [callback])](#nanodbreplicatesource-target-opts-callback)
+  - [nano.db.replication.enable(source, target, [opts], [callback])](#nanodbreplicatorenablesource-target-opts-callback)
+  - [nano.db.replication.query(id, [opts], [callback])](#nanodbreplicatorquery-id-opts-callback)
+  - [nano.db.replication.disable(id, [opts], [callback])](#nanodbreplicatordisable-id-opts-callback)
   - [nano.db.changes(name, [params], [callback])](#nanodbchangesname-params-callback)
   - [nano.db.follow(name, [params], [callback])](#nanodbfollowname-params-callback)
+  - [nano.db.info([callback])](#nanodbinfocallback)
   - [nano.use(name)](#nanousename)
   - [nano.request(opts, [callback])](#nanorequestopts-callback)
   - [nano.config](#nanoconfig)
@@ -60,6 +64,7 @@ minimalistic couchdb driver for node.js
   - [db.search(designname, viewname, [params], [callback])](#dbsearchdesignname-searchname-params-callback)
 - [using cookie authentication](#using-cookie-authentication)
 - [advanced features](#advanced-features)
+  - [getting uuids](#getting-uuids)
   - [extending nano](#extending-nano)
   - [pipes](#pipes)
 - [tests](#tests)
@@ -272,6 +277,55 @@ nano.db.replicate('alice', 'http://admin:password@otherhost.com:5984/alice',
 });
 ```
 
+### nano.db.replication.enable(source, target, [opts], [callback])
+
+enables replication using the new couchdb api from `source` to `target`
+with options `opts`. `target` has to exist, add `create_target:true` to
+`opts` to create it prior to replication.
+replication will survive server restarts.
+
+``` js
+nano.db.replication.enable('alice', 'http://admin:password@otherhost.com:5984/alice',
+                  { create_target:true }, function(err, body) {
+    if (!err)
+      console.log(body);
+});
+```
+
+### nano.db.replication.query(id, [opts], [callback])
+
+queries the state of replication using the new couchdb api. `id` comes from the response
+given by the call to enable.
+
+``` js
+nano.db.replication.enable('alice', 'http://admin:password@otherhost.com:5984/alice',
+                   { create_target:true }, function(err, body) {
+    if (!err) {
+      nano.db.replication.query(body.id, function(error, reply) {
+        if (!err)
+          console.log(reply);
+      }
+    }
+});
+```
+
+### nano.db.replication.disable(id, [opts], [callback])
+
+disables replication using the new couchdb api. `id` comes from the response given
+by the call to enable.
+
+``` js
+nano.db.replication.enable('alice', 'http://admin:password@otherhost.com:5984/alice',
+                   { create_target:true }, function(err, body) {
+    if (!err) {
+      nano.db.replication.disable(body.id, function(error, reply) {
+        if (!err)
+          console.log(reply);
+      }
+    }
+});
+```
+
 ### nano.db.changes(name, [params], [callback])
 
 asks for the changes feed of `name`, `params` contains additions
@@ -287,7 +341,7 @@ nano.db.changes('alice', function(err, body) {
 
 ### nano.db.follow(name, [params], [callback])
 
-uses [follow] to create a solid changes feed. please consult follow documentation for more information as this is a very complete api on it's own
+Uses [Follow] to create a solid changes feed. please consult follow documentation for more information as this is a very complete API on it's own.
 
 ``` js
 var feed = db.follow({since: "now"});
@@ -299,6 +353,16 @@ process.nextTick(function () {
   db.insert({"bar": "baz"}, "bar");
 });
 ```
+
+### nano.db.info([callback])
+
+gets database information.
+
+nano.db.info(function(err, body) {
+  if (!err) {
+    console.log('got database info'', body);
+  }
+});
 
 ### nano.use(name)
 
@@ -379,9 +443,9 @@ listen to db updates, the available `params` are:
 
 ** changed in version 6 **
 
-uses [follow](https://github.com/iriscouch/follow) to create a solid
+Use [Follow](https://github.com/jhs/follow) to create a solid
 [`_db_updates`](http://docs.couchdb.org/en/latest/api/server/common.html?highlight=db_updates#get--_db_updates) feed.
-please consult follow documentation for more information as this is a very complete api on it's own
+Please consult follow documentation for more information as this is a very complete api on it's own
 
 ```js
 var feed = nano.followUpdates({since: "now"});
@@ -411,7 +475,7 @@ alice.insert({ crazy: true }, 'rabbit', function(err, body) {
 The `insert` function can also be used with the method signature `db.insert(doc,[callback])`, where the `doc` contains the `_id` field e.g.
 
 ~~~ js
-var alice = cloudant.use('alice')
+var alice = nano.use('alice')
 alice.insert({ _id: 'myid', crazy: true }, function(err, body) {
   if (!err)
     console.log(body)
@@ -421,7 +485,7 @@ alice.insert({ _id: 'myid', crazy: true }, function(err, body) {
 and also used to update an existing document, by including the `_rev` token in the document being saved:
 
 ~~~ js
-var alice = cloudant.use('alice')
+var alice = nano.use('alice')
 alice.insert({ _id: 'myid', _rev: '1-23202479633c2b380f79507a776743d5', crazy: false }, function(err, body) {
   if (!err)
     console.log(body)
@@ -765,6 +829,21 @@ nano.session(function(err, session) {
 
 ## advanced features
 
+### getting uuids
+
+if your application needs to generate UUIDs, then CouchDB can provide some for you
+
+```js
+nano.uuids(3, callback);
+// { uuid: [
+// '5d1b3ef2bc7eea51f660c091e3dffa23',
+// '5d1b3ef2bc7eea51f660c091e3e006ff',
+// '5d1b3ef2bc7eea51f660c091e3e007f0',
+//]}
+```
+
+The first parameter is the number of uuids to generate. If omitted, it defaults to 1.
+
 ### extending nano
 
 nano is minimalistic but you can add your own features with
@@ -886,8 +965,8 @@ where `list_doc_params` is the test name.
 [2]: http://github.com/dscape/nano/issues
 [3]: http://caos.di.uminho.pt/
 [4]: https://github.com/dscape/nano/blob/master/cfg/couch.example.js
-[follow]: https://github.com/iriscouch/follow
-[request]:  https://github.com/mikeal/request
+[follow]: https://github.com/jhs/follow
+[request]:  https://github.com/request/request
 
 ## license
 

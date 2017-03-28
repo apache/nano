@@ -146,7 +146,7 @@ helpers.prepareAView = function(assert, search, db) {
         }, 'p_nuno', cb);
       }
     ], function(error) {
-      assert.equal(error, undefined, 'store the peeps');
+      assert.equal(error, null, 'store the peeps');
       assert.end();
     });
   });
@@ -180,7 +180,7 @@ helpers.insertThree = function insertThree(assert) {
     function(cb) { db.insert({'bar': 'foo'}, 'barfoo', cb); },
     function(cb) { db.insert({'foo': 'baz'}, 'foobaz', cb); }
   ], function(error) {
-    assert.equal(error, undefined, 'should store docs');
+    assert.equal(error, null, 'should store docs');
     assert.end();
   });
 };

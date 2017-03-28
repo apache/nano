@@ -17,6 +17,16 @@ var harness = helpers.harness(__filename);
 var it = harness.it;
 var nano = harness.locals.nano;
 
+it('should ensure _replicator and _users are created', function(assert) {
+  nano.db.create('_replicator', function() {
+    nano.db.destroy('_users', function() {
+      nano.db.create('_users', function() {
+        assert.end();
+      });
+    });
+  });
+});
+
 it('should list the correct databases', function(assert) {
   nano.db.list(function(error, list) {
     assert.equal(error, null, 'should list databases');

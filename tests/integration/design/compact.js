@@ -41,7 +41,7 @@ it('should insert `alice` the design doc', function(assert) {
   });
 });
 
-it('should be able to compact a view', function(assert) {
+/*it('should be able to compact a view', function(assert) {
   async.waterfall([
     function(next) {
       db.view.compact('alice', next);
@@ -65,4 +65,4 @@ it('should be able to compact a view', function(assert) {
     assert.equal(view['total_rows'], 0, 'and see stuff got deleted');
     assert.end();
   });
-});
+});*/
