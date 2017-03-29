@@ -687,7 +687,44 @@ calls a view of the specified design with optional query string additions
 `{ keys: ['key1', 'key2', 'key_n'] }`, as `params`.
 
 ``` js
+alice.view('characters', 'crazy_ones', {
+  'key': 'Tea Party',
+  'include_docs': true
+}, function(err, body) {
+  if (!err) {
+    body.rows.forEach(function(doc) {
+      console.log(doc.value);
+    });
+  }
+});
+```
+
+``` js
+alice.view('characters', 'soldiers', {
+  'keys': ['Hearts', 'Clubs']
+}, function(err, body) {
+  if (!err) {
+    body.rows.forEach(function(doc) {
+      console.log(doc.value);
+    });
+  }
+});
+```
+
+When `params` is not supplied, or no keys are specified, it will simply return all docs in the view.
+
+``` js
 alice.view('characters', 'crazy_ones', function(err, body) {
+  if (!err) {
+    body.rows.forEach(function(doc) {
+      console.log(doc.value);
+    });
+  }
+});
+```
+
+``` js
+alice.view('characters', 'crazy_ones', { include_docs: true }, function(err, body) {
   if (!err) {
     body.rows.forEach(function(doc) {
       console.log(doc.value);
