@@ -489,7 +489,7 @@ alice.copy('rabbit', 'rabbit2', { overwrite: true }, function(err, _, headers) {
 ### db.bulk(docs, [params], [callback])
 
 bulk operations(update/delete/insert) on the database, refer to the
-[couchdb doc](http://wiki.apache.org/couchdb/HTTP_Bulk_Document_API).
+[couchdb doc](http://docs.couchdb.org/en/stable/api/database/bulk-api.html#db-bulk-docs).
 
 ### db.list([params], [callback])
 
@@ -504,12 +504,12 @@ alice.list({startkey:'cat', limit:3}, function(err, body) {
   }
 });
 ```
-For a full list of params, see [couchdb doc](https://wiki.apache.org/couchdb/HTTP_view_API#Querying_Options).
+For a full list of params, see [couchdb doc](http://docs.couchdb.org/en/latest/api/database/bulk-api.html#get--db-_all_docs).
 
 ### db.fetch(docnames, [params], [callback])
 
 bulk fetch of the database documents, `docnames` are specified as per
-[couchdb doc](http://wiki.apache.org/couchdb/HTTP_Bulk_Document_API).
+[couchdb doc](http://docs.couchdb.org/en/latest/api/database/bulk-api.html#post--db-_all_docs).
 additional query string `params` can be specified, `include_docs` is always set
 to `true`.
 
@@ -518,7 +518,7 @@ to `true`.
 ** changed in version 6 **
 
 bulk fetch of the revisions of the database documents, `docnames` are specified as per
-[couchdb doc](http://wiki.apache.org/couchdb/HTTP_Bulk_Document_API).
+[couchdb doc](http://docs.couchdb.org/en/latest/api/database/bulk-api.html#post--db-_all_docs).
 additional query string `params` can be specified, this is the same method as fetch but
  `include_docs` is not automatically set to `true`.
 
